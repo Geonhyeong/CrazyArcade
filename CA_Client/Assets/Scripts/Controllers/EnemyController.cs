@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Define;
 
-public class PlayerController : CreatureController
+public class EnemyController : CreatureController
 {
     protected override void Init()
     {
@@ -12,7 +12,7 @@ public class PlayerController : CreatureController
 
     protected override void UpdateController()
     {
-        GetDirInput();
+        //GetDirInput();
         base.UpdateController();
     }
 

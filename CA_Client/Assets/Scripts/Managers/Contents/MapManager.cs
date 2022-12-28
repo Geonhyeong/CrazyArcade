@@ -54,11 +54,11 @@ public class MapManager
         _collision = new bool[yCount, xCount];
 
         for (int y = 0; y < yCount; y++)
-        {
+        { 
             string line = reader.ReadLine();
             for (int x = 0; x < xCount; x++)
             {
-                _collision[y, x] = (line[x] != '0' ? true : false);
+                _collision[y, x] = (line[x] != '0' ? false : false);
             }
         }
     }
