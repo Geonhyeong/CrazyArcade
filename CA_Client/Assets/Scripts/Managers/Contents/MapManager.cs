@@ -58,7 +58,7 @@ public class MapManager
             string line = reader.ReadLine();
             for (int x = 0; x < xCount; x++)
             {
-                _collision[y, x] = (line[x] != '0' ? false : false);
+                _collision[y, x] = (line[x] != '0' ? /*TODO*/false : false);
             }
         }
     }

@@ -4,11 +4,16 @@ using UnityEngine;
 
 public class Define
 {
+    public enum InanimateState
+    {
+        Idle,
+        Pop,
+    }
+
     public enum CreatureState
     {
         Idle,
         Moving,
-        Skill,
         Dead,
     }
 
