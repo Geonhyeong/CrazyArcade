@@ -30,7 +30,7 @@ public class InanimateController : MonoBehaviour
     protected virtual void Init()
     {
         _animator = GetComponent<Animator>();
-        Vector3 pos = Managers.Map.CurrentGrid.CellToWorld(CellPos) + new Vector3(0.26f, 0.26f);
+        Vector3 pos = Managers.Map.CurrentGrid.CellToWorld(CellPos) + new Vector3(0.26f, 0.26f, Managers.Map.GetZ(CellPos));
         transform.position = pos;
     }
 

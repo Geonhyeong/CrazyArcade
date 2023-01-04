@@ -19,7 +19,7 @@ public class MapEditor
     {
         GameObject[] gameObjects = Resources.LoadAll<GameObject>("Prefabs/Map");
 
-        foreach(GameObject go in gameObjects)
+        foreach (GameObject go in gameObjects)
         {
             Tilemap tm = Util.FindChild<Tilemap>(go, "Tilemap_Object", true);
 
@@ -56,12 +56,6 @@ public class MapEditor
                 }
             }
         }
-    }
-
-    [MenuItem("Tools/MakeObjectsTest")]
-    private static void MakeObjects()
-    {
-        
     }
 
 #endif

@@ -21,7 +21,6 @@ public class ObjectManager
     {
         foreach (GameObject obj in _objects)
         {
-            // 지금 유닛 간에 충돌하도록 설계되어있다. 추후에 변경해야함.
             CreatureController cc = obj.GetComponent<CreatureController>();
             if (cc == null)
                 continue;

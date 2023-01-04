@@ -4,6 +4,15 @@ using UnityEngine;
 
 public class Define
 {
+    public enum WaveDir
+    {
+        None,
+        Up,
+        Down,
+        Left,
+        Right,
+    }
+
     public enum InanimateState
     {
         Idle,

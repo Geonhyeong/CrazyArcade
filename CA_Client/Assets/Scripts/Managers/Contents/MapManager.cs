@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class MapManager
 {
@@ -34,10 +35,6 @@ public class MapManager
         GameObject go = Managers.Resource.Instantiate($"Map/{mapName}");
         go.name = "Map";
 
-        GameObject collision = Util.FindChild(go, "Tilemap_Object", true);
-        /*if (collision != null)
-            collision.SetActive(false);*/
-
         CurrentGrid = go.GetComponent<Grid>();
 
         // Collision 관련 파일
@@ -58,9 +55,15 @@ public class MapManager
             string line = reader.ReadLine();
             for (int x = 0; x < xCount; x++)
             {
-                _collision[y, x] = (line[x] != '0' ? /*TODO*/false : false);
+                _collision[y, x] = (line[x] != '0' ? /*TODO*/true : false);
             }
         }
+
+        LoadBlocks();
+
+        GameObject collision = Util.FindChild(go, "Tilemap_Object", true);
+        if (collision != null)
+            collision.SetActive(false);
     }
 
     public void DestroyMap()
@@ -71,5 +74,37 @@ public class MapManager
             GameObject.Destroy(map);
             CurrentGrid = null;
         }
+    }
+
+    public void LoadBlocks()
+    {
+        GameObject map = GameObject.Find("Map");
+        Tilemap tm = Util.FindChild<Tilemap>(map, "Tilemap_Object", true);
+
+        for (int y = MaxY; y >= MinY; y--)
+        {
+            for (int x = MinX; x <= MaxX; x++)
+            {
+                TileBase tile = tm.GetTile(new Vector3Int(x, y, 0));
+                if (tile != null)
+                {
+                    GameObject go = Managers.Resource.Instantiate($"Inanimate/{tile.name}");
+                    if (tile.name.StartsWith("block"))
+                    {
+                        BlockController bc = go.GetComponent<BlockController>();
+                        bc.CellPos = new Vector3Int(x, y, 0);
+                    }
+                    else
+                    {
+                        go.transform.position = CurrentGrid.CellToWorld(new Vector3Int(x, y, 0)) + new Vector3(0.26f, 0.335f, (y - MaxY) * 0.1f);
+                    }
+                }
+            }
+        }
+    }
+
+    public float GetZ(Vector3Int cellPos)
+    {
+        return (cellPos.y - MaxY) * 0.1f;
     }
 }
