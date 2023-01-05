@@ -21,11 +21,18 @@ public class ObjectManager
     {
         foreach (GameObject obj in _objects)
         {
-            CreatureController cc = obj.GetComponent<CreatureController>();
+            /*CreatureController cc = obj.GetComponent<CreatureController>();
             if (cc == null)
                 continue;
 
             if (cc.CellPos == cellPos)
+                return obj;*/
+
+            InanimateController ic = obj.GetComponent<InanimateController>();
+            if (ic == null)
+                continue;
+
+            if (ic.CellPos == cellPos)
                 return obj;
         }
 

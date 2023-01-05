@@ -19,7 +19,7 @@ public class BubbleController : InanimateController
         OnPop();
     }
 
-    void OnPop()
+    public override void OnPop()
     {
         State = InanimateState.Pop;
 
@@ -30,6 +30,15 @@ public class BubbleController : InanimateController
             Vector3Int destPos = CellPos + Vector3Int.up * (cc._power - power + 1);
             if (Managers.Map.CanGo(destPos) == false)
                 break;
+
+            GameObject targetObject = Managers.Object.Find(destPos);
+            if (targetObject != null)
+            {
+                InanimateController ic = targetObject.GetComponent<InanimateController>();
+                if (ic != null)
+                    ic.OnPop();
+                break;
+            }
 
             GameObject go = Managers.Resource.Instantiate("Inanimate/Wave");
             WaveController wc = go.GetComponent<WaveController>();
@@ -46,6 +55,15 @@ public class BubbleController : InanimateController
             if (Managers.Map.CanGo(destPos) == false)
                 break;
 
+            GameObject targetObject = Managers.Object.Find(destPos);
+            if (targetObject != null)
+            {
+                InanimateController ic = targetObject.GetComponent<InanimateController>();
+                if (ic != null)
+                    ic.OnPop();
+                break;
+            }
+
             GameObject go = Managers.Resource.Instantiate("Inanimate/Wave");
             WaveController wc = go.GetComponent<WaveController>();
 
@@ -60,6 +78,15 @@ public class BubbleController : InanimateController
             Vector3Int destPos = CellPos + Vector3Int.left * (cc._power - power + 1);
             if (Managers.Map.CanGo(destPos) == false)
                 break;
+
+            GameObject targetObject = Managers.Object.Find(destPos);
+            if (targetObject != null)
+            {
+                InanimateController ic = targetObject.GetComponent<InanimateController>();
+                if (ic != null)
+                    ic.OnPop();
+                break;
+            }
 
             GameObject go = Managers.Resource.Instantiate("Inanimate/Wave");
             WaveController wc = go.GetComponent<WaveController>();
@@ -76,6 +103,15 @@ public class BubbleController : InanimateController
             if (Managers.Map.CanGo(destPos) == false)
                 break;
 
+            GameObject targetObject = Managers.Object.Find(destPos);
+            if (targetObject != null)
+            {
+                InanimateController ic = targetObject.GetComponent<InanimateController>();
+                if (ic != null)
+                    ic.OnPop();
+                break;
+            }
+
             GameObject go = Managers.Resource.Instantiate("Inanimate/Wave");
             WaveController wc = go.GetComponent<WaveController>();
 
@@ -86,5 +122,14 @@ public class BubbleController : InanimateController
         }
 
         GameObject.Destroy(gameObject, 0.5f);
+        Managers.Object.Remove(gameObject);
+
+        GameObject target = Managers.Object.Find(CellPos);
+        if (target != null)
+        {
+            InanimateController ic = target.GetComponent<InanimateController>();
+            if (ic != null)
+                ic.OnPop();
+        }
     }
 }

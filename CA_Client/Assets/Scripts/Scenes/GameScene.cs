@@ -14,7 +14,6 @@ public class GameScene : BaseScene
 
         GameObject player = Managers.Resource.Instantiate("Creature/Player");
         player.name = "Player";
-        Managers.Object.Add(player);
 
         for (int i = 0; i < 5; i++)
         {
@@ -30,7 +29,6 @@ public class GameScene : BaseScene
 
             EnemyController ec = enemy.GetComponent<EnemyController>();
             ec.CellPos = pos;
-            Managers.Object.Add(enemy);
         }
         //Managers.UI.ShowSceneUI<UI_Inven>();
         //Dictionary<int, Data.Stat> dict = Managers.Data.StatDict;

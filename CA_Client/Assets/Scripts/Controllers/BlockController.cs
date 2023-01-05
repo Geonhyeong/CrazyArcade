@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Define;
 
 public class BlockController : InanimateController
 {
@@ -15,8 +16,11 @@ public class BlockController : InanimateController
         base.UpdateAnimation();
     }
 
-    void OnPop()
+    public override void OnPop()
     {
-        // TODO : 물풍선에 맞으면 터지는 기능 추가
+        State = InanimateState.Pop;
+
+        GameObject.Destroy(gameObject, 0.4f);
+        Managers.Object.Remove(gameObject);
     }
 }

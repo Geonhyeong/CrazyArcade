@@ -31,6 +31,7 @@ public class WaveController : MonoBehaviour
         UpdateAnimation();
 
         GameObject.Destroy(gameObject, 0.5f);
+
     }
 
     void UpdateAnimation()
