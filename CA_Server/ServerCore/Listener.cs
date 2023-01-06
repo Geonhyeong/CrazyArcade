@@ -6,15 +6,15 @@ using System.Text;
 
 namespace ServerCore
 {
-    internal class Listener
+    public class Listener
     {
         private Socket _listenSocket;
-        private Action<Socket> _onAcceptHandler;
+        private Func<Session> _sessionFactory;
 
-        public void Init(IPEndPoint endPoint, Action<Socket> onAcceptHandler)
+        public void Init(IPEndPoint endPoint, Func<Session> sessionFactory)
         {
             _listenSocket = new Socket(endPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-            _onAcceptHandler += onAcceptHandler;
+            _sessionFactory = sessionFactory;
 
             _listenSocket.Bind(endPoint);
 
@@ -30,7 +30,7 @@ namespace ServerCore
             args.AcceptSocket = null;
 
             bool pending = _listenSocket.AcceptAsync(args);
-            if (pending == false)   // 등록한 직후에 즉시 accept 요청이 들어온 경우
+            if (pending == false)
                 OnAcceptCompleted(null, args);
         }
 
@@ -38,7 +38,9 @@ namespace ServerCore
         {
             if (args.SocketError == SocketError.Success)
             {
-                _onAcceptHandler.Invoke(args.AcceptSocket);
+                Session session = _sessionFactory.Invoke();
+                session.Start(args.AcceptSocket);
+                session.OnConnected(args.AcceptSocket.RemoteEndPoint);
             }
             else
                 Console.WriteLine(args.SocketError.ToString());
