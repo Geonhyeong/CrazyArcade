@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Google.Protobuf.Protocol;
 using ServerCore;
 
 namespace Server
@@ -12,11 +13,9 @@ namespace Server
     internal class Program
     {
         private static Listener _listener = new Listener();
-        public static GameRoom Room = new GameRoom();
 
         private static void FlushRoom()
         {
-            Room.Push(() => Room.Flush());
             JobTimer.Instance.Push(FlushRoom, 250);
         }
 

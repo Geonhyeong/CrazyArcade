@@ -12,24 +12,10 @@ public class GameScene : BaseScene
 
         Managers.Map.LoadMap(1);
 
-        GameObject player = Managers.Resource.Instantiate("Creature/Player");
+        /*GameObject player = Managers.Resource.Instantiate("Creature/Player");
         player.name = "Player";
+        Managers.Object.Add(player);*/
 
-        for (int i = 0; i < 5; i++)
-        {
-            GameObject enemy = Managers.Resource.Instantiate("Creature/Enemy");
-            enemy.name = $"Enemy_{i + 1}";
-
-            // 랜덤 위치 스폰 (일단 겹쳐도 OK)
-            Vector3Int pos = new Vector3Int()
-            {
-                x = Random.Range(-10, 4),
-                y = Random.Range(-7, 5)
-            };
-
-            EnemyController ec = enemy.GetComponent<EnemyController>();
-            ec.CellPos = pos;
-        }
         //Managers.UI.ShowSceneUI<UI_Inven>();
         //Dictionary<int, Data.Stat> dict = Managers.Data.StatDict;
         //gameObject.GetOrAddComponent<CursorController>();
@@ -45,6 +31,5 @@ public class GameScene : BaseScene
 
     public override void Clear()
     {
-        
     }
 }

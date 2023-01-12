@@ -7,9 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "Server\Server.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServerCore", "ServerCore\ServerCore.csproj", "{A7797CF7-8CDD-4BE1-B074-AB5B3CB21B06}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DummyClient", "DummyClient\DummyClient.csproj", "{789CD260-A645-4308-B17F-DD9455431224}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PacketGenerator", "PacketGenerator\PacketGenerator.csproj", "{8664C4CB-F258-4290-92CB-57D151EB691E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PacketGenerator", "PacketGenerator\PacketGenerator.csproj", "{8664C4CB-F258-4290-92CB-57D151EB691E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{E00BE4CE-4A8C-4E03-AAB5-D3AD4C06F4A5}"
 EndProject
@@ -27,10 +25,6 @@ Global
 		{A7797CF7-8CDD-4BE1-B074-AB5B3CB21B06}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7797CF7-8CDD-4BE1-B074-AB5B3CB21B06}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7797CF7-8CDD-4BE1-B074-AB5B3CB21B06}.Release|Any CPU.Build.0 = Release|Any CPU
-		{789CD260-A645-4308-B17F-DD9455431224}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{789CD260-A645-4308-B17F-DD9455431224}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{789CD260-A645-4308-B17F-DD9455431224}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{789CD260-A645-4308-B17F-DD9455431224}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8664C4CB-F258-4290-92CB-57D151EB691E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8664C4CB-F258-4290-92CB-57D151EB691E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8664C4CB-F258-4290-92CB-57D151EB691E}.Release|Any CPU.ActiveCfg = Release|Any CPU
