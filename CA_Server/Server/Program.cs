@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Google.Protobuf.Protocol;
+﻿using Server.Game;
 using ServerCore;
+using System;
+using System.Net;
 
 namespace Server
 {
@@ -21,6 +16,8 @@ namespace Server
 
         private static void Main(string[] args)
         {
+            RoomManager.Instance.Add();
+
             // DNS (Domain Name System)
             string host = Dns.GetHostName();
             IPHostEntry ipHost = Dns.GetHostEntry(host);

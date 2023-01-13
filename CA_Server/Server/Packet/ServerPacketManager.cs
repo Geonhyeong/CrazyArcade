@@ -7,9 +7,11 @@ using System.Collections.Generic;
 class PacketManager
 {
 	#region Singleton
+
 	static PacketManager _instance = new PacketManager();
 	public static PacketManager Instance { get { return _instance; } }
-	#endregion
+
+	#endregion Singleton
 
 	PacketManager()
 	{
@@ -18,11 +20,11 @@ class PacketManager
 
 	Dictionary<ushort, Action<PacketSession, ArraySegment<byte>, ushort>> _onRecv = new Dictionary<ushort, Action<PacketSession, ArraySegment<byte>, ushort>>();
 	Dictionary<ushort, Action<PacketSession, IMessage>> _handler = new Dictionary<ushort, Action<PacketSession, IMessage>>();
-		
+
 	public void Register()
-	{		
-		_onRecv.Add((ushort)MsgId.CChat, MakePacket<C_Chat>);
-		_handler.Add((ushort)MsgId.CChat, PacketHandler.C_ChatHandler);
+	{
+		_onRecv.Add((ushort)MsgId.CMove, MakePacket<C_Move>);
+		_handler.Add((ushort)MsgId.CMove, PacketHandler.C_MoveHandler);
 	}
 
 	public void OnRecvPacket(PacketSession session, ArraySegment<byte> buffer)
