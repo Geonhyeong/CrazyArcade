@@ -21,6 +21,6 @@ public class BlockController : InanimateController
         State = InanimateState.Pop;
 
         GameObject.Destroy(gameObject, 0.4f);
-        Managers.Object.Remove(gameObject);
+        //Managers.Object.Remove(gameObject);
     }
 }

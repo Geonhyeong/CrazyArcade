@@ -13,7 +13,7 @@ public class BubbleController : InanimateController
         StartCoroutine("CoLifeTime");
     }
 
-    IEnumerator CoLifeTime()
+    private IEnumerator CoLifeTime()
     {
         yield return new WaitForSeconds(3.5f);
         OnPop();
@@ -122,7 +122,7 @@ public class BubbleController : InanimateController
         }
 
         GameObject.Destroy(gameObject, 0.5f);
-        Managers.Object.Remove(gameObject);
+        //Managers.Object.Remove(gameObject);
 
         GameObject target = Managers.Object.Find(CellPos);
         if (target != null)

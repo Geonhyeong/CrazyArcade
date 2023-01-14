@@ -13,7 +13,7 @@ public class MapManager
     public int MinY { get; set; }
     public int MaxY { get; set; }
 
-    bool[,] _collision;
+    private bool[,] _collision;
 
     public bool CanGo(Vector3Int cellPos)
     {
@@ -51,7 +51,7 @@ public class MapManager
         _collision = new bool[yCount, xCount];
 
         for (int y = 0; y < yCount; y++)
-        { 
+        {
             string line = reader.ReadLine();
             for (int x = 0; x < xCount; x++)
             {
@@ -59,7 +59,7 @@ public class MapManager
             }
         }
 
-        LoadBlocks();
+        //LoadBlocks();
 
         GameObject collision = Util.FindChild(go, "Tilemap_Object", true);
         if (collision != null)

@@ -7,23 +7,28 @@ using UnityEngine;
 
 public class ServerSession : PacketSession
 {
-	public override void OnConnected(EndPoint endPoint)
-	{
-		Debug.Log($"OnConnected : {endPoint}");
-	}
+    public override void OnConnected(EndPoint endPoint)
+    {
+        Debug.Log($"OnConnected : {endPoint}");
 
-	public override void OnDisconnected(EndPoint endPoint)
-	{
-		Debug.Log($"OnDisconnected : {endPoint}");
-	}
+        PacketManager.Instance.CustomHandler = (s, m, i) =>
+        {
+            PacketQueue.Instance.Push(i, m);
+        };
+    }
 
-	public override void OnRecvPacket(ArraySegment<byte> buffer)
-	{
-		PacketManager.Instance.OnRecvPacket(this, buffer);
-	}
+    public override void OnDisconnected(EndPoint endPoint)
+    {
+        Debug.Log($"OnDisconnected : {endPoint}");
+    }
 
-	public override void OnSend(int numOfBytes)
-	{
-		//Console.WriteLine($"Transferred bytes: {numOfBytes}");
-	}
+    public override void OnRecvPacket(ArraySegment<byte> buffer)
+    {
+        PacketManager.Instance.OnRecvPacket(this, buffer);
+    }
+
+    public override void OnSend(int numOfBytes)
+    {
+        //Console.WriteLine($"Transferred bytes: {numOfBytes}");
+    }
 }

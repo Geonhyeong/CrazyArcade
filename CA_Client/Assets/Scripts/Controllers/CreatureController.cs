@@ -5,13 +5,19 @@ using static Define;
 
 public class CreatureController : MonoBehaviour
 {
+    public int Id { get; set; }
+
+    [SerializeField]
     public float _speed = 5.0f;
+
     public int _power = 1;
 
     public Vector3Int CellPos { get; set; } = Vector3Int.zero;
     protected Animator _animator;
 
-    CreatureState _state = CreatureState.Idle;
+    [SerializeField]
+    private CreatureState _state = CreatureState.Idle;
+
     public CreatureState State
     {
         get { return _state; }
@@ -25,8 +31,9 @@ public class CreatureController : MonoBehaviour
         }
     }
 
-    MoveDir _lastDir = MoveDir.None;
-    MoveDir _dir = MoveDir.None;
+    private MoveDir _lastDir = MoveDir.None;
+    private MoveDir _dir = MoveDir.None;
+
     public MoveDir Dir
     {
         get { return _dir; }
@@ -43,12 +50,12 @@ public class CreatureController : MonoBehaviour
         }
     }
 
-    void Start()
+    private void Start()
     {
         Init();
     }
 
-    void Update()
+    private void Update()
     {
         UpdateController();
     }
@@ -59,7 +66,7 @@ public class CreatureController : MonoBehaviour
         Vector3 pos = Managers.Map.CurrentGrid.CellToWorld(CellPos) + new Vector3(0.26f, 0.26f, Managers.Map.GetZ(CellPos));
         transform.position = pos;
 
-        Managers.Object.Add(gameObject);
+        //Managers.Object.Add(gameObject);
     }
 
     protected virtual void UpdateAnimation()
@@ -71,12 +78,15 @@ public class CreatureController : MonoBehaviour
                 case MoveDir.Up:
                     _animator.Play("IDLE_UP");
                     break;
+
                 case MoveDir.Down:
                     _animator.Play("IDLE_DOWN");
                     break;
+
                 case MoveDir.Left:
                     _animator.Play("IDLE_LEFT");
                     break;
+
                 case MoveDir.Right:
                     _animator.Play("IDLE_RIGHT");
                     break;
@@ -89,12 +99,15 @@ public class CreatureController : MonoBehaviour
                 case MoveDir.Up:
                     _animator.Play("WALK_UP");
                     break;
+
                 case MoveDir.Down:
                     _animator.Play("WALK_DOWN");
                     break;
+
                 case MoveDir.Left:
                     _animator.Play("WALK_LEFT");
                     break;
+
                 case MoveDir.Right:
                     _animator.Play("WALK_RIGHT");
                     break;
@@ -102,7 +115,6 @@ public class CreatureController : MonoBehaviour
         }
         else if (_state == CreatureState.Dead)
         {
-
         }
     }
 
@@ -113,9 +125,11 @@ public class CreatureController : MonoBehaviour
             case CreatureState.Idle:
                 UpdateIdle();
                 break;
+
             case CreatureState.Moving:
                 UpdateMoving();
                 break;
+
             case CreatureState.Dead:
                 UpdateDead();
                 break;
@@ -133,12 +147,15 @@ public class CreatureController : MonoBehaviour
                 case MoveDir.Up:
                     destPos += Vector3Int.up;
                     break;
+
                 case MoveDir.Down:
                     destPos += Vector3Int.down;
                     break;
+
                 case MoveDir.Left:
                     destPos += Vector3Int.left;
                     break;
+
                 case MoveDir.Right:
                     destPos += Vector3Int.right;
                     break;
@@ -157,7 +174,7 @@ public class CreatureController : MonoBehaviour
 
     // 스르륵 이동하는 것을 처리
     protected virtual void UpdateMoving()
-    { 
+    {
         Vector3 destPos = Managers.Map.CurrentGrid.CellToWorld(CellPos) + new Vector3(0.26f, 0.26f, Managers.Map.GetZ(CellPos));
         Vector3 moveDir = destPos - transform.position;
 
@@ -180,6 +197,5 @@ public class CreatureController : MonoBehaviour
 
     protected virtual void UpdateDead()
     {
-
     }
 }
