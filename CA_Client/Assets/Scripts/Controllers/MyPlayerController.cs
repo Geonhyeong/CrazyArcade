@@ -53,14 +53,6 @@ public class MyPlayerController : PlayerController
         }
     }
 
-    private void GetSkillInput()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            _coSkill = StartCoroutine("CoStartBubble");
-        }
-    }
-
     protected override void SetNextPos()
     {
         if (Dir == MoveDir.None)
@@ -107,5 +99,24 @@ public class MyPlayerController : PlayerController
             Managers.Network.Send(movePacket);
             _updated = false;
         }
+    }
+
+    private void GetSkillInput()
+    {
+        if (_coSkillCooltime == null && Input.GetKeyDown(KeyCode.Space))
+        {
+            C_Skill skill = new C_Skill() { Info = new SkillInfo() };
+            skill.Info.SkillId = 1;
+            Managers.Network.Send(skill);
+
+            _coSkillCooltime = StartCoroutine("CoInputCooltime", 0.2f);
+        }
+    }
+
+    Coroutine _coSkillCooltime;
+    IEnumerator CoInputCooltime(float time)
+    {
+        yield return new WaitForSeconds(time);
+        _coSkillCooltime = null;
     }
 }

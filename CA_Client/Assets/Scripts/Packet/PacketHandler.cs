@@ -41,7 +41,6 @@ internal class PacketHandler
     public static void S_MoveHandler(PacketSession session, IMessage packet)
     {
         S_Move movePacket = packet as S_Move;
-        ServerSession serverSession = session as ServerSession;
 
         GameObject go = Managers.Object.FindById(movePacket.PlayerId);
         if (go == null)
@@ -52,5 +51,20 @@ internal class PacketHandler
             return;
 
         cc.PosInfo = movePacket.PosInfo;
+    }
+
+    public static void S_SkillHandler(PacketSession session, IMessage packet)
+    {
+        S_Skill skillPacket = packet as S_Skill;
+
+        GameObject go = Managers.Object.FindById(skillPacket.PlayerId);
+        if (go == null)
+            return;
+
+        PlayerController pc = go.GetComponent<PlayerController>();
+        if (pc != null)
+        {
+            pc.UseSkill(skillPacket.Info.SkillId);
+        }       
     }
 }

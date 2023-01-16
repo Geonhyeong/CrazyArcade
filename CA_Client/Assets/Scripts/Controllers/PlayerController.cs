@@ -12,6 +12,14 @@ public class PlayerController : CreatureController
         base.Init();
     }
 
+    public void UseSkill(int skillId)
+    {
+        if (skillId == 1)
+        {
+            _coSkill = StartCoroutine("CoStartBubble");
+        }
+    }
+
     private IEnumerator CoStartBubble()
     {
         GameObject go = Managers.Resource.Instantiate("Inanimate/Bubble");
