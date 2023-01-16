@@ -12,11 +12,6 @@ public class PlayerController : CreatureController
         base.Init();
     }
 
-    protected override void UpdateController()
-    {
-        base.UpdateController();
-    }
-
     private IEnumerator CoStartBubble()
     {
         GameObject go = Managers.Resource.Instantiate("Inanimate/Bubble");

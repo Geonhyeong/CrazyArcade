@@ -19,22 +19,6 @@ public class Define
         Pop,
     }
 
-    public enum CreatureState
-    {
-        Idle,
-        Moving,
-        Dead,
-    }
-
-    public enum MoveDir
-    {
-        None,
-        Up,
-        Down,
-        Left,
-        Right,
-    }
-
     public enum Scene
     {
         Unknown,

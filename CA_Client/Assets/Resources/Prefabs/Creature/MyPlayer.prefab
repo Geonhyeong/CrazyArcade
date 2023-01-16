@@ -120,3 +120,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _speed: 5
   _power: 1
+  _maxBubble: 1

@@ -1,3 +1,4 @@
+using Google.Protobuf.Protocol;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,46 +10,73 @@ public class CreatureController : MonoBehaviour
 
     [SerializeField]
     public float _speed = 5.0f;
-
     public int _power = 1;
+    public int _maxBubble = 1;
 
-    public Vector3Int CellPos { get; set; } = Vector3Int.zero;
     protected Animator _animator;
+    protected bool _updated = false;
 
-    [SerializeField]
-    private CreatureState _state = CreatureState.Idle;
-
-    public CreatureState State
+    private PositionInfo _positionInfo = new PositionInfo();
+    public PositionInfo PosInfo
     {
-        get { return _state; }
+        get { return _positionInfo; }
         set
         {
-            if (_state == value)
+            if (_positionInfo.Equals(value))
                 return;
 
-            _state = value;
+            CellPos = new Vector3Int(value.PosX, value.PosY, 0);
+            State = value.State;
+            Dir = value.MoveDir;
+        }
+    }
+    #region PositionInfo
+    public CreatureState State
+    {
+        get { return PosInfo.State; }
+        set
+        {
+            if (PosInfo.State == value)
+                return;
+
+            PosInfo.State = value;
             UpdateAnimation();
+            _updated = true;
         }
     }
 
-    private MoveDir _lastDir = MoveDir.None;
-    private MoveDir _dir = MoveDir.None;
-
+    protected MoveDir _lastDir = MoveDir.None;
     public MoveDir Dir
     {
-        get { return _dir; }
+        get { return PosInfo.MoveDir; }
         set
         {
-            if (_dir == value)
+            if (PosInfo.MoveDir == value)
                 return;
 
-            _dir = value;
+            PosInfo.MoveDir = value;
             if (value != MoveDir.None)
                 _lastDir = value;
 
             UpdateAnimation();
+            _updated = true;
         }
     }
+
+    public Vector3Int CellPos
+    {
+        get { return new Vector3Int(PosInfo.PosX, PosInfo.PosY, 0); }
+        set
+        {
+            if (PosInfo.PosX == value.x && PosInfo.PosY == value.y)
+                return;
+
+            PosInfo.PosX = value.x;
+            PosInfo.PosY = value.y;
+            _updated = true;
+        }
+    }
+    #endregion
 
     private void Start()
     {
@@ -66,12 +94,15 @@ public class CreatureController : MonoBehaviour
         Vector3 pos = Managers.Map.CurrentGrid.CellToWorld(CellPos) + new Vector3(0.26f, 0.26f, Managers.Map.GetZ(CellPos));
         transform.position = pos;
 
-        //Managers.Object.Add(gameObject);
+        State = CreatureState.Idle;
+        Dir = MoveDir.None;
+        CellPos = new Vector3Int(0, 0, 0);
+        UpdateAnimation();
     }
 
     protected virtual void UpdateAnimation()
     {
-        if (_state == CreatureState.Idle)
+        if (State == CreatureState.Idle)
         {
             switch (_lastDir)
             {
@@ -92,9 +123,9 @@ public class CreatureController : MonoBehaviour
                     break;
             }
         }
-        else if (_state == CreatureState.Moving)
+        else if (State == CreatureState.Moving)
         {
-            switch (_dir)
+            switch (Dir)
             {
                 case MoveDir.Up:
                     _animator.Play("WALK_UP");
@@ -113,7 +144,7 @@ public class CreatureController : MonoBehaviour
                     break;
             }
         }
-        else if (_state == CreatureState.Dead)
+        else if (State == CreatureState.Dead)
         {
         }
     }
@@ -125,54 +156,24 @@ public class CreatureController : MonoBehaviour
             case CreatureState.Idle:
                 UpdateIdle();
                 break;
-
             case CreatureState.Moving:
                 UpdateMoving();
                 break;
-
             case CreatureState.Dead:
                 UpdateDead();
                 break;
         }
     }
 
-    // 이동 가능한 상태일 때, 실제 좌표를 이동한다.
     protected virtual void UpdateIdle()
     {
-        if (_dir != MoveDir.None)
+        if (Dir != MoveDir.None)
         {
-            Vector3Int destPos = CellPos;
-            switch (_dir)
-            {
-                case MoveDir.Up:
-                    destPos += Vector3Int.up;
-                    break;
-
-                case MoveDir.Down:
-                    destPos += Vector3Int.down;
-                    break;
-
-                case MoveDir.Left:
-                    destPos += Vector3Int.left;
-                    break;
-
-                case MoveDir.Right:
-                    destPos += Vector3Int.right;
-                    break;
-            }
-
             State = CreatureState.Moving;
-            if (Managers.Map.CanGo(destPos))
-            {
-                if (Managers.Object.Find(destPos) == null)  // TODO : 유닛 간 충돌 있음
-                {
-                    CellPos = destPos;
-                }
-            }
+            return;
         }
     }
 
-    // 스르륵 이동하는 것을 처리
     protected virtual void UpdateMoving()
     {
         Vector3 destPos = Managers.Map.CurrentGrid.CellToWorld(CellPos) + new Vector3(0.26f, 0.26f, Managers.Map.GetZ(CellPos));
@@ -183,10 +184,7 @@ public class CreatureController : MonoBehaviour
         if (dist < _speed * Time.deltaTime)
         {
             transform.position = destPos;
-            // 예외적으로 애니메이션을 직접 컨트롤
-            _state = CreatureState.Idle;
-            if (_dir == MoveDir.None)
-                UpdateAnimation();
+            SetNextPos();
         }
         else
         {
@@ -197,5 +195,10 @@ public class CreatureController : MonoBehaviour
 
     protected virtual void UpdateDead()
     {
+    }
+
+    protected virtual void SetNextPos()
+    {
+
     }
 }

@@ -12,7 +12,7 @@ public class GameScene : BaseScene
 
         Managers.Map.LoadMap(1);
 
-        /*GameObject player = Managers.Resource.Instantiate("Creature/Player");
+        /*GameObject player = Managers.Resource.Instantiate("Creature/MyPlayer");
         player.name = "Player";
         Managers.Object.Add(player);*/
 

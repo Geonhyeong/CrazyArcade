@@ -59,7 +59,7 @@ public class MapManager
             }
         }
 
-        //LoadBlocks();
+        LoadBlocks();
 
         GameObject collision = Util.FindChild(go, "Tilemap_Object", true);
         if (collision != null)
@@ -88,14 +88,15 @@ public class MapManager
                 TileBase tile = tm.GetTile(new Vector3Int(x, y, 0));
                 if (tile != null)
                 {
-                    GameObject go = Managers.Resource.Instantiate($"Inanimate/{tile.name}");
+                    //GameObject go = Managers.Resource.Instantiate($"Inanimate/{tile.name}");
                     if (tile.name.StartsWith("block"))
                     {
-                        BlockController bc = go.GetComponent<BlockController>();
-                        bc.CellPos = new Vector3Int(x, y, 0);
+                        //BlockController bc = go.GetComponent<BlockController>();
+                        //bc.CellPos = new Vector3Int(x, y, 0);
                     }
                     else
                     {
+                        /*test  */GameObject go = Managers.Resource.Instantiate($"Inanimate/{tile.name}");
                         go.transform.position = CurrentGrid.CellToWorld(new Vector3Int(x, y, 0)) + new Vector3(0.26f, 0.335f, (y - MaxY) * 0.1f);
                     }
                 }
