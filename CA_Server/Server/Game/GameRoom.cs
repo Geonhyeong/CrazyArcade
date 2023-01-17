@@ -1,5 +1,6 @@
 ﻿using Google.Protobuf;
 using Google.Protobuf.Protocol;
+using System;
 using System.Collections.Generic;
 
 namespace Server.Game
@@ -10,11 +11,14 @@ namespace Server.Game
         public int RoomId { get; set; }
 
         private Dictionary<int, Player> _players = new Dictionary<int, Player>();
+        private Dictionary<int, Block> _blocks = null;
         private Map _map = new Map();
+        
 
         public void Init(int mapId)
         {
             _map.LoadMap(mapId);
+            _map.GetBlocks(out _blocks);
         }
 
         public void EnterGame(Player newPlayer)
@@ -40,6 +44,13 @@ namespace Server.Game
                             spawnPacket.Players.Add(p.Info);
                     }
                     newPlayer.Session.Send(spawnPacket);
+
+                    S_SpawnBlock spawnBlockPacket = new S_SpawnBlock();
+                    foreach (Block b in _blocks.Values)
+                    {
+                        spawnBlockPacket.Blocks.Add(b.Info);
+                    }
+                    newPlayer.Session.Send(spawnBlockPacket);
                 }
 
                 // 타인한테 정보 전송
@@ -111,6 +122,7 @@ namespace Server.Game
                 S_Move resMovePacket = new S_Move();
                 resMovePacket.PlayerId = player.Info.PlayerId;
                 resMovePacket.PosInfo = movePacket.PosInfo;
+                //Console.WriteLine($"S_Move ({resMovePacket.PosInfo.PosX}, {resMovePacket.PosInfo.PosY})");
 
                 Broadcast(resMovePacket);
             }

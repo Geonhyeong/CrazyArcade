@@ -7,8 +7,8 @@ using UnityEngine;
 public class ObjectManager
 {
     public MyPlayerController MyPlayer { get; set; }
-    private Dictionary<int, GameObject> _objects = new Dictionary<int, GameObject>();
-    //private Dictionary<int, GameObject> _players = new Dictionary<int, GameObject>();
+    private Dictionary<int, GameObject> _objects = new Dictionary<int, GameObject>();   /*현재는 플레이어만 담겨있음*/
+    private Dictionary<int, GameObject> _blocks = new Dictionary<int, GameObject>();
 
     public void Add(PlayerInfo info, bool myPlayer = false)
     {
@@ -34,6 +34,17 @@ public class ObjectManager
             pc.PosInfo = info.PosInfo;
             pc.SyncPos();
         }
+    }
+
+    public void Add(BlockInfo info)
+    {
+        GameObject go = Managers.Resource.Instantiate($"Inanimate/{info.Name}");
+        go.name = info.Name;
+        _blocks.Add(info.BlockId, go);
+
+        BlockController bc = go.GetComponent<BlockController>();
+        bc.Id = info.BlockId;
+        bc.CellPos = new Vector3Int(info.PosX, info.PosY, 0);
     }
 
     public void Remove(int id)
@@ -64,20 +75,13 @@ public class ObjectManager
 
     public GameObject Find(Vector3Int cellPos)
     {
-        foreach (GameObject obj in _objects.Values)
+        foreach (GameObject obj in _blocks.Values)
         {
-            /*CreatureController cc = obj.GetComponent<CreatureController>();
-            if (cc == null)
+            BlockController bc = obj.GetComponent<BlockController>();
+            if (bc == null)
                 continue;
 
-            if (cc.CellPos == cellPos)
-                return obj;*/
-
-            InanimateController ic = obj.GetComponent<InanimateController>();
-            if (ic == null)
-                continue;
-
-            if (ic.CellPos == cellPos)
+            if (bc.CellPos == cellPos)
                 return obj;
         }
 

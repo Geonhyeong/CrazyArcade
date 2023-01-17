@@ -5,6 +5,8 @@ using static Define;
 
 public class BlockController : InanimateController
 {
+    public int Id { get; set; }
+
     protected override void Init()
     {
         base.Init();

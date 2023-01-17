@@ -13,6 +13,7 @@ enum MsgId {
   S_MOVE = 5;
   C_SKILL = 6;
   S_SKILL = 7;
+  S_SPAWN_BLOCK = 8; 
 }
 
 enum CreatureState {
@@ -22,11 +23,10 @@ enum CreatureState {
 }
 
 enum MoveDir {
-    NONE = 0;
-    UP = 1;
-    DOWN = 2;
-    LEFT = 3;
-    RIGHT = 4;
+    UP = 0;
+    DOWN = 1;
+    LEFT = 2;
+    RIGHT = 3;
 }
 
 message S_EnterGame {
@@ -62,6 +62,10 @@ message S_Skill {
     SkillInfo info = 2;
 }
 
+message S_SpawnBlock {
+    repeated BlockInfo blocks = 1;
+}
+
 message PlayerInfo {
     int32 playerId = 1;
     string name = 2;
@@ -77,4 +81,11 @@ message PositionInfo {
 
 message SkillInfo {
     int32 skillId = 1;
+}
+
+message BlockInfo {
+    int32 blockId = 1;
+    string name = 2;
+    int32 posX = 3;
+    int32 posY = 4;
 }

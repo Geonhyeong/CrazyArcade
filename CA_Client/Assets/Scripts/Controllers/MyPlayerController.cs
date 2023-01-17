@@ -6,6 +6,8 @@ using static Define;
 
 public class MyPlayerController : PlayerController
 {
+    private bool _moveKeyPressed = false;
+
     protected override void Init()
     {
         base.Init();
@@ -29,8 +31,19 @@ public class MyPlayerController : PlayerController
         base.UpdateController();
     }
 
+    protected override void UpdateIdle()
+    {
+        if (_moveKeyPressed)
+        {
+            State = CreatureState.Moving;
+            return;
+        }
+    }
+
     private void GetDirInput()
     {
+        _moveKeyPressed = true;
+
         if (Input.GetKey(KeyCode.UpArrow))
         {
             Dir = MoveDir.Up;
@@ -49,13 +62,13 @@ public class MyPlayerController : PlayerController
         }
         else
         {
-            Dir = MoveDir.None;
+            _moveKeyPressed = false;
         }
     }
 
     protected override void SetNextPos()
     {
-        if (Dir == MoveDir.None)
+        if (_moveKeyPressed == false)
         {
             State = CreatureState.Idle;
             CheckUpdatedFlag();

@@ -33,8 +33,9 @@ namespace Server.Game
 
         private bool[,] _collision;
         private Player[,] _players;
+        private Block[,] _blocks;
 
-        public bool CanGo(Vector2Int cellPos, bool checkObjects = false)
+        public bool CanGo(Vector2Int cellPos, bool checkObjects = true)
         {
             if (cellPos.x < MinX || cellPos.x > MaxX)
                 return false;
@@ -43,7 +44,7 @@ namespace Server.Game
 
             int x = cellPos.x - MinX;
             int y = MaxY - cellPos.y;
-            return !_collision[y, x] && (!checkObjects || _players[y, x] == null);
+            return !_collision[y, x] && (!checkObjects || _blocks[y, x] == null);
         }
 
         public bool ApplyMove(Player player, Vector2Int dest)
@@ -78,7 +79,7 @@ namespace Server.Game
         {
             string mapName = "Map_" + mapId.ToString("000");
 
-            // Collision 관련 파일
+            // 맵 관련 파일
             string text = File.ReadAllText($"{pathPrefix}/{mapName}.txt");
             StringReader reader = new StringReader(text);
 
@@ -91,7 +92,9 @@ namespace Server.Game
             int yCount = MaxY - MinY + 1;
             _collision = new bool[yCount, xCount];
             _players = new Player[yCount, xCount];
+            _blocks = new Block[yCount, xCount];
 
+            // collision 정보 읽기
             for (int y = 0; y < yCount; y++)
             {
                 string line = reader.ReadLine();
@@ -99,6 +102,36 @@ namespace Server.Game
                 {
                     _collision[y, x] = (line[x] == '1' ? true : false);
                 }
+            }
+
+            // 블록 정보 읽기
+            int blockCnt = 1;
+            for (int y = 0; y < yCount; y++)
+            {
+                string line = reader.ReadLine();
+                for (int x = 0; x < xCount; x++)
+                {
+                    if (line[x] == '0')
+                        continue;
+
+                    Block block = new Block();
+                    block.Info.BlockId = blockCnt++;
+                    block.Info.Name = $"block_{line[x] - '0'}";
+                    block.Info.PosX = x + MinX;
+                    block.Info.PosY = MaxY - y;
+                    _blocks[y, x] = block;
+                }
+            }
+        }
+
+        public void GetBlocks(out Dictionary<int, Block> blocks)
+        {
+            blocks = new Dictionary<int, Block>();
+
+            foreach (Block b in _blocks)
+            {
+                if (b != null)
+                    blocks.Add(b.Info.BlockId, b);
             }
         }
     }

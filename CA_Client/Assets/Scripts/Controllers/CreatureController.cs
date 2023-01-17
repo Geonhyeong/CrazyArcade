@@ -45,7 +45,6 @@ public class CreatureController : MonoBehaviour
         }
     }
 
-    protected MoveDir _lastDir = MoveDir.None;
     public MoveDir Dir
     {
         get { return PosInfo.MoveDir; }
@@ -55,8 +54,6 @@ public class CreatureController : MonoBehaviour
                 return;
 
             PosInfo.MoveDir = value;
-            if (value != MoveDir.None)
-                _lastDir = value;
 
             UpdateAnimation();
             _updated = true;
@@ -93,23 +90,24 @@ public class CreatureController : MonoBehaviour
     {
         UpdateController();
     }
-
+    
     protected virtual void Init()
     {
         _animator = GetComponent<Animator>();
         Vector3 pos = Managers.Map.CurrentGrid.CellToWorld(CellPos) + new Vector3(0.26f, 0.26f, Managers.Map.GetZ(CellPos));
         transform.position = pos;
 
-        State = CreatureState.Idle;
-        Dir = MoveDir.None;
         UpdateAnimation();
     }
 
     protected virtual void UpdateAnimation()
     {
+        if (_animator == null)
+            return;
+
         if (State == CreatureState.Idle)
         {
-            switch (_lastDir)
+            switch (Dir)
             {
                 case MoveDir.Up:
                     _animator.Play("IDLE_UP");
@@ -172,11 +170,6 @@ public class CreatureController : MonoBehaviour
 
     protected virtual void UpdateIdle()
     {
-        if (Dir != MoveDir.None)
-        {
-            State = CreatureState.Moving;
-            return;
-        }
     }
 
     protected virtual void UpdateMoving()

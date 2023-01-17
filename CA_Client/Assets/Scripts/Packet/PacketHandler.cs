@@ -67,4 +67,13 @@ internal class PacketHandler
             pc.UseSkill(skillPacket.Info.SkillId);
         }       
     }
+
+    public static void S_SpawnBlockHandler(PacketSession session, IMessage packet)
+    {
+        S_SpawnBlock spawnBlockPacket = packet as S_SpawnBlock;
+        foreach (BlockInfo block in spawnBlockPacket.Blocks)
+        {
+            Managers.Object.Add(block);
+        }
+    }
 }
