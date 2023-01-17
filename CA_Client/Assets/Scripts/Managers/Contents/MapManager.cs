@@ -55,15 +55,19 @@ public class MapManager
             string line = reader.ReadLine();
             for (int x = 0; x < xCount; x++)
             {
-                _collision[y, x] = (line[x] == '1' ? /*TODO*/true : false);
+                _collision[y, x] = (line[x] == '1' ? true : false);
             }
         }
 
-        LoadBlocks();
+        LoadBlocksAndObjects();
 
-        GameObject collision = Util.FindChild(go, "Tilemap_Object", true);
-        if (collision != null)
-            collision.SetActive(false);
+        GameObject tmObject = Util.FindChild(go, "Tilemap_Object", true);
+        if (tmObject != null)
+            tmObject.SetActive(false);
+
+        GameObject tmBlock = Util.FindChild(go, "Tilemap_Block", true);
+        if (tmBlock != null)
+            tmBlock.SetActive(false);
     }
 
     public void DestroyMap()
@@ -76,29 +80,29 @@ public class MapManager
         }
     }
 
-    public void LoadBlocks()
+    public void LoadBlocksAndObjects()
     {
         GameObject map = GameObject.Find("Map");
-        Tilemap tm = Util.FindChild<Tilemap>(map, "Tilemap_Object", true);
+        Tilemap tm_object = Util.FindChild<Tilemap>(map, "Tilemap_Object", true);
+        Tilemap tm_block = Util.FindChild<Tilemap>(map, "Tilemap_Block", true);
 
         for (int y = MaxY; y >= MinY; y--)
         {
             for (int x = MinX; x <= MaxX; x++)
             {
-                TileBase tile = tm.GetTile(new Vector3Int(x, y, 0));
-                if (tile != null)
+                /*TileBase tBlock = tm_block.GetTile(new Vector3Int(x, y, 0));
+                if (tBlock != null)
                 {
-                    //GameObject go = Managers.Resource.Instantiate($"Inanimate/{tile.name}");
-                    if (tile.name.StartsWith("block"))
-                    {
-                        //BlockController bc = go.GetComponent<BlockController>();
-                        //bc.CellPos = new Vector3Int(x, y, 0);
-                    }
-                    else
-                    {
-                        /*test  */GameObject go = Managers.Resource.Instantiate($"Inanimate/{tile.name}");
-                        go.transform.position = CurrentGrid.CellToWorld(new Vector3Int(x, y, 0)) + new Vector3(0.26f, 0.335f, (y - MaxY) * 0.1f);
-                    }
+                    GameObject go = Managers.Resource.Instantiate($"Inanimate/{tBlock.name}");
+                    BlockController bc = go.GetComponent<BlockController>();
+                    bc.CellPos = new Vector3Int(x, y, 0);
+                }*/
+
+                TileBase tObject = tm_object.GetTile(new Vector3Int(x, y, 0));
+                if (tObject != null)
+                {
+                    GameObject go = Managers.Resource.Instantiate($"Inanimate/{tObject.name}");
+                    go.transform.position = CurrentGrid.CellToWorld(new Vector3Int(x, y, 0)) + new Vector3(0.26f, 0.335f, (y - MaxY) * 0.1f);
                 }
             }
         }
