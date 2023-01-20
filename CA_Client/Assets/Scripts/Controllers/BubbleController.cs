@@ -1,25 +1,25 @@
+using Google.Protobuf.Protocol;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static Define;
 
-public class BubbleController : InanimateController
+public class BubbleController : CreatureController
 {
-    public GameObject Host { get; set; }
-
     protected override void Init()
     {
         base.Init();
+        Type = GameObjectType.Bubble;
         StartCoroutine("CoLifeTime");
     }
 
     private IEnumerator CoLifeTime()
     {
         yield return new WaitForSeconds(3.5f);
-        OnPop();
+        //OnPop();
     }
 
-    public override void OnPop()
+    /*public override void OnPop()
     {
         State = InanimateState.Pop;
 
@@ -131,5 +131,5 @@ public class BubbleController : InanimateController
             if (ic != null)
                 ic.OnPop();
         }
-    }
+    }*/
 }

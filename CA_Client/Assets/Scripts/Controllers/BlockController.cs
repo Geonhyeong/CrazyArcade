@@ -1,28 +1,54 @@
+using Google.Protobuf.Protocol;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Define;
 
-public class BlockController : InanimateController
+public class BlockController : CreatureController
 {
-    public int Id { get; set; }
-
     protected override void Init()
     {
         base.Init();
+        Type = GameObjectType.Block;
         transform.position += new Vector3(0, 0.075f);
     }
 
     protected override void UpdateAnimation()
     {
-        base.UpdateAnimation();
+        if (_animator == null)
+            return;
+
+        switch (State)
+        {
+            case CreatureState.Idle:
+                _animator.Play("IDLE");
+                break;
+
+            case CreatureState.Pop:
+                _animator.Play("POP");
+                break;
+        }
     }
 
-    public override void OnPop()
+    protected override void UpdateController()
     {
-        State = InanimateState.Pop;
+        switch (State)
+        {
+            case CreatureState.Idle:
+                UpdateIdle();
+                break;
+            case CreatureState.Pop:
+                UpdatePop();
+                break;
+        }
+    }
 
-        GameObject.Destroy(gameObject, 0.4f);
-        //Managers.Object.Remove(gameObject);
+    private void UpdateIdle()
+    {
+
+    }
+
+    private void UpdatePop()
+    {
+
     }
 }

@@ -5,8 +5,11 @@ using System.Text;
 
 namespace Server.Game
 {
-    public class Block
+    public class Block : GameObject
     {
-        public BlockInfo Info { get; set; } = new BlockInfo();
+        public Block()
+        {
+            ObjectType = GameObjectType.Block;
+        }
     }
 }

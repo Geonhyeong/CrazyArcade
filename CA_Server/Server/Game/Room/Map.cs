@@ -31,9 +31,14 @@ namespace Server.Game
         public int MinY { get; set; }
         public int MaxY { get; set; }
 
+        private int _roomId;
         private bool[,] _collision;
-        private Player[,] _players;
-        private Block[,] _blocks;
+        private GameObject[,] _objects; // 충돌체만 관리
+
+        public Map(int roomId)
+        {
+            _roomId = roomId;
+        }
 
         public bool CanGo(Vector2Int cellPos, bool checkObjects = true)
         {
@@ -44,29 +49,49 @@ namespace Server.Game
 
             int x = cellPos.x - MinX;
             int y = MaxY - cellPos.y;
-            return !_collision[y, x] && (!checkObjects || _blocks[y, x] == null);
+            return !_collision[y, x] && (!checkObjects || _objects[y, x] == null);
         }
 
-        public bool ApplyMove(Player player, Vector2Int dest)
+        public GameObject Find(Vector2Int cellPos)
         {
-            PositionInfo posInfo = player.Info.PosInfo;
+            if (cellPos.x < MinX || cellPos.x > MaxX)
+                return null;
+            if (cellPos.y < MinY || cellPos.y > MaxY)
+                return null;
+
+            int x = cellPos.x - MinX;
+            int y = MaxY - cellPos.y;
+            return _objects[y, x];
+        }
+
+        public bool ApplyLeave(GameObject gameObject)
+        {
+            PositionInfo posInfo = gameObject.PosInfo;
             if (posInfo.PosX < MinX || posInfo.PosX > MaxX)
                 return false;
             if (posInfo.PosY < MinY || posInfo.PosY > MaxY)
                 return false;
-            if (CanGo(dest) == false)
+            
+            int x = posInfo.PosX - MinX;
+            int y = MaxY - posInfo.PosY;
+            if (_objects[y, x] == gameObject)
+                _objects[y, x] = null;
+
+            return true;
+        }
+
+        public bool ApplyMove(GameObject gameObject, Vector2Int dest)
+        {
+            ApplyLeave(gameObject);
+
+            PositionInfo posInfo = gameObject.PosInfo;
+            if (CanGo(dest, true) == false)
                 return false;
             
-            {   // 기존 위치는 삭제
-                int x = posInfo.PosX - MinX;
-                int y = MaxY - posInfo.PosY;
-                if (_players[y, x] == player)
-                    _players[y, x] = null;
-            }
-            {   // 새로운 위치로 이동
+            {
                 int x = dest.x - MinX;
                 int y = MaxY - dest.y;
-                _players[y, x] = player;
+                _objects[y, x] = gameObject;
             }
 
             // 실제 좌표 이동
@@ -91,8 +116,7 @@ namespace Server.Game
             int xCount = MaxX - MinX + 1;
             int yCount = MaxY - MinY + 1;
             _collision = new bool[yCount, xCount];
-            _players = new Player[yCount, xCount];
-            _blocks = new Block[yCount, xCount];
+            _objects = new GameObject[yCount, xCount];
 
             // collision 정보 읽기
             for (int y = 0; y < yCount; y++)
@@ -104,8 +128,6 @@ namespace Server.Game
                 }
             }
 
-            // 블록 정보 읽기
-            int blockCnt = 1;
             for (int y = 0; y < yCount; y++)
             {
                 string line = reader.ReadLine();
@@ -114,24 +136,16 @@ namespace Server.Game
                     if (line[x] == '0')
                         continue;
 
-                    Block block = new Block();
-                    block.Info.BlockId = blockCnt++;
-                    block.Info.Name = $"block_{line[x] - '0'}";
-                    block.Info.PosX = x + MinX;
-                    block.Info.PosY = MaxY - y;
-                    _blocks[y, x] = block;
+                    Block block = ObjectManager.Instance.Add<Block>();
+                    {
+                        block.Info.Name = $"Block_{line[x] - '0'}";
+                        block.PosInfo.State = CreatureState.Idle;
+                        block.PosInfo.PosX = x + MinX;
+                        block.PosInfo.PosY = MaxY - y;
+                    }
+                    _objects[y, x] = block;
+                    RoomManager.Instance.Find(_roomId).EnterGame(block);
                 }
-            }
-        }
-
-        public void GetBlocks(out Dictionary<int, Block> blocks)
-        {
-            blocks = new Dictionary<int, Block>();
-
-            foreach (Block b in _blocks)
-            {
-                if (b != null)
-                    blocks.Add(b.Info.BlockId, b);
             }
         }
     }

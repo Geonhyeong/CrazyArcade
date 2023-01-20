@@ -13,7 +13,6 @@ namespace Server.Game
         public GameRoom Add(int mapId)
         {
             GameRoom gameRoom = new GameRoom();
-            gameRoom.Init(mapId);
 
             lock (_lock)
             {
@@ -21,6 +20,7 @@ namespace Server.Game
                 _rooms.Add(_roomId, gameRoom);
                 _roomId++;
             }
+            gameRoom.Init(mapId);
 
             return gameRoom;
         }

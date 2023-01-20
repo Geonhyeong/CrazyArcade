@@ -59,7 +59,7 @@ public class MapManager
             }
         }
 
-        LoadBlocksAndObjects();
+        LoadObjects();
 
         GameObject tmObject = Util.FindChild(go, "Tilemap_Object", true);
         if (tmObject != null)
@@ -80,28 +80,19 @@ public class MapManager
         }
     }
 
-    public void LoadBlocksAndObjects()
+    public void LoadObjects()
     {
         GameObject map = GameObject.Find("Map");
         Tilemap tm_object = Util.FindChild<Tilemap>(map, "Tilemap_Object", true);
-        Tilemap tm_block = Util.FindChild<Tilemap>(map, "Tilemap_Block", true);
 
         for (int y = MaxY; y >= MinY; y--)
         {
             for (int x = MinX; x <= MaxX; x++)
             {
-                /*TileBase tBlock = tm_block.GetTile(new Vector3Int(x, y, 0));
-                if (tBlock != null)
-                {
-                    GameObject go = Managers.Resource.Instantiate($"Inanimate/{tBlock.name}");
-                    BlockController bc = go.GetComponent<BlockController>();
-                    bc.CellPos = new Vector3Int(x, y, 0);
-                }*/
-
                 TileBase tObject = tm_object.GetTile(new Vector3Int(x, y, 0));
                 if (tObject != null)
                 {
-                    GameObject go = Managers.Resource.Instantiate($"Inanimate/{tObject.name}");
+                    GameObject go = Managers.Resource.Instantiate($"Creature/{tObject.name}");
                     go.transform.position = CurrentGrid.CellToWorld(new Vector3Int(x, y, 0)) + new Vector3(0.26f, 0.335f, (y - MaxY) * 0.1f);
                 }
             }

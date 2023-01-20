@@ -2,7 +2,6 @@ using Google.Protobuf.Protocol;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Define;
 
 public class MyPlayerController : PlayerController
 {
@@ -95,9 +94,19 @@ public class MyPlayerController : PlayerController
 
         if (Managers.Map.CanGo(destPos))
         {
-            if (Managers.Object.Find(destPos) == null)  // TODO : 유닛 간 충돌 있음
+            GameObject obstacle = Managers.Object.Find(destPos);
+            
+            if (obstacle == null)
             {
                 CellPos = destPos;
+            }
+            else
+            {
+                CreatureController cc = obstacle.GetComponent<CreatureController>();
+                if (cc != null && cc.Type == GameObjectType.Player)
+                {
+                    CellPos = destPos;
+                }
             }
         }
         CheckUpdatedFlag();

@@ -7,44 +7,65 @@ using UnityEngine;
 public class ObjectManager
 {
     public MyPlayerController MyPlayer { get; set; }
-    private Dictionary<int, GameObject> _objects = new Dictionary<int, GameObject>();   /*현재는 플레이어만 담겨있음*/
-    private Dictionary<int, GameObject> _blocks = new Dictionary<int, GameObject>();
+    private Dictionary<int, GameObject> _objects = new Dictionary<int, GameObject>();
 
-    public void Add(PlayerInfo info, bool myPlayer = false)
+    public static GameObjectType GetObjectTypeById(int id)
     {
-        if (myPlayer)
-        {
-            GameObject go = Managers.Resource.Instantiate("Creature/MyPlayer");
-            go.name = info.Name;
-            _objects.Add(info.PlayerId, go);
-
-            MyPlayer = go.GetComponent<MyPlayerController>();
-            MyPlayer.Id = info.PlayerId;
-            MyPlayer.PosInfo = info.PosInfo;
-            MyPlayer.SyncPos();
-        }
-        else
-        {
-            GameObject go = Managers.Resource.Instantiate("Creature/Player");
-            go.name = info.Name;
-            _objects.Add(info.PlayerId, go);
-
-            PlayerController pc = go.GetComponent<PlayerController>();
-            pc.Id = info.PlayerId;
-            pc.PosInfo = info.PosInfo;
-            pc.SyncPos();
-        }
+        int type = (id >> 24) & 0x7F;
+        return (GameObjectType)type;
     }
 
-    public void Add(BlockInfo info)
+    public void Add(ObjectInfo info, bool myPlayer = false)
     {
-        GameObject go = Managers.Resource.Instantiate($"Inanimate/{info.Name}");
-        go.name = info.Name;
-        _blocks.Add(info.BlockId, go);
+        GameObjectType objectType = GetObjectTypeById(info.ObjectId);
+        
+        if (objectType == GameObjectType.Player)
+        {
+            if (myPlayer)
+            {
+                GameObject go = Managers.Resource.Instantiate("Creature/MyPlayer");
+                go.name = info.Name;
+                _objects.Add(info.ObjectId, go);
 
-        BlockController bc = go.GetComponent<BlockController>();
-        bc.Id = info.BlockId;
-        bc.CellPos = new Vector3Int(info.PosX, info.PosY, 0);
+                MyPlayer = go.GetComponent<MyPlayerController>();
+                MyPlayer.Id = info.ObjectId;
+                MyPlayer.PosInfo = info.PosInfo;
+                MyPlayer.SyncPos();
+            }
+            else
+            {
+                GameObject go = Managers.Resource.Instantiate("Creature/Player");
+                go.name = info.Name;
+                _objects.Add(info.ObjectId, go);
+
+                PlayerController pc = go.GetComponent<PlayerController>();
+                pc.Id = info.ObjectId;
+                pc.PosInfo = info.PosInfo;
+                pc.SyncPos();
+            }
+        }
+        else if (objectType == GameObjectType.Block)
+        {
+            GameObject go = Managers.Resource.Instantiate($"Creature/{info.Name}");
+            go.name = info.Name;
+            _objects.Add(info.ObjectId, go);
+
+            BlockController bc = go.GetComponent<BlockController>();
+            bc.Id = info.ObjectId;
+            bc.PosInfo = info.PosInfo;
+            bc.SyncPos();
+        }
+        else if (objectType == GameObjectType.Bubble)
+        {
+            GameObject go = Managers.Resource.Instantiate("Creature/Bubble");
+            go.name = info.Name;
+            _objects.Add(info.ObjectId, go);
+
+            BubbleController bc = go.GetComponent<BubbleController>();
+            bc.Id = info.ObjectId;
+            bc.PosInfo = info.PosInfo;
+            bc.SyncPos();
+        }
     }
 
     public void Remove(int id)
@@ -75,13 +96,13 @@ public class ObjectManager
 
     public GameObject Find(Vector3Int cellPos)
     {
-        foreach (GameObject obj in _blocks.Values)
+        foreach (GameObject obj in _objects.Values)
         {
-            BlockController bc = obj.GetComponent<BlockController>();
-            if (bc == null)
+            CreatureController cc = obj.GetComponent<CreatureController>();
+            if (cc == null)
                 continue;
 
-            if (bc.CellPos == cellPos)
+            if (cc.CellPos == cellPos)
                 return obj;
         }
 

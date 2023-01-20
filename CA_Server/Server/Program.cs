@@ -2,6 +2,7 @@
 using ServerCore;
 using System;
 using System.Net;
+using System.Threading;
 
 namespace Server
 {
@@ -27,11 +28,15 @@ namespace Server
             _listener.Init(endPoint, () => { return SessionManager.Instance.Generate(); });
             Console.WriteLine("Listening...");
 
-            JobTimer.Instance.Push(FlushRoom);
+            //JobTimer.Instance.Push(FlushRoom);
 
+            // TODO
             while (true)
             {
-                JobTimer.Instance.Flush();
+                //JobTimer.Instance.Flush();
+                RoomManager.Instance.Find(1).Update();
+
+                Thread.Sleep(100);
             }
         }
     }

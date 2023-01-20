@@ -5,7 +5,7 @@ using static Define;
 
 public class WaveController : MonoBehaviour
 {
-    public Vector3Int CellPos { get; set; } = Vector3Int.zero;
+    /*public Vector3Int CellPos { get; set; } = Vector3Int.zero;
     public GameObject Host { get; set; }
     public int power = 0;
     Animator _animator;
@@ -51,5 +51,5 @@ public class WaveController : MonoBehaviour
                 _animator.Play(power == 1 ? "RIGHT_EDGE" : "RIGHT");
                 break;
         }
-    }
+    }*/
 }
