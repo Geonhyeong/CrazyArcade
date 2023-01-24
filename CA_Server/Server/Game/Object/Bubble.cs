@@ -9,8 +9,11 @@ namespace Server.Game
     {
         public GameObject Owner { get; set; }
 
-        private long _lifeTimeTick = Environment.TickCount64 + 50;
-        //private long _popTimeTick = Environment.TickCount64 + 100; 
+        public int Power { get; set; }
+
+        private bool _isPop = false;
+        private long _lifeTimeTick = Environment.TickCount64 + 2500;
+        private long _popTimeTick = Environment.TickCount64 + 3000;
 
         public Bubble()
         {
@@ -25,20 +28,32 @@ namespace Server.Game
             if (_lifeTimeTick >= Environment.TickCount64)
                 return;
 
-            // TODO : 버블팝
-            PosInfo.State = CreatureState.Dead;
+            RegisterPop();
+
+            // 소멸타임틱에 소멸
+            if (_popTimeTick >= Environment.TickCount64)
+                return;
+
+            Room.LeaveGame(Id);
+        }
+
+        private void RegisterPop()
+        {
+            if (_isPop)
+                return;
+
+            PosInfo.State = CreatureState.Pop;
 
             S_Move movePacket = new S_Move();
             movePacket.ObjectId = Id;
             movePacket.PosInfo = PosInfo;
             Room.Broadcast(movePacket);
-            
+
             Console.WriteLine("Bubble Pop");
 
             // TODO : 웨이브 소환
-            
-            // TODO : 소멸타임틱에 소멸
-            Room.LeaveGame(Id);
+
+            _isPop = true;
         }
     }
 }

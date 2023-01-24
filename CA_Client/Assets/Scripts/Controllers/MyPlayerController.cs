@@ -18,11 +18,11 @@ public class MyPlayerController : PlayerController
         {
             case CreatureState.Idle:
                 GetDirInput();
-                //GetSkillInput();
+                GetSkillInput();
                 break;
             case CreatureState.Moving:
                 GetDirInput();
-                //GetSkillInput();
+                GetSkillInput();
                 break;
             case CreatureState.Dead:
                 break;
@@ -127,8 +127,11 @@ public class MyPlayerController : PlayerController
     {
         if (_coSkillCooltime == null && Input.GetKeyDown(KeyCode.Space))
         {
-            C_Skill skill = new C_Skill() { Info = new SkillInfo() };
-            skill.Info.SkillId = 1;
+            C_Skill skill = new C_Skill() { Info = new SkillInfo() { PosInfo = new PositionInfo() } };
+            skill.Info.Power = _power;
+            skill.Info.PosInfo.State = CreatureState.Idle;
+            skill.Info.PosInfo.PosX = PosInfo.PosX;
+            skill.Info.PosInfo.PosY = PosInfo.PosY;
             Managers.Network.Send(skill);
 
             _coSkillCooltime = StartCoroutine("CoInputCooltime", 0.2f);

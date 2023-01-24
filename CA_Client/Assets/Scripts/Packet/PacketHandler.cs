@@ -53,18 +53,4 @@ internal class PacketHandler
         cc.PosInfo = movePacket.PosInfo;
     }
 
-    public static void S_SkillHandler(PacketSession session, IMessage packet)
-    {
-        S_Skill skillPacket = packet as S_Skill;
-
-        GameObject go = Managers.Object.FindById(skillPacket.ObjectId);
-        if (go == null)
-            return;
-
-        PlayerController pc = go.GetComponent<PlayerController>();
-        if (pc != null)
-        {
-            pc.UseSkill(skillPacket.Info.SkillId);
-        }       
-    }
 }

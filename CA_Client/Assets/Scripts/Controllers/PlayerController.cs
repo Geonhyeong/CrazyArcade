@@ -7,9 +7,9 @@ using static Define;
 public class PlayerController : CreatureController
 {
     [SerializeField]
-    public float _speed = 5.0f;
-    public int _power = 1;
-    public int _maxBubble = 1;
+    protected float _speed = 5.0f;
+    protected int _power = 1;
+    protected int _maxBubble = 1;
 
     protected Coroutine _coSkill;
     
@@ -118,12 +118,11 @@ public class PlayerController : CreatureController
     {
     }
 
-    public void UseSkill(int skillId)
+    public void UseSkill(SkillInfo info)
     {
-        if (skillId == 1)
-        {
-            _coSkill = StartCoroutine("CoStartBubble");
-        }
+        //_coSkill = StartCoroutine("CoStartBubble");
+        Debug.Log("Make Bubble!");
+        
     }
 
     private IEnumerator CoStartBubble()

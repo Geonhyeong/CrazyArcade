@@ -183,28 +183,23 @@ namespace Server.Game
             {
                 ObjectInfo info = player.Info;
 
-                // TODO : 스킬 사용 가능 여부 체크
+                // 스킬 사용 가능 여부 체크
+                Vector2Int skillPos = new Vector2Int(skillPacket.Info.PosInfo.PosX, skillPacket.Info.PosInfo.PosY);
+                if (Map.CanGo(skillPos) == false)
+                    return;
+                if (skillPacket.Info.Power > 10 || skillPacket.Info.Power < 1)
+                    return;
 
-                // 통과
-                S_Skill skill = new S_Skill() { Info = new SkillInfo() };
-                skill.ObjectId = info.ObjectId;
-                skill.Info.SkillId = 1;
-                Broadcast(skill);
+                // 버블 생성
+                Bubble bubble = ObjectManager.Instance.Add<Bubble>();
+                if (bubble == null)
+                    return;
 
-                if (skillPacket.Info.SkillId == 1)
-                {
-                    Bubble bubble = ObjectManager.Instance.Add<Bubble>();
-                    if (bubble == null)
-                        return;
-
-                    bubble.Owner = player;
-                    bubble.PosInfo.State = CreatureState.Idle;
-                    bubble.PosInfo.PosX = player.PosInfo.PosX;
-                    bubble.PosInfo.PosY = player.PosInfo.PosY;
-                    EnterGame(bubble);
-
-                    // TODO : 피격 판정
-                }
+                bubble.Owner = player;
+                bubble.Power = skillPacket.Info.Power;
+                bubble.Info.Name = $"Bubble_{bubble.Id}";
+                bubble.Info.PosInfo = skillPacket.Info.PosInfo;
+                EnterGame(bubble);
             }
         }
 

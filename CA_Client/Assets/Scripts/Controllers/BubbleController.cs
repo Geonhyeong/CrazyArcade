@@ -10,13 +10,46 @@ public class BubbleController : CreatureController
     {
         base.Init();
         Type = GameObjectType.Bubble;
-        StartCoroutine("CoLifeTime");
     }
 
-    private IEnumerator CoLifeTime()
+    protected override void UpdateAnimation()
     {
-        yield return new WaitForSeconds(3.5f);
-        //OnPop();
+        if (_animator == null)
+            return;
+
+        switch (State)
+        {
+            case CreatureState.Idle:
+                _animator.Play("IDLE");
+                break;
+
+            case CreatureState.Pop:
+                _animator.Play("POP");
+                break;
+        }
+    }
+
+    protected override void UpdateController()
+    {
+        switch (State)
+        {
+            case CreatureState.Idle:
+                UpdateIdle();
+                break;
+            case CreatureState.Pop:
+                UpdatePop();
+                break;
+        }
+    }
+
+    private void UpdateIdle()
+    {
+
+    }
+
+    private void UpdatePop()
+    {
+
     }
 
     /*public override void OnPop()
