@@ -19,6 +19,14 @@ namespace Server.Game
             if (Room == null)
                 return;
 
+            // 플레이어 및 아이템 피격 판정
+            List<GameObject> gameObjects = Room.FindAll(CellPos);
+            if (gameObjects != null)
+            {
+                foreach (GameObject go in gameObjects)
+                    go.OnAttacked(this);
+            }
+
             if (_lifeTimeTick >= Environment.TickCount64)
                 return;
 

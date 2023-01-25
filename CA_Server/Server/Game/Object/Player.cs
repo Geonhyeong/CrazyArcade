@@ -14,5 +14,10 @@ namespace Server.Game
         {
             ObjectType = GameObjectType.Player;
         }
+
+        public override void OnAttacked(GameObject attacker)
+        {
+            System.Console.WriteLine($"{Id} : OnAttacked");
+        }
     }
 }

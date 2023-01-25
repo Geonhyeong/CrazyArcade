@@ -38,6 +38,28 @@ namespace Server.Game
             }
         }
 
+        public List<GameObject> FindAll(Vector2Int cellPos)
+        {
+            List<GameObject> list = new List<GameObject>();
+
+            foreach (Player player in _players.Values)
+            {
+                if (cellPos.x == player.CellPos.x && cellPos.y == player.CellPos.y)
+                    list.Add(player);
+            }
+
+            /*foreach (Item item in _items.Values)
+            {
+                if (cellPos.x == item.CellPos.x && cellPos.y == item.CellPos.y)
+                    list.Add(item);
+            }*/
+
+            if (list.Count == 0)
+                return null;
+
+            return list;
+        }
+
         public void EnterGame(GameObject gameObject)
         {
             if (gameObject == null)
@@ -52,6 +74,7 @@ namespace Server.Game
                     Player player = gameObject as Player;
                     _players.Add(gameObject.Id, player);
                     player.Room = this;
+                    Console.WriteLine($"{player.Id} : Player Spawn ({player.CellPos.x}, {player.CellPos.y})");
 
                     // 본인한테 정보 전송
                     {
@@ -78,6 +101,7 @@ namespace Server.Game
                     _blocks.Add(gameObject.Id, block);
                     block.Room = this;
                     Map.ApplyMove(block, block.CellPos);
+                    Console.WriteLine($"{block.Id} : Block Spawn ({block.CellPos.x}, {block.CellPos.y})");
                 }
                 else if (type == GameObjectType.Bubble)
                 {
@@ -85,12 +109,14 @@ namespace Server.Game
                     _bubbles.Add(gameObject.Id, bubble);
                     bubble.Room = this;
                     Map.ApplyMove(bubble, bubble.CellPos);
+                    Console.WriteLine($"{bubble.Id} : Bubble Spawn ({bubble.CellPos.x}, {bubble.CellPos.y})");
                 }
                 else if (type == GameObjectType.Wave)
                 {
                     Wave wave = gameObject as Wave;
                     _waves.Add(gameObject.Id, wave);
                     wave.Room = this;
+                    Console.WriteLine($"{wave.Id} : Wave Spawn ({wave.CellPos.x}, {wave.CellPos.y})");
                 }
 
                 // 타인한테 정보 전송
@@ -119,6 +145,7 @@ namespace Server.Game
                         return;
 
                     player.Room = null;
+                    Console.WriteLine($"{player.Id} : Player Despawn");
 
                     // 본인한테 정보 전송
                     {
@@ -134,6 +161,7 @@ namespace Server.Game
 
                     block.Room = null;
                     Map.ApplyLeave(block);
+                    Console.WriteLine($"{block.Id} : Block Despawn");
                 }
                 else if (type == GameObjectType.Bubble)
                 {
@@ -143,7 +171,8 @@ namespace Server.Game
 
                     bubble.Room = null;
                     Map.ApplyLeave(bubble);
-                        
+                    Console.WriteLine($"{bubble.Id} : Bubble Despawn");
+
                 }
                 else if (type == GameObjectType.Wave)
                 {
@@ -152,6 +181,7 @@ namespace Server.Game
                         return;
 
                     wave.Room = null;
+                    Console.WriteLine($"{wave.Id} : Wave Despawn");
                 }
 
                 // 타인한테 정보 전송
@@ -198,7 +228,10 @@ namespace Server.Game
                 }
 
                 // 서버에서 위치 이동
-                info.PosInfo = movePosInfo;
+                player.PosInfo.MoveDir = movePosInfo.MoveDir;
+                player.PosInfo.State = movePosInfo.State;
+                player.PosInfo.PosX = movePosInfo.PosX;
+                player.PosInfo.PosY = movePosInfo.PosY;
 
                 // 다른 플레이어한테도 알려준다
                 S_Move resMovePacket = new S_Move();

@@ -56,5 +56,10 @@ namespace Server.Game
 
             return cellPos;
         }
+
+        public virtual void OnAttacked(GameObject attacker)
+        {
+
+        }
     }
 }

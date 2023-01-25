@@ -30,6 +30,14 @@ namespace Server.Game
 
             RegisterPop();
 
+            // 플레이어 및 아이템 피격 판정
+            List<GameObject> gameObjects = Room.FindAll(CellPos);
+            if (gameObjects != null)
+            {
+                foreach (GameObject go in gameObjects)
+                    go.OnAttacked(this);
+            }
+
             // 소멸타임틱에 소멸
             if (_popTimeTick >= Environment.TickCount64)
                 return;
@@ -42,14 +50,16 @@ namespace Server.Game
             if (_isPop)
                 return;
 
+            _isPop = true;
+            _lifeTimeTick = Environment.TickCount64;
+            _popTimeTick = _lifeTimeTick + 500;
+
             PosInfo.State = CreatureState.Pop;
 
             S_Move movePacket = new S_Move();
             movePacket.ObjectId = Id;
             movePacket.PosInfo = PosInfo;
             Room.Broadcast(movePacket);
-
-            Console.WriteLine("Bubble Pop");
 
             // 웨이브 소환
             for (int waveDir = 0; waveDir < 4; waveDir++)
@@ -58,7 +68,15 @@ namespace Server.Game
                 {
                     Vector2Int wavePos = GetFrontCellPos((MoveDir)waveDir, i);
                     if (Room.Map.CanGo(wavePos, true) == false)
+                    {
+                        // Block 피격 판정
+                        GameObject go = Room.Map.Find(wavePos);
+                        if (go != null)
+                        {
+                            go.OnAttacked(this);
+                        }
                         break;
+                    }
 
                     Wave wave = ObjectManager.Instance.Add<Wave>();
                     if (wave == null)
@@ -72,9 +90,13 @@ namespace Server.Game
                     Room.EnterGame(wave);
                 }
             }
+        }
 
-            _isPop = true;
-            _popTimeTick = Environment.TickCount64 + 500;
+        public override void OnAttacked(GameObject attacker)
+        {
+            Console.WriteLine($"{Id} : Bubble Attacked");
+
+            RegisterPop();
         }
     }
 }
