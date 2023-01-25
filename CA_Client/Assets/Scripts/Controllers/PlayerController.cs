@@ -7,9 +7,9 @@ using static Define;
 public class PlayerController : CreatureController
 {
     [SerializeField]
-    protected float _speed = 5.0f;
-    protected int _power = 1;
-    protected int _maxBubble = 1;
+    public float _speed = 5.0f;
+    public int _power = 1;
+    public int _maxBubble = 1;
 
     protected Coroutine _coSkill;
     
@@ -118,7 +118,7 @@ public class PlayerController : CreatureController
     {
     }
 
-    public void UseSkill(SkillInfo info)
+    /*public void UseSkill(SkillInfo info)
     {
         //_coSkill = StartCoroutine("CoStartBubble");
         Debug.Log("Make Bubble!");
@@ -127,13 +127,13 @@ public class PlayerController : CreatureController
 
     private IEnumerator CoStartBubble()
     {
-        /*GameObject go = Managers.Resource.Instantiate("Inanimate/Bubble");
+        *//*GameObject go = Managers.Resource.Instantiate("Inanimate/Bubble");
         BubbleController bc = go.GetComponent<BubbleController>();
         bc.CellPos = CellPos;
         bc.Host = gameObject;
 
         yield return new WaitForSeconds(0.5f);
-        _coSkill = null;*/
+        _coSkill = null;*//*
         yield return new WaitForSeconds(0.5f);
-    }
+    }*/
 }

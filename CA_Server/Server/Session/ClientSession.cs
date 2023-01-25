@@ -41,7 +41,7 @@ namespace Server
                 MyPlayer.PosInfo.State = CreatureState.Idle;
                 MyPlayer.PosInfo.MoveDir = MoveDir.Down;
                 MyPlayer.PosInfo.PosX = 0;
-                MyPlayer.PosInfo.PosY = 0;
+                MyPlayer.PosInfo.PosY = -1;
                 MyPlayer.Session = this;
             }
 

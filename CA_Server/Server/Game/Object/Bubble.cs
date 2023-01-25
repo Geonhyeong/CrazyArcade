@@ -51,9 +51,30 @@ namespace Server.Game
 
             Console.WriteLine("Bubble Pop");
 
-            // TODO : 웨이브 소환
+            // 웨이브 소환
+            for (int waveDir = 0; waveDir < 4; waveDir++)
+            {
+                for (int i = 1; i <= Power; i++)
+                {
+                    Vector2Int wavePos = GetFrontCellPos((MoveDir)waveDir, i);
+                    if (Room.Map.CanGo(wavePos, true) == false)
+                        break;
+
+                    Wave wave = ObjectManager.Instance.Add<Wave>();
+                    if (wave == null)
+                        break;
+
+                    wave.Info.Name = $"Wave_{wave.Id}";
+                    wave.Info.PosInfo.MoveDir = (MoveDir)waveDir;
+                    wave.Info.PosInfo.PosX = wavePos.x;
+                    wave.Info.PosInfo.PosY = wavePos.y;
+                    wave.Info.IsEdge = (i == Power);
+                    Room.EnterGame(wave);
+                }
+            }
 
             _isPop = true;
+            _popTimeTick = Environment.TickCount64 + 500;
         }
     }
 }

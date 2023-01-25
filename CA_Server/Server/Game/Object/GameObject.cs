@@ -34,23 +34,23 @@ namespace Server.Game
             return GetFrontCellPos(PosInfo.MoveDir);
         }
 
-        public Vector2Int GetFrontCellPos(MoveDir dir)
+        public Vector2Int GetFrontCellPos(MoveDir dir, int distance = 1)
         {
             Vector2Int cellPos = CellPos;
 
             switch (dir)
             {
                 case MoveDir.Up:
-                    cellPos += Vector2Int.up;
+                    cellPos += Vector2Int.up * distance;
                     break;
                 case MoveDir.Down:
-                    cellPos += Vector2Int.down;
+                    cellPos += Vector2Int.down * distance;
                     break;
                 case MoveDir.Left:
-                    cellPos += Vector2Int.left;
+                    cellPos += Vector2Int.left * distance;
                     break;
                 case MoveDir.Right:
-                    cellPos += Vector2Int.right;
+                    cellPos += Vector2Int.right * distance;
                     break;
             }
 

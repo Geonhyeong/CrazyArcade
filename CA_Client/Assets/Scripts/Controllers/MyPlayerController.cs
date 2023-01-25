@@ -95,7 +95,7 @@ public class MyPlayerController : PlayerController
         if (Managers.Map.CanGo(destPos))
         {
             GameObject obstacle = Managers.Object.Find(destPos);
-            
+
             if (obstacle == null)
             {
                 CellPos = destPos;
@@ -108,6 +108,7 @@ public class MyPlayerController : PlayerController
                     CellPos = destPos;
                 }
             }
+            CellPos = destPos;
         }
         CheckUpdatedFlag();
     }

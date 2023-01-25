@@ -1,5 +1,6 @@
 ﻿using Google.Protobuf;
 using Google.Protobuf.Protocol;
+using System;
 using System.Collections.Generic;
 
 namespace Server.Game
@@ -13,6 +14,7 @@ namespace Server.Game
         private Dictionary<int, Player> _players = new Dictionary<int, Player>();
         private Dictionary<int, Block> _blocks = new Dictionary<int, Block>();
         private Dictionary<int, Bubble> _bubbles = new Dictionary<int, Bubble>();
+        private Dictionary<int, Wave> _waves = new Dictionary<int, Wave>();
 
         public void Init(int mapId)
         {
@@ -27,6 +29,11 @@ namespace Server.Game
                 foreach (Bubble bubble in _bubbles.Values)
                 {
                     bubble.Update();
+                }
+
+                foreach (Wave wave in _waves.Values)
+                {
+                    wave.Update();
                 }
             }
         }
@@ -70,12 +77,20 @@ namespace Server.Game
                     Block block = gameObject as Block;
                     _blocks.Add(gameObject.Id, block);
                     block.Room = this;
+                    Map.ApplyMove(block, block.CellPos);
                 }
                 else if (type == GameObjectType.Bubble)
                 {
                     Bubble bubble = gameObject as Bubble;
                     _bubbles.Add(gameObject.Id, bubble);
                     bubble.Room = this;
+                    Map.ApplyMove(bubble, bubble.CellPos);
+                }
+                else if (type == GameObjectType.Wave)
+                {
+                    Wave wave = gameObject as Wave;
+                    _waves.Add(gameObject.Id, wave);
+                    wave.Room = this;
                 }
 
                 // 타인한테 정보 전송
@@ -128,6 +143,15 @@ namespace Server.Game
 
                     bubble.Room = null;
                     Map.ApplyLeave(bubble);
+                        
+                }
+                else if (type == GameObjectType.Wave)
+                {
+                    Wave wave = null;
+                    if (_waves.Remove(objectId, out wave) == false)
+                        return;
+
+                    wave.Room = null;
                 }
 
                 // 타인한테 정보 전송
@@ -158,7 +182,19 @@ namespace Server.Game
                 if (movePosInfo.PosX != info.PosInfo.PosX || movePosInfo.PosY != info.PosInfo.PosY)
                 {
                     if (Map.CanGo(new Vector2Int(movePosInfo.PosX, movePosInfo.PosY)) == false)
+                    {
+                        // 다른 플레이어한테도 알려준다
+                        S_Move noMovePacket = new S_Move() { PosInfo = new PositionInfo() };
+                        noMovePacket.ObjectId = player.Info.ObjectId;
+                        noMovePacket.PosInfo.State = movePacket.PosInfo.State;
+                        noMovePacket.PosInfo.MoveDir = movePacket.PosInfo.MoveDir;
+                        noMovePacket.PosInfo.PosX = info.PosInfo.PosX;
+                        noMovePacket.PosInfo.PosY = info.PosInfo.PosY;
+                        
+                        Broadcast(noMovePacket);
+
                         return;
+                    }
                 }
 
                 // 서버에서 위치 이동
@@ -198,7 +234,9 @@ namespace Server.Game
                 bubble.Owner = player;
                 bubble.Power = skillPacket.Info.Power;
                 bubble.Info.Name = $"Bubble_{bubble.Id}";
-                bubble.Info.PosInfo = skillPacket.Info.PosInfo;
+                bubble.PosInfo.State = skillPacket.Info.PosInfo.State;
+                bubble.PosInfo.PosX = skillPacket.Info.PosInfo.PosX;
+                bubble.PosInfo.PosY = skillPacket.Info.PosInfo.PosY;
                 EnterGame(bubble);
             }
         }

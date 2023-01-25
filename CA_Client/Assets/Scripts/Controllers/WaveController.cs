@@ -1,55 +1,41 @@
+using Google.Protobuf.Protocol;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static Define;
 
-public class WaveController : MonoBehaviour
+public class WaveController : CreatureController
 {
-    /*public Vector3Int CellPos { get; set; } = Vector3Int.zero;
-    public GameObject Host { get; set; }
-    public int power = 0;
-    Animator _animator;
+    public bool IsEdge { get; set; } = false;
 
-    WaveDir _dir = WaveDir.None;
-    public WaveDir Dir
+    protected override void Init()
     {
-        get { return _dir; }
-        set
-        {
-            if (_dir == value)
-                return;
-
-            _dir = value;
-        }
+        base.Init();
+        Type = GameObjectType.Wave;
     }
 
-    void Start()
+    protected override void UpdateAnimation()
     {
-        _animator = GetComponent<Animator>();
-        Vector3 pos = Managers.Map.CurrentGrid.CellToWorld(CellPos) + new Vector3(0.26f, 0.26f);
-        transform.position = pos;
-        UpdateAnimation();
+        if (_animator == null)
+            return;
 
-        GameObject.Destroy(gameObject, 0.5f);
-
-    }
-
-    void UpdateAnimation()
-    {
-        switch(_dir)
+        switch (Dir)
         {
-            case WaveDir.Up:
-                _animator.Play(power == 1 ? "UP_EDGE" : "UP");
+            case MoveDir.Up:
+                _animator.Play(IsEdge ? "UP_EDGE" : "UP");
                 break;
-            case WaveDir.Down:
-                _animator.Play(power == 1 ? "DOWN_EDGE" : "DOWN");
+
+            case MoveDir.Down:
+                _animator.Play(IsEdge ? "DOWN_EDGE" : "DOWN");
                 break;
-            case WaveDir.Left:
-                _animator.Play(power == 1 ? "LEFT_EDGE" : "LEFT");
+
+            case MoveDir.Left:
+                _animator.Play(IsEdge ? "LEFT_EDGE" : "LEFT");
                 break;
-            case WaveDir.Right:
-                _animator.Play(power == 1 ? "RIGHT_EDGE" : "RIGHT");
+
+            case MoveDir.Right:
+                _animator.Play(IsEdge ? "RIGHT_EDGE" : "RIGHT");
                 break;
         }
-    }*/
+    }
 }

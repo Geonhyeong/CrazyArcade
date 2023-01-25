@@ -22,6 +22,11 @@ namespace Server.Game
         {
             return new Vector2Int(a.x + b.x, a.y + b.y);
         }
+
+        public static Vector2Int operator*(Vector2Int a, int b)
+        {
+            return new Vector2Int(a.x * b, a.y * b);
+        }
     }
 
     public class Map
@@ -143,7 +148,6 @@ namespace Server.Game
                         block.PosInfo.PosX = x + MinX;
                         block.PosInfo.PosY = MaxY - y;
                     }
-                    _objects[y, x] = block;
                     RoomManager.Instance.Find(_roomId).EnterGame(block);
                 }
             }

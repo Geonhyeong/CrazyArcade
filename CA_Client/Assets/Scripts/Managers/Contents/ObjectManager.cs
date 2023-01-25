@@ -66,6 +66,18 @@ public class ObjectManager
             bc.PosInfo = info.PosInfo;
             bc.SyncPos();
         }
+        else if (objectType == GameObjectType.Wave)
+        {
+            GameObject go = Managers.Resource.Instantiate("Creature/Wave");
+            go.name = info.Name;
+            _objects.Add(info.ObjectId, go);
+
+            WaveController wc = go.GetComponent<WaveController>();
+            wc.Id = info.ObjectId;
+            wc.PosInfo = info.PosInfo;
+            wc.IsEdge = info.IsEdge;
+            wc.SyncPos();
+        }
     }
 
     public void Remove(int id)
