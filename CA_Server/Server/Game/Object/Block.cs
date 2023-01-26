@@ -27,9 +27,36 @@ namespace Server.Game
             // 0.5초 후 소멸
             Timer t = new Timer();
             t.Interval = 500;
-            t.Elapsed += (s, e) => Room.LeaveGame(Id);
+            t.Elapsed += OnPopEvent;
             t.AutoReset = false;
             t.Enabled = true;
+        }
+
+        private void OnPopEvent(object s, ElapsedEventArgs e)
+        {
+            DropItem();
+
+            Room.LeaveGame(Id);
+        }
+
+        private void DropItem()
+        {
+            // item 생성 (일단 랜덤으로)
+            Random rand = new Random();
+            int randInt = rand.Next(0, 8); // 꽝 : 50%
+            if (randInt % 2 != 0)  // 꽝
+                return;
+
+            Item item = ObjectManager.Instance.Add<Item>();
+            if (item == null)
+                return;
+
+            item.ItemType = randInt / 2 + 1;
+            item.Info.Name = $"Item_{item.ItemType}";
+            item.PosInfo.State = CreatureState.Idle;
+            item.PosInfo.PosX = PosInfo.PosX;
+            item.PosInfo.PosY = PosInfo.PosY;
+            Room.EnterGame(item);
         }
     }
 }

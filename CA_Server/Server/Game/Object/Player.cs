@@ -5,9 +5,9 @@ namespace Server.Game
 {
     public class Player : GameObject
     {
-        private int _speedLvl = 1;
-        private int _power = 1;
-        private int _maxBubble = 1;
+        public int SpeedLvl { get; set; } = 1;
+        public int Power { get; set; } = 1;
+        public int MaxBubble { get; set; } = 1;
 
         public ClientSession Session { get; set; }
 
@@ -56,6 +56,34 @@ namespace Server.Game
             deadPacket.PosInfo = PosInfo;
 
             Room.Broadcast(deadPacket);
+        }
+
+        public void GetItem(Item item)
+        {
+            if (item == null)
+                return;
+
+            System.Console.WriteLine($"Player_{Id} get Item_{item.Id}, {item.ItemType}");
+            switch(item.ItemType)
+            {
+                case 1: // ballon
+                    if (MaxBubble < 5 && MaxBubble > 0)
+                        MaxBubble++;
+                    break;
+                case 2: // potion
+                    if (Power < 10 && Power > 0)
+                        Power++;
+                    break;
+                case 3: // potion_make_power_max
+                    Power = 10;
+                    break;
+                case 4: // skate
+                    if (SpeedLvl < 5 && SpeedLvl > 0)
+                        SpeedLvl++;
+                    break;
+            }
+
+            // TODO : 능력 변화 패킷 전송
         }
     }
 }

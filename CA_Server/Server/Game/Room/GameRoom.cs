@@ -15,6 +15,7 @@ namespace Server.Game
         private Dictionary<int, Block> _blocks = new Dictionary<int, Block>();
         private Dictionary<int, Bubble> _bubbles = new Dictionary<int, Bubble>();
         private Dictionary<int, Wave> _waves = new Dictionary<int, Wave>();
+        private Dictionary<int, Item> _items = new Dictionary<int, Item>();
 
         public void Init(int mapId)
         {
@@ -48,11 +49,11 @@ namespace Server.Game
                     list.Add(player);
             }
 
-            /*foreach (Item item in _items.Values)
+            foreach (Item item in _items.Values)
             {
                 if (cellPos.x == item.CellPos.x && cellPos.y == item.CellPos.y)
                     list.Add(item);
-            }*/
+            }
 
             if (list.Count == 0)
                 return null;
@@ -92,6 +93,18 @@ namespace Server.Game
                         {
                             spawnPacket.Objects.Add(block.Info);
                         }
+                        foreach (Bubble bubble in _bubbles.Values)
+                        {
+                            spawnPacket.Objects.Add(bubble.Info);
+                        }
+                        foreach (Wave wave in _waves.Values)
+                        {
+                            spawnPacket.Objects.Add(wave.Info);
+                        }
+                        foreach (Item item in _items.Values)
+                        {
+                            spawnPacket.Objects.Add(item.Info);
+                        }
                         player.Session.Send(spawnPacket);
                     }
                 }
@@ -117,6 +130,13 @@ namespace Server.Game
                     _waves.Add(gameObject.Id, wave);
                     wave.Room = this;
                     Console.WriteLine($"{wave.Id} : Wave Spawn ({wave.CellPos.x}, {wave.CellPos.y})");
+                }
+                else if (type == GameObjectType.Item)
+                {
+                    Item item = gameObject as Item;
+                    _items.Add(gameObject.Id, item);
+                    item.Room = this;
+                    Console.WriteLine($"{item.Id} : Item Spawn ({item.CellPos.x}, {item.CellPos.y})");
                 }
 
                 // 타인한테 정보 전송
@@ -182,6 +202,15 @@ namespace Server.Game
 
                     wave.Room = null;
                     Console.WriteLine($"{wave.Id} : Wave Despawn");
+                }
+                else if (type == GameObjectType.Item)
+                {
+                    Item item = null;
+                    if (_items.Remove(objectId, out item) == false)
+                        return;
+
+                    item.Room = null;
+                    Console.WriteLine($"{item.Id} : Item Despawn");
                 }
 
                 // 타인한테 정보 전송
@@ -250,15 +279,18 @@ namespace Server.Game
                         {
                             if (go.ObjectType == GameObjectType.Player)
                             {
-                                // 만약 그 위치에 Trap 상태의 플레이어가 있으면 즉사시킨다
+                                // 만약 그 위치에 Trap 상태의 다른 플레이어가 있으면 즉사시킨다
                                 Player p = go as Player;
                                 if (p.Id != player.Id && p.Info.PosInfo.State == CreatureState.Trap)
                                     p.OnDead();
                             }
-                            /*else if (go.ObjectType == GameObjectType.Item)
+                            else if (go.ObjectType == GameObjectType.Item)
                             {
-
-                            }*/
+                                // 아이템이 있으면 획득하고 아이템 삭제
+                                Item item = go as Item;
+                                player.GetItem(item);
+                                LeaveGame(item.Id);
+                            }
                         }
                     }
                 }
@@ -287,7 +319,7 @@ namespace Server.Game
                     return;
 
                 bubble.Owner = player;
-                bubble.Power = skillPacket.Info.Power;
+                bubble.Power = player.Power;
                 bubble.Info.Name = $"Bubble_{bubble.Id}";
                 bubble.PosInfo.State = skillPacket.Info.PosInfo.State;
                 bubble.PosInfo.PosX = skillPacket.Info.PosInfo.PosX;

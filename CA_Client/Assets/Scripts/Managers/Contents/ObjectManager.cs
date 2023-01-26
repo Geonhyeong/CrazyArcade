@@ -78,6 +78,17 @@ public class ObjectManager
             wc.IsEdge = info.IsEdge;
             wc.SyncPos();
         }
+        else if (objectType == GameObjectType.Item)
+        {
+            GameObject go = Managers.Resource.Instantiate($"Creature/{info.Name}");
+            go.name = $"Item_{info.ObjectId}";
+            _objects.Add(info.ObjectId, go);
+
+            ItemController ic = go.GetComponent<ItemController>();
+            ic.Id = info.ObjectId;
+            ic.PosInfo = info.PosInfo;
+            ic.SyncPos();
+        }
     }
 
     public void Remove(int id)

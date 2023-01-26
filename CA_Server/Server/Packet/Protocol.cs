@@ -44,9 +44,10 @@ namespace Google.Protobuf.Protocol {
             "ThADEgoKBkNfTU9WRRAEEgoKBlNfTU9WRRAFEgsKB0NfU0tJTEwQBipCCg1D",
             "cmVhdHVyZVN0YXRlEggKBElETEUQABIKCgZNT1ZJTkcQARIICgRERUFEEAIS",
             "BwoDUE9QEAMSCAoEVFJBUBAEKjAKB01vdmVEaXISBgoCVVAQABIICgRET1dO",
-            "EAESCAoETEVGVBACEgkKBVJJR0hUEAMqRwoOR2FtZU9iamVjdFR5cGUSCAoE",
+            "EAESCAoETEVGVBACEgkKBVJJR0hUEAMqUQoOR2FtZU9iamVjdFR5cGUSCAoE",
             "Tk9ORRAAEgoKBlBMQVlFUhABEgkKBUJMT0NLEAISCgoGQlVCQkxFEAMSCAoE",
-            "V0FWRRAEQhuqAhhHb29nbGUuUHJvdG9idWYuUHJvdG9jb2xiBnByb3RvMw=="));
+            "V0FWRRAEEggKBElURU0QBUIbqgIYR29vZ2xlLlByb3RvYnVmLlByb3RvY29s",
+            "YgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Google.Protobuf.Protocol.MsgId), typeof(global::Google.Protobuf.Protocol.CreatureState), typeof(global::Google.Protobuf.Protocol.MoveDir), typeof(global::Google.Protobuf.Protocol.GameObjectType), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -98,6 +99,7 @@ namespace Google.Protobuf.Protocol {
     [pbr::OriginalName("BLOCK")] Block = 2,
     [pbr::OriginalName("BUBBLE")] Bubble = 3,
     [pbr::OriginalName("WAVE")] Wave = 4,
+    [pbr::OriginalName("ITEM")] Item = 5,
   }
 
   #endregion
