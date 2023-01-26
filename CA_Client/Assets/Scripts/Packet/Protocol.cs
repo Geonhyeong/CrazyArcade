@@ -41,12 +41,12 @@ namespace Google.Protobuf.Protocol {
             "cG9zSW5mbxgCIAEoCzIWLlByb3RvY29sLlBvc2l0aW9uSW5mbyIaCghJdGVt",
             "SW5mbxIOCgZpdGVtSWQYASABKAUqbAoFTXNnSWQSEAoMU19FTlRFUl9HQU1F",
             "EAASEAoMU19MRUFWRV9HQU1FEAESCwoHU19TUEFXThACEg0KCVNfREVTUEFX",
-            "ThADEgoKBkNfTU9WRRAEEgoKBlNfTU9WRRAFEgsKB0NfU0tJTEwQBio4Cg1D",
+            "ThADEgoKBkNfTU9WRRAEEgoKBlNfTU9WRRAFEgsKB0NfU0tJTEwQBipCCg1D",
             "cmVhdHVyZVN0YXRlEggKBElETEUQABIKCgZNT1ZJTkcQARIICgRERUFEEAIS",
-            "BwoDUE9QEAMqMAoHTW92ZURpchIGCgJVUBAAEggKBERPV04QARIICgRMRUZU",
-            "EAISCQoFUklHSFQQAypHCg5HYW1lT2JqZWN0VHlwZRIICgROT05FEAASCgoG",
-            "UExBWUVSEAESCQoFQkxPQ0sQAhIKCgZCVUJCTEUQAxIICgRXQVZFEARCG6oC",
-            "GEdvb2dsZS5Qcm90b2J1Zi5Qcm90b2NvbGIGcHJvdG8z"));
+            "BwoDUE9QEAMSCAoEVFJBUBAEKjAKB01vdmVEaXISBgoCVVAQABIICgRET1dO",
+            "EAESCAoETEVGVBACEgkKBVJJR0hUEAMqRwoOR2FtZU9iamVjdFR5cGUSCAoE",
+            "Tk9ORRAAEgoKBlBMQVlFUhABEgkKBUJMT0NLEAISCgoGQlVCQkxFEAMSCAoE",
+            "V0FWRRAEQhuqAhhHb29nbGUuUHJvdG9idWYuUHJvdG9jb2xiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Google.Protobuf.Protocol.MsgId), typeof(global::Google.Protobuf.Protocol.CreatureState), typeof(global::Google.Protobuf.Protocol.MoveDir), typeof(global::Google.Protobuf.Protocol.GameObjectType), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -82,6 +82,7 @@ namespace Google.Protobuf.Protocol {
     [pbr::OriginalName("MOVING")] Moving = 1,
     [pbr::OriginalName("DEAD")] Dead = 2,
     [pbr::OriginalName("POP")] Pop = 3,
+    [pbr::OriginalName("TRAP")] Trap = 4,
   }
 
   public enum MoveDir {

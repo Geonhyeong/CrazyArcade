@@ -240,6 +240,28 @@ namespace Server.Game
                 //Console.WriteLine($"S_Move ({resMovePacket.PosInfo.PosX}, {resMovePacket.PosInfo.PosY})");
 
                 Broadcast(resMovePacket);
+
+                if (player.Info.PosInfo.State == CreatureState.Idle || player.Info.PosInfo.State == CreatureState.Moving)
+                {
+                    List<GameObject> gameObjects = FindAll(player.CellPos);
+                    if (gameObjects != null)
+                    {
+                        foreach (GameObject go in gameObjects)
+                        {
+                            if (go.ObjectType == GameObjectType.Player)
+                            {
+                                // 만약 그 위치에 Trap 상태의 플레이어가 있으면 즉사시킨다
+                                Player p = go as Player;
+                                if (p.Id != player.Id && p.Info.PosInfo.State == CreatureState.Trap)
+                                    p.OnDead();
+                            }
+                            /*else if (go.ObjectType == GameObjectType.Item)
+                            {
+
+                            }*/
+                        }
+                    }
+                }
             }
         }
 

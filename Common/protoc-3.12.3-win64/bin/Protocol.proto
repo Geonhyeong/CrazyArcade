@@ -19,6 +19,7 @@ enum CreatureState {
     MOVING = 1;
     DEAD = 2;
     POP = 3;
+    TRAP = 4;
 }
 
 enum MoveDir {

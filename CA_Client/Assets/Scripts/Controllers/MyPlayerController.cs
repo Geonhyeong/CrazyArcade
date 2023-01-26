@@ -26,6 +26,9 @@ public class MyPlayerController : PlayerController
                 break;
             case CreatureState.Dead:
                 break;
+            case CreatureState.Trap:
+                GetDirInput();
+                break;
         }
         base.UpdateController();
     }
@@ -69,7 +72,8 @@ public class MyPlayerController : PlayerController
     {
         if (_moveKeyPressed == false)
         {
-            State = CreatureState.Idle;
+            if (State == CreatureState.Moving)
+                State = CreatureState.Idle;
             CheckUpdatedFlag();
             return;
         }

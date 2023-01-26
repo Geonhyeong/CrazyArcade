@@ -68,6 +68,11 @@ public class PlayerController : CreatureController
         }
         else if (State == CreatureState.Dead)
         {
+            _animator.Play("DIE");
+        }
+        else if (State == CreatureState.Trap)
+        {
+            _animator.Play("TRAP");
         }
     }
 
@@ -83,6 +88,9 @@ public class PlayerController : CreatureController
                 break;
             case CreatureState.Dead:
                 UpdateDead();
+                break;
+            case CreatureState.Trap:
+                UpdateTrap();
                 break;
         }
     }
@@ -112,6 +120,25 @@ public class PlayerController : CreatureController
     
     protected virtual void UpdateDead()
     {
+    }
+
+    protected virtual void UpdateTrap()
+    {
+        _speed = 0.5f;
+        Vector3 destPos = Managers.Map.CurrentGrid.CellToWorld(CellPos) + new Vector3(0.26f, 0.26f, Managers.Map.GetZ(CellPos));
+        Vector3 moveDir = destPos - transform.position;
+
+        // 도착 여부 체크
+        float dist = moveDir.magnitude;
+        if (dist < _speed * Time.deltaTime)
+        {
+            transform.position = destPos;
+            SetNextPos();
+        }
+        else
+        {
+            transform.position += moveDir.normalized * _speed * Time.deltaTime;
+        }
     }
 
     protected virtual void SetNextPos()
