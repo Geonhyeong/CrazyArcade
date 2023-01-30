@@ -1,4 +1,5 @@
-﻿using Server.Game;
+﻿using Server.Data;
+using Server.Game;
 using ServerCore;
 using System;
 using System.Net;
@@ -17,6 +18,9 @@ namespace Server
 
         private static void Main(string[] args)
         {
+            ConfigManager.LoadConfig();
+            DataManager.LoadData();
+
             RoomManager.Instance.Add(1);
 
             // DNS (Domain Name System)

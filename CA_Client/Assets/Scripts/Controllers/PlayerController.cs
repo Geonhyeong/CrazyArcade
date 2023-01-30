@@ -9,7 +9,7 @@ public class PlayerController : CreatureController
     [SerializeField]
     public float Speed { get; set; } = 1.0f;
     public int Power { get; set; } = 1;
-    public int MaxBubble { get; set; } = 1;
+    public int AvailBubble { get; set; } = 1;
 
     protected Coroutine _coSkill;
     

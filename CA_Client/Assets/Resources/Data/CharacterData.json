@@ -1,0 +1,11 @@
+{
+  "characters": [
+    {
+      "id": "1",
+      "name": "bazzi",
+      "maxSpeedLvl": "7",
+      "maxPower": "5",
+      "maxBubble": "7"
+    }
+  ]
+}

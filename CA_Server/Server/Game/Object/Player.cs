@@ -5,12 +5,13 @@ namespace Server.Game
 {
     public class Player : GameObject
     {
+        public ClientSession Session { get; set; }
+        public Data.Character Data { get; set; }
+
         public int SpeedLvl { get; set; } = 1;
         public int Power { get; set; } = 1;
-        public int MaxBubble { get; set; } = 1;
+        public int AvailBubble { get; set; } = 1;
         public int BubbleCount { get; set; } = 0;
-
-        public ClientSession Session { get; set; }
 
         public Player()
         {
@@ -68,18 +69,18 @@ namespace Server.Game
             switch(item.ItemType)
             {
                 case 1: // ballon
-                    if (MaxBubble < 7 && MaxBubble > 0)
-                        MaxBubble++;
+                    if (AvailBubble < Data.maxBubble)
+                        AvailBubble++;
                     break;
                 case 2: // potion
-                    if (Power < 5 && Power > 0)
+                    if (Power < Data.maxPower)
                         Power++;
                     break;
                 case 3: // potion_make_power_max
-                    Power = 5;
+                    Power = Data.maxPower;
                     break;
                 case 4: // skate
-                    if (SpeedLvl < 7 && SpeedLvl > 0)
+                    if (SpeedLvl < Data.maxSpeedLvl)
                         SpeedLvl++;
                     break;
             }
@@ -88,7 +89,7 @@ namespace Server.Game
             abilityPacket.PlayerId = Id;
             abilityPacket.Speed = SpeedLvl * 0.8f;
             abilityPacket.Power = Power;
-            abilityPacket.MaxBubble = MaxBubble;
+            abilityPacket.AvailBubble = AvailBubble;
 
             Room.Broadcast(abilityPacket);
         }

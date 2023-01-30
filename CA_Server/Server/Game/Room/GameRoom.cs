@@ -256,7 +256,7 @@ namespace Server.Game
                         noMovePacket.PosInfo.MoveDir = movePacket.PosInfo.MoveDir;
                         noMovePacket.PosInfo.PosX = info.PosInfo.PosX;
                         noMovePacket.PosInfo.PosY = info.PosInfo.PosY;
-                        
+
                         Broadcast(noMovePacket);
 
                         return;
@@ -317,9 +317,9 @@ namespace Server.Game
                 Vector2Int skillPos = new Vector2Int(skillPacket.Info.PosInfo.PosX, skillPacket.Info.PosInfo.PosY);
                 if (Map.CanGo(skillPos) == false)
                     return;
-                if (skillPacket.Info.Power > 5 || skillPacket.Info.Power < 1)
+                if (skillPacket.Info.Power > player.Data.maxPower || skillPacket.Info.Power < 1)
                     return;
-                if (player.BubbleCount >= player.MaxBubble)
+                if (player.BubbleCount >= player.AvailBubble)
                     return;
 
                 // 버블 생성

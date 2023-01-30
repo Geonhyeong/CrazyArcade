@@ -67,6 +67,6 @@ internal class PacketHandler
 
         pc.Speed = abilityPacket.Speed;
         pc.Power = abilityPacket.Power;
-        pc.MaxBubble = abilityPacket.MaxBubble;
+        pc.AvailBubble = abilityPacket.AvailBubble;
     }
 }

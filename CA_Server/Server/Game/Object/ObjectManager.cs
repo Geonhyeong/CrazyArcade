@@ -9,7 +9,7 @@ namespace Server.Game
 
         private object _lock = new object();
         private Dictionary<int, Player> _players = new Dictionary<int, Player>();
-        
+
         // [UNUSED(1)][TYPE(7)][ID(24)]
         private int _counter = 1;
 
@@ -23,7 +23,7 @@ namespace Server.Game
         {
             T gameObject = new T();
 
-            lock(_lock)
+            lock (_lock)
             {
                 gameObject.Id = GenerateId(gameObject.ObjectType);
 
@@ -39,7 +39,7 @@ namespace Server.Game
         public bool Remove(int objectId)
         {
             GameObjectType objectType = GetObjectTypeById(objectId);
-            
+
             lock (_lock)
             {
                 if (objectType == GameObjectType.Player)

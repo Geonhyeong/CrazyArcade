@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Text;
 
-namespace Data
+namespace Server.Data
 {
     #region Character
     [Serializable]

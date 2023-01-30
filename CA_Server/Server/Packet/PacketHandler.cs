@@ -4,8 +4,6 @@ using Server;
 using Server.Game;
 using ServerCore;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 internal class PacketHandler
 {
@@ -27,7 +25,7 @@ internal class PacketHandler
         room.HandleMove(player, movePacket);
     }
 
-    public static void C_SkillHandler(PacketSession session ,IMessage packet)
+    public static void C_SkillHandler(PacketSession session, IMessage packet)
     {
         C_Skill skillPacket = packet as C_Skill;
         ClientSession clientSession = session as ClientSession;

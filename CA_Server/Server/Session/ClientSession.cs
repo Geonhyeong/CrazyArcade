@@ -9,6 +9,7 @@ using System.Net;
 using Google.Protobuf.Protocol;
 using Google.Protobuf;
 using Server.Game;
+using Server.Data;
 
 namespace Server
 {
@@ -43,6 +44,12 @@ namespace Server
                 MyPlayer.PosInfo.PosX = 0;
                 MyPlayer.PosInfo.PosY = -1;
                 MyPlayer.Session = this;
+
+                // 지금은 배찌밖에 없기 때문에 무조건 배찌로 지정
+                Data.Character characterData = null;
+                if (DataManager.CharacterDict.TryGetValue(1, out characterData) == false)
+                    return;
+                MyPlayer.Data = characterData;
             }
 
             RoomManager.Instance.Find(1).EnterGame(MyPlayer);

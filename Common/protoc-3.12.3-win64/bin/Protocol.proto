@@ -71,7 +71,7 @@ message S_Ability {
     int32 playerId = 1;
     float speed = 2;
     int32 power = 3;
-    int32 maxBubble = 4;
+    int32 availBubble = 4;
 }
 
 message ObjectInfo {
