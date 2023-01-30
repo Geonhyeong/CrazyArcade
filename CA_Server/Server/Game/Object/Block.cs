@@ -41,17 +41,26 @@ namespace Server.Game
 
         private void DropItem()
         {
-            // item 생성 (일단 랜덤으로)
+            // TODO : item 생성 (일단 랜덤으로)
             Random rand = new Random();
-            int randInt = rand.Next(0, 8); // 꽝 : 50%
-            if (randInt % 2 != 0)  // 꽝
+            int randInt = rand.Next(0, 100);
+            int itemType = 0;
+            if (randInt < 40)
                 return;
+            else if (randInt < 60)
+                itemType = 1;
+            else if (randInt < 75)
+                itemType = 2;
+            else if (randInt < 80)
+                itemType = 3;
+            else
+                itemType = 4;
 
             Item item = ObjectManager.Instance.Add<Item>();
             if (item == null)
                 return;
 
-            item.ItemType = randInt / 2 + 1;
+            item.ItemType = itemType;
             item.Info.Name = $"Item_{item.ItemType}";
             item.PosInfo.State = CreatureState.Idle;
             item.PosInfo.PosX = PosInfo.PosX;

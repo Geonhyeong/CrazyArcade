@@ -12,6 +12,7 @@ enum MsgId {
   C_MOVE = 4;
   S_MOVE = 5;
   C_SKILL = 6;
+  S_ABILITY = 7;
 }
 
 enum CreatureState {
@@ -64,6 +65,13 @@ message S_Move {
 
 message C_Skill {
     SkillInfo info = 1;
+}
+
+message S_Ability {
+    int32 playerId = 1;
+    float speed = 2;
+    int32 power = 3;
+    int32 maxBubble = 4;
 }
 
 message ObjectInfo {

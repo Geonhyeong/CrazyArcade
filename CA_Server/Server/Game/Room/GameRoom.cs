@@ -123,6 +123,10 @@ namespace Server.Game
                     bubble.Room = this;
                     Map.ApplyMove(bubble, bubble.CellPos);
                     Console.WriteLine($"{bubble.Id} : Bubble Spawn ({bubble.CellPos.x}, {bubble.CellPos.y})");
+
+                    // 플레이어의 현재 물풍선 갯수 증가
+                    Player owner = bubble.Owner as Player;
+                    owner.BubbleCount++;
                 }
                 else if (type == GameObjectType.Wave)
                 {
@@ -193,6 +197,9 @@ namespace Server.Game
                     Map.ApplyLeave(bubble);
                     Console.WriteLine($"{bubble.Id} : Bubble Despawn");
 
+                    // 플레이어의 현재 물풍선 갯수 감소
+                    Player owner = bubble.Owner as Player;
+                    owner.BubbleCount--;
                 }
                 else if (type == GameObjectType.Wave)
                 {
@@ -310,7 +317,9 @@ namespace Server.Game
                 Vector2Int skillPos = new Vector2Int(skillPacket.Info.PosInfo.PosX, skillPacket.Info.PosInfo.PosY);
                 if (Map.CanGo(skillPos) == false)
                     return;
-                if (skillPacket.Info.Power > 10 || skillPacket.Info.Power < 1)
+                if (skillPacket.Info.Power > 5 || skillPacket.Info.Power < 1)
+                    return;
+                if (player.BubbleCount >= player.MaxBubble)
                     return;
 
                 // 버블 생성

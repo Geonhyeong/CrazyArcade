@@ -8,6 +8,7 @@ namespace Server.Game
         public int SpeedLvl { get; set; } = 1;
         public int Power { get; set; } = 1;
         public int MaxBubble { get; set; } = 1;
+        public int BubbleCount { get; set; } = 0;
 
         public ClientSession Session { get; set; }
 
@@ -67,23 +68,29 @@ namespace Server.Game
             switch(item.ItemType)
             {
                 case 1: // ballon
-                    if (MaxBubble < 5 && MaxBubble > 0)
+                    if (MaxBubble < 7 && MaxBubble > 0)
                         MaxBubble++;
                     break;
                 case 2: // potion
-                    if (Power < 10 && Power > 0)
+                    if (Power < 5 && Power > 0)
                         Power++;
                     break;
                 case 3: // potion_make_power_max
-                    Power = 10;
+                    Power = 5;
                     break;
                 case 4: // skate
-                    if (SpeedLvl < 5 && SpeedLvl > 0)
+                    if (SpeedLvl < 7 && SpeedLvl > 0)
                         SpeedLvl++;
                     break;
             }
 
-            // TODO : 능력 변화 패킷 전송
+            S_Ability abilityPacket = new S_Ability();
+            abilityPacket.PlayerId = Id;
+            abilityPacket.Speed = SpeedLvl * 0.8f;
+            abilityPacket.Power = Power;
+            abilityPacket.MaxBubble = MaxBubble;
+
+            Room.Broadcast(abilityPacket);
         }
     }
 }

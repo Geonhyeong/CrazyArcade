@@ -133,7 +133,7 @@ public class MyPlayerController : PlayerController
         if (_coSkillCooltime == null && Input.GetKeyDown(KeyCode.Space))
         {
             C_Skill skill = new C_Skill() { Info = new SkillInfo() { PosInfo = new PositionInfo() } };
-            skill.Info.Power = _power;
+            skill.Info.Power = Power;
             skill.Info.PosInfo.State = CreatureState.Idle;
             skill.Info.PosInfo.PosX = PosInfo.PosX;
             skill.Info.PosInfo.PosY = PosInfo.PosY;

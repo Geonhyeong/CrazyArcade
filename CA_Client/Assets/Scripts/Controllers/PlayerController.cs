@@ -7,9 +7,9 @@ using static Define;
 public class PlayerController : CreatureController
 {
     [SerializeField]
-    public float _speed = 5.0f;
-    public int _power = 1;
-    public int _maxBubble = 1;
+    public float Speed { get; set; } = 1.0f;
+    public int Power { get; set; } = 1;
+    public int MaxBubble { get; set; } = 1;
 
     protected Coroutine _coSkill;
     
@@ -106,14 +106,14 @@ public class PlayerController : CreatureController
 
         // 도착 여부 체크
         float dist = moveDir.magnitude;
-        if (dist < _speed * Time.deltaTime)
+        if (dist < Time.deltaTime * Speed)
         {
             transform.position = destPos;
             SetNextPos();
         }
         else
         {
-            transform.position += moveDir.normalized * _speed * Time.deltaTime;
+            transform.position += moveDir.normalized * Time.deltaTime * Speed;
             State = CreatureState.Moving;
         }
     }
@@ -124,20 +124,19 @@ public class PlayerController : CreatureController
 
     protected virtual void UpdateTrap()
     {
-        _speed = 0.5f;
         Vector3 destPos = Managers.Map.CurrentGrid.CellToWorld(CellPos) + new Vector3(0.26f, 0.26f, Managers.Map.GetZ(CellPos));
         Vector3 moveDir = destPos - transform.position;
 
         // 도착 여부 체크
         float dist = moveDir.magnitude;
-        if (dist < _speed * Time.deltaTime)
+        if (dist < Time.deltaTime * 0.5f)
         {
             transform.position = destPos;
             SetNextPos();
         }
         else
         {
-            transform.position += moveDir.normalized * _speed * Time.deltaTime;
+            transform.position += moveDir.normalized * Time.deltaTime * 0.5f;
         }
     }
 

@@ -53,4 +53,20 @@ internal class PacketHandler
         cc.PosInfo = movePacket.PosInfo;
     }
 
+    public static void S_AbilityHandler(PacketSession session, IMessage packet)
+    {
+        S_Ability abilityPacket = packet as S_Ability;
+
+        GameObject go = Managers.Object.FindById(abilityPacket.PlayerId);
+        if (go == null)
+            return;
+
+        PlayerController pc = go.GetComponent<PlayerController>();
+        if (pc == null)
+            return;
+
+        pc.Speed = abilityPacket.Speed;
+        pc.Power = abilityPacket.Power;
+        pc.MaxBubble = abilityPacket.MaxBubble;
+    }
 }
