@@ -59,6 +59,7 @@ public class MapManager
             }
         }
 
+        // TODO : 게임오브젝트로 생성하지 않아도 정렬되도록 하기... 련준이 방식으로
         LoadObjects();
 
         GameObject tmObject = Util.FindChild(go, "Tilemap_Object", true);

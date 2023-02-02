@@ -20,7 +20,7 @@ namespace Server.Game
                 _rooms.Add(_roomId, gameRoom);
                 _roomId++;
             }
-            gameRoom.Init(mapId);
+            gameRoom.Push(gameRoom.Init, mapId);
 
             return gameRoom;
         }

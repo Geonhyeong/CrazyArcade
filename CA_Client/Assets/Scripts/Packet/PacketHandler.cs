@@ -46,6 +46,10 @@ internal class PacketHandler
         if (go == null)
             return;
 
+        // 서버에서 응답 패킷이 늦게와서 클라에서는 이미 이동했는데 다시 뒤로 가야하는 소위 가위 눌리는 현상 방지
+        if (Managers.Object.MyPlayer.Id == movePacket.ObjectId)
+            return;
+
         CreatureController cc = go.GetComponent<CreatureController>();
         if (cc == null)
             return;

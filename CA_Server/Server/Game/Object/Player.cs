@@ -30,7 +30,7 @@ namespace Server.Game
             S_Move trapPacket = new S_Move();
             trapPacket.ObjectId = Id;
             trapPacket.PosInfo = PosInfo;
-            
+
             Room.Broadcast(trapPacket);
 
             // 5초 후 죽음
@@ -48,6 +48,9 @@ namespace Server.Game
 
         public void OnDead()
         {
+            if (Room == null)
+                return;
+
             if (Info.PosInfo.State != CreatureState.Trap)
                 return;
 
@@ -66,19 +69,22 @@ namespace Server.Game
                 return;
 
             System.Console.WriteLine($"Player_{Id} get Item_{item.Id}, {item.ItemType}");
-            switch(item.ItemType)
+            switch (item.ItemType)
             {
                 case 1: // ballon
                     if (AvailBubble < Data.maxBubble)
                         AvailBubble++;
                     break;
+
                 case 2: // potion
                     if (Power < Data.maxPower)
                         Power++;
                     break;
+
                 case 3: // potion_make_power_max
                     Power = Data.maxPower;
                     break;
+
                 case 4: // skate
                     if (SpeedLvl < Data.maxSpeedLvl)
                         SpeedLvl++;

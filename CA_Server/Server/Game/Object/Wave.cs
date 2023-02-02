@@ -30,7 +30,8 @@ namespace Server.Game
             if (_lifeTimeTick >= Environment.TickCount64)
                 return;
 
-            Room.LeaveGame(Id);
+            GameRoom room = Room;
+            room.Push(room.LeaveGame, Id);
         }
     }
 }

@@ -42,7 +42,8 @@ namespace Server.Game
             if (_popTimeTick >= Environment.TickCount64)
                 return;
 
-            Room.LeaveGame(Id);
+            GameRoom room = Room;
+            room.Push(room.LeaveGame, Id);
         }
 
         private void RegisterPop()
@@ -87,7 +88,9 @@ namespace Server.Game
                     wave.Info.PosInfo.PosX = wavePos.x;
                     wave.Info.PosInfo.PosY = wavePos.y;
                     wave.Info.IsEdge = (i == Power);
-                    Room.EnterGame(wave);
+
+                    GameRoom room = Room;
+                    room.Push(room.EnterGame, wave);
                 }
             }
         }

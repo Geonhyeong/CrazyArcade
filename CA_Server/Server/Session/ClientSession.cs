@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Net.Sockets;
-using System.Threading;
-using System.Threading.Tasks;
-using ServerCore;
-using System.Net;
+﻿using Google.Protobuf;
 using Google.Protobuf.Protocol;
-using Google.Protobuf;
-using Server.Game;
 using Server.Data;
+using Server.Game;
+using ServerCore;
+using System;
+using System.Net;
 
 namespace Server
 {
@@ -52,7 +47,8 @@ namespace Server
                 MyPlayer.Data = characterData;
             }
 
-            RoomManager.Instance.Find(1).EnterGame(MyPlayer);
+            GameRoom room = RoomManager.Instance.Find(1);
+            room.Push(room.EnterGame, MyPlayer);
         }
 
         public override void OnRecvPacket(ArraySegment<byte> buffer)
@@ -62,7 +58,8 @@ namespace Server
 
         public override void OnDisconnected(EndPoint endPoint)
         {
-            RoomManager.Instance.Find(1).LeaveGame(MyPlayer.Info.ObjectId);
+            GameRoom room = RoomManager.Instance.Find(1);
+            room.Push(room.LeaveGame, MyPlayer.Info.ObjectId);
             ObjectManager.Instance.Remove(MyPlayer.Info.ObjectId);
 
             SessionManager.Instance.Remove(this);

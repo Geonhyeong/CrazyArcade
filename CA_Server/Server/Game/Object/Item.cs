@@ -16,7 +16,8 @@ namespace Server.Game
 
         public override void OnAttacked(GameObject attacker)
         {
-            Room.LeaveGame(Id);
+            GameRoom room = Room;
+            room.Push(room.LeaveGame, Id);
         }
     }
 }

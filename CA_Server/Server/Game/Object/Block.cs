@@ -36,7 +36,8 @@ namespace Server.Game
         {
             DropItem();
 
-            Room.LeaveGame(Id);
+            GameRoom room = Room;
+            room.Push(room.LeaveGame, Id);
         }
 
         private void DropItem()
@@ -65,7 +66,9 @@ namespace Server.Game
             item.PosInfo.State = CreatureState.Idle;
             item.PosInfo.PosX = PosInfo.PosX;
             item.PosInfo.PosY = PosInfo.PosY;
-            Room.EnterGame(item);
+
+            GameRoom room = Room;
+            room.Push(room.EnterGame, item);
         }
     }
 }
