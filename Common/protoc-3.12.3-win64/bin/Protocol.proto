@@ -13,6 +13,9 @@ enum MsgId {
   S_MOVE = 5;
   C_SKILL = 6;
   S_ABILITY = 7;
+  S_POP = 8;
+  S_TRAP = 9;
+  S_DIE = 10;
 }
 
 enum CreatureState {
@@ -74,11 +77,24 @@ message S_Ability {
     int32 availBubble = 4;
 }
 
+message S_Pop {
+    int32 objectId = 1;
+}
+
+message S_Trap {
+    int32 playerId = 1;
+}
+
+message S_Die {
+    int32 playerId = 1;
+}
+
 message ObjectInfo {
     int32 objectId = 1;
     string name = 2;
     PositionInfo posInfo = 3;
-    bool isEdge = 4;
+    StatInfo statInfo = 4;
+    bool isEdge = 5;
 }
 
 message PositionInfo {
@@ -88,11 +104,19 @@ message PositionInfo {
     int32 posY = 4;
 }
 
-message SkillInfo {
-    int32 power = 1;
-    PositionInfo posInfo = 2;
+message StatInfo {
+    int32 id = 1;
+    string name = 2;
+    int32 speedLvl = 3;
+    int32 power = 4;
+    int32 availBubble = 5;
+    int32 maxSpeedLvl = 6;
+    int32 maxPower = 7;
+    int32 maxBubble = 8;
 }
 
-message ItemInfo {
-    int32 itemType = 1;
+message SkillInfo {
+    int32 power = 1;
+    int32 posX = 2;
+    int32 posY = 3;
 }

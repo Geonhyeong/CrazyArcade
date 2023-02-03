@@ -14,12 +14,20 @@ namespace Server.Game
             ObjectType = GameObjectType.Wave;
         }
 
-        public void Update()
+        public void OnSpawn()
+        {
+            Console.WriteLine($"{Id} : Wave Spawn ({CellPos.x}, {CellPos.y})");
+
+            Room.Push(CheckCollision);
+            Room.PushAfter(500, Despawn);
+        }
+
+        private void CheckCollision()
         {
             if (Room == null)
                 return;
 
-            // 플레이어 및 아이템 피격 판정
+            // 플레이어 및 아이템이 존재하는지 확인
             List<GameObject> gameObjects = Room.FindAll(CellPos);
             if (gameObjects != null)
             {
@@ -27,11 +35,15 @@ namespace Server.Game
                     go.OnAttacked(this);
             }
 
-            if (_lifeTimeTick >= Environment.TickCount64)
-                return;
+            // 0.1초마다 체크
+            Room.PushAfter(100, CheckCollision);
+        }
 
-            GameRoom room = Room;
-            room.Push(room.LeaveGame, Id);
+        private void Despawn()
+        {
+            Room.Push(Room.LeaveGame, Id);
+
+            Console.WriteLine($"{Id} : Wave Despawn");
         }
     }
 }

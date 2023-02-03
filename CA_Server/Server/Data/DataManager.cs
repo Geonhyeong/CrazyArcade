@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Google.Protobuf.Protocol;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -11,11 +12,11 @@ namespace Server.Data
 
     public class DataManager
     {
-        public static Dictionary<int, Data.Character> CharacterDict { get; private set; } = new Dictionary<int, Data.Character>();
+        public static Dictionary<int, StatInfo> StatDict { get; private set; } = new Dictionary<int, StatInfo>();
 
         public static void LoadData()
         {
-            CharacterDict = LoadJson<Data.CharacterData, int, Data.Character>("CharacterData").MakeDict();
+            StatDict = LoadJson<Data.StatData, int, StatInfo>("StatData").MakeDict();
         }
 
         private static Loader LoadJson<Loader, Key, Value>(string path) where Loader : ILoader<Key, Value>

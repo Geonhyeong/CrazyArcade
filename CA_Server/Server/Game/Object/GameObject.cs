@@ -13,10 +13,12 @@ namespace Server.Game
         public GameRoom Room { get; set; }
         public ObjectInfo Info { get; set; } = new ObjectInfo();
         public PositionInfo PosInfo { get; private set; } = new PositionInfo();
+        public StatInfo Stat { get; private set; } = new StatInfo();
 
         public GameObject()
         {
             Info.PosInfo = PosInfo;
+            Info.StatInfo = Stat;
         }
 
         public Vector2Int CellPos

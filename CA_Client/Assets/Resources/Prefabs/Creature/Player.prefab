@@ -98,8 +98,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46b72567a1dced14999beb6943e0e0c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 5
-  _power: 2
 --- !u!95 &1548702737184378725
 Animator:
   serializedVersion: 4

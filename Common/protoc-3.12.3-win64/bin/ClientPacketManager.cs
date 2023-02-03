@@ -37,6 +37,12 @@ class PacketManager
 		_handler.Add((ushort)MsgId.SMove, PacketHandler.S_MoveHandler);
 		_onRecv.Add((ushort)MsgId.SAbility, MakePacket<S_Ability>);
 		_handler.Add((ushort)MsgId.SAbility, PacketHandler.S_AbilityHandler);
+		_onRecv.Add((ushort)MsgId.SPop, MakePacket<S_Pop>);
+		_handler.Add((ushort)MsgId.SPop, PacketHandler.S_PopHandler);
+		_onRecv.Add((ushort)MsgId.STrap, MakePacket<S_Trap>);
+		_handler.Add((ushort)MsgId.STrap, PacketHandler.S_TrapHandler);
+		_onRecv.Add((ushort)MsgId.SDie, MakePacket<S_Die>);
+		_handler.Add((ushort)MsgId.SDie, PacketHandler.S_DieHandler);
 	}
 
 	public void OnRecvPacket(PacketSession session, ArraySegment<byte> buffer)

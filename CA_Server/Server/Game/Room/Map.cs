@@ -36,14 +36,8 @@ namespace Server.Game
         public int MinY { get; set; }
         public int MaxY { get; set; }
 
-        private int _roomId;
         private bool[,] _collision;
         private GameObject[,] _objects; // 충돌체만 관리
-
-        public Map(int roomId)
-        {
-            _roomId = roomId;
-        }
 
         public bool CanGo(Vector2Int cellPos, bool checkObjects = true)
         {
@@ -69,30 +63,51 @@ namespace Server.Game
             return _objects[y, x];
         }
 
-        public bool ApplyLeave(GameObject gameObject)
+        public bool ApplyDespawn(GameObject gameObject)
         {
             if (gameObject.Room == null)
                 return false;
             if (gameObject.Room.Map != this)
                 return false;
 
-            PositionInfo posInfo = gameObject.PosInfo;
-            if (posInfo.PosX < MinX || posInfo.PosX > MaxX)
+            Vector2Int pos = gameObject.CellPos;
+            if (pos.x < MinX || pos.x > MaxX)
                 return false;
-            if (posInfo.PosY < MinY || posInfo.PosY > MaxY)
+            if (pos.y < MinY || pos.y > MaxY)
                 return false;
             
-            int x = posInfo.PosX - MinX;
-            int y = MaxY - posInfo.PosY;
+            int x = pos.x - MinX;
+            int y = MaxY - pos.y;
             if (_objects[y, x] == gameObject)
                 _objects[y, x] = null;
 
             return true;
         }
 
+        public bool ApplySpawn(GameObject gameObject)
+        {
+            ApplyDespawn(gameObject);
+
+            if (gameObject.Room == null)
+                return false;
+            if (gameObject.Room.Map != this)
+                return false;
+
+            Vector2Int pos = gameObject.CellPos;
+            if (CanGo(pos, true) == false)
+                return false;
+            
+            
+            int x = pos.x - MinX;
+            int y = MaxY - pos.y;
+            _objects[y, x] = gameObject;
+            
+            return true;
+        }
+
         public bool ApplyMove(GameObject gameObject, Vector2Int dest)
         {
-            ApplyLeave(gameObject);
+            ApplyDespawn(gameObject);
 
             if (gameObject.Room == null)
                 return false;
@@ -102,7 +117,7 @@ namespace Server.Game
             PositionInfo posInfo = gameObject.PosInfo;
             if (CanGo(dest, true) == false)
                 return false;
-            
+
             {
                 int x = dest.x - MinX;
                 int y = MaxY - dest.y;
@@ -152,14 +167,31 @@ namespace Server.Game
                         continue;
 
                     Block block = ObjectManager.Instance.Add<Block>();
-                    {
-                        block.Info.Name = $"Block_{line[x] - '0'}";
-                        block.PosInfo.State = CreatureState.Idle;
-                        block.PosInfo.PosX = x + MinX;
-                        block.PosInfo.PosY = MaxY - y;
-                    }
-                    GameRoom room = RoomManager.Instance.Find(_roomId);
-                    room.Push(room.EnterGame, block);
+                    block.Info.Name = $"Block_{line[x] - '0'}";
+                    block.PosInfo.State = CreatureState.Idle;
+                    block.PosInfo.PosX = x + MinX;
+                    block.PosInfo.PosY = MaxY - y;
+
+                    _objects[y, x] = block;
+                }
+            }
+        }
+
+        public void LoadObjects(GameRoom room)
+        {
+            if (room == null)
+                return;
+
+            int xCount = MaxX - MinX + 1;
+            int yCount = MaxY - MinY + 1;
+
+            for (int y = 0; y < yCount; y++)
+            {
+                for (int x = 0; x < xCount; x++)
+                {
+                    GameObject go = _objects[y, x];
+                    if (go != null)
+                        room.Push(room.EnterGame, go);
                 }
             }
         }

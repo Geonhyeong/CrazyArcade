@@ -15,29 +15,21 @@ namespace Server.Game
 
         public override void OnAttacked(GameObject attacker)
         {
-            // Pop 상태로 변환
-            S_Move changeStatePacket = new S_Move() { PosInfo = new PositionInfo() };
-            changeStatePacket.ObjectId = Id;
-            changeStatePacket.PosInfo.State = CreatureState.Pop;
-            changeStatePacket.PosInfo.PosX = PosInfo.PosX;
-            changeStatePacket.PosInfo.PosY = PosInfo.PosY;
+            // Pop 패킷 전송
+            S_Pop popPacket = new S_Pop();
+            popPacket.ObjectId = Id;
 
-            Room.Broadcast(changeStatePacket);
+            Room.Broadcast(popPacket);
 
             // 0.5초 후 소멸
-            Timer t = new Timer();
-            t.Interval = 500;
-            t.Elapsed += OnPopEvent;
-            t.AutoReset = false;
-            t.Enabled = true;
+            Room.PushAfter(500, Despawn);
         }
 
-        private void OnPopEvent(object s, ElapsedEventArgs e)
+        private void Despawn()
         {
             DropItem();
 
-            GameRoom room = Room;
-            room.Push(room.LeaveGame, Id);
+            Room.Push(Room.LeaveGame, Id);
         }
 
         private void DropItem()

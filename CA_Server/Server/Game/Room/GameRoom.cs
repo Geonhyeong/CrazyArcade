@@ -8,7 +8,7 @@ namespace Server.Game
     public class GameRoom : JobSerializer
     {
         public int RoomId { get; set; }
-        public Map Map { get; private set; } = null;
+        public Map Map { get; private set; } = new Map();
 
         private Dictionary<int, Player> _players = new Dictionary<int, Player>();
         private Dictionary<int, Block> _blocks = new Dictionary<int, Block>();
@@ -18,23 +18,13 @@ namespace Server.Game
 
         public void Init(int mapId)
         {
-            Map = new Map(RoomId);
             Map.LoadMap(mapId);
+            Map.LoadObjects(this);
         }
 
         // 누군가 주기적으로 호출해줘야 한다
         public void Update()
         {
-            foreach (Bubble bubble in _bubbles.Values)
-            {
-                bubble.Update();
-            }
-
-            foreach (Wave wave in _waves.Values)
-            {
-                wave.Update();
-            }
-
             Flush();
         }
 
@@ -64,22 +54,19 @@ namespace Server.Game
                         if (player != p)
                             spawnPacket.Objects.Add(p.Info);
                     }
+
                     foreach (Block block in _blocks.Values)
-                    {
                         spawnPacket.Objects.Add(block.Info);
-                    }
+
                     foreach (Bubble bubble in _bubbles.Values)
-                    {
                         spawnPacket.Objects.Add(bubble.Info);
-                    }
+
                     foreach (Wave wave in _waves.Values)
-                    {
                         spawnPacket.Objects.Add(wave.Info);
-                    }
+
                     foreach (Item item in _items.Values)
-                    {
                         spawnPacket.Objects.Add(item.Info);
-                    }
+
                     player.Session.Send(spawnPacket);
                 }
             }
@@ -88,7 +75,6 @@ namespace Server.Game
                 Block block = gameObject as Block;
                 _blocks.Add(gameObject.Id, block);
                 block.Room = this;
-                Map.ApplyMove(block, block.CellPos);
                 Console.WriteLine($"{block.Id} : Block Spawn ({block.CellPos.x}, {block.CellPos.y})");
             }
             else if (type == GameObjectType.Bubble)
@@ -96,26 +82,25 @@ namespace Server.Game
                 Bubble bubble = gameObject as Bubble;
                 _bubbles.Add(gameObject.Id, bubble);
                 bubble.Room = this;
-                Map.ApplyMove(bubble, bubble.CellPos);
-                Console.WriteLine($"{bubble.Id} : Bubble Spawn ({bubble.CellPos.x}, {bubble.CellPos.y})");
-
-                // 플레이어의 현재 물풍선 갯수 증가
-                Player owner = bubble.Owner as Player;
-                owner.BubbleCount++;
+                
+                Map.ApplySpawn(bubble); // 충돌체이므로 Map에 적용
+                bubble.OnSpawn();
             }
             else if (type == GameObjectType.Wave)
             {
                 Wave wave = gameObject as Wave;
                 _waves.Add(gameObject.Id, wave);
                 wave.Room = this;
-                Console.WriteLine($"{wave.Id} : Wave Spawn ({wave.CellPos.x}, {wave.CellPos.y})");
+
+                wave.OnSpawn();
             }
             else if (type == GameObjectType.Item)
             {
                 Item item = gameObject as Item;
                 _items.Add(gameObject.Id, item);
                 item.Room = this;
-                Console.WriteLine($"{item.Id} : Item Spawn ({item.CellPos.x}, {item.CellPos.y})");
+
+                item.OnSpawn();
             }
 
             // 타인한테 정보 전송
@@ -155,7 +140,7 @@ namespace Server.Game
                 if (_blocks.Remove(objectId, out block) == false)
                     return;
 
-                Map.ApplyLeave(block);
+                Map.ApplyDespawn(block);
                 block.Room = null;
                 Console.WriteLine($"{block.Id} : Block Despawn");
             }
@@ -165,13 +150,8 @@ namespace Server.Game
                 if (_bubbles.Remove(objectId, out bubble) == false)
                     return;
 
-                Map.ApplyLeave(bubble);
+                Map.ApplyDespawn(bubble);
                 bubble.Room = null;
-                Console.WriteLine($"{bubble.Id} : Bubble Despawn");
-
-                // 플레이어의 현재 물풍선 갯수 감소
-                Player owner = bubble.Owner as Player;
-                owner.BubbleCount--;
             }
             else if (type == GameObjectType.Wave)
             {
@@ -180,7 +160,6 @@ namespace Server.Game
                     return;
 
                 wave.Room = null;
-                Console.WriteLine($"{wave.Id} : Wave Despawn");
             }
             else if (type == GameObjectType.Item)
             {
@@ -189,7 +168,6 @@ namespace Server.Game
                     return;
 
                 item.Room = null;
-                Console.WriteLine($"{item.Id} : Item Despawn");
             }
 
             // 타인한테 정보 전송
@@ -206,7 +184,7 @@ namespace Server.Game
 
         public void HandleMove(Player player, C_Move movePacket)
         {
-            if (player == null)
+            if (player == null || player.Room != this)
                 return;
 
             // TODO : 검증
@@ -218,23 +196,13 @@ namespace Server.Game
             {
                 if (Map.CanGo(new Vector2Int(movePosInfo.PosX, movePosInfo.PosY)) == false)
                 {
-                    // 다른 플레이어한테도 알려준다
-                    S_Move noMovePacket = new S_Move() { PosInfo = new PositionInfo() };
-                    noMovePacket.ObjectId = player.Info.ObjectId;
-                    noMovePacket.PosInfo.State = movePacket.PosInfo.State;
-                    noMovePacket.PosInfo.MoveDir = movePacket.PosInfo.MoveDir;
-                    noMovePacket.PosInfo.PosX = info.PosInfo.PosX;
-                    noMovePacket.PosInfo.PosY = info.PosInfo.PosY;
-
-                    Broadcast(noMovePacket);
-
                     return;
                 }
             }
 
             // 서버에서 위치 이동
-            player.PosInfo.MoveDir = movePosInfo.MoveDir;
             player.PosInfo.State = movePosInfo.State;
+            player.PosInfo.MoveDir = movePosInfo.MoveDir;
             player.PosInfo.PosX = movePosInfo.PosX;
             player.PosInfo.PosY = movePosInfo.PosY;
 
@@ -242,50 +210,23 @@ namespace Server.Game
             S_Move resMovePacket = new S_Move();
             resMovePacket.ObjectId = player.Info.ObjectId;
             resMovePacket.PosInfo = movePacket.PosInfo;
-            //Console.WriteLine($"S_Move ({resMovePacket.PosInfo.PosX}, {resMovePacket.PosInfo.PosY})");
+            Console.WriteLine($"S_Move ({resMovePacket.PosInfo.PosX}, {resMovePacket.PosInfo.PosY})");
 
             Broadcast(resMovePacket);
-
-            if (player.Info.PosInfo.State == CreatureState.Idle || player.Info.PosInfo.State == CreatureState.Moving)
-            {
-                List<GameObject> gameObjects = FindAll(player.CellPos);
-                if (gameObjects != null)
-                {
-                    foreach (GameObject go in gameObjects)
-                    {
-                        if (go.ObjectType == GameObjectType.Player)
-                        {
-                            // 만약 그 위치에 Trap 상태의 다른 플레이어가 있으면 즉사시킨다
-                            Player p = go as Player;
-                            if (p.Id != player.Id && p.Info.PosInfo.State == CreatureState.Trap)
-                                p.OnDead();
-                        }
-                        else if (go.ObjectType == GameObjectType.Item)
-                        {
-                            // 아이템이 있으면 획득하고 아이템 삭제
-                            Item item = go as Item;
-                            player.GetItem(item);
-                            Push(LeaveGame, item.Id);
-                        }
-                    }
-                }
-            }
         }
 
         public void HandleSkill(Player player, C_Skill skillPacket)
         {
-            if (player == null)
+            if (player == null || player.Room != this)
                 return;
-
-            ObjectInfo info = player.Info;
 
             // 스킬 사용 가능 여부 체크
-            Vector2Int skillPos = new Vector2Int(skillPacket.Info.PosInfo.PosX, skillPacket.Info.PosInfo.PosY);
+            Vector2Int skillPos = new Vector2Int(skillPacket.Info.PosX, skillPacket.Info.PosY);
             if (Map.CanGo(skillPos) == false)
                 return;
-            if (skillPacket.Info.Power > player.Data.maxPower || skillPacket.Info.Power < 1)
+            if (skillPacket.Info.Power > player.Stat.MaxPower || skillPacket.Info.Power < 1)
                 return;
-            if (player.BubbleCount >= player.AvailBubble)
+            if (player.BubbleCount >= player.Stat.AvailBubble)
                 return;
 
             // 버블 생성
@@ -294,11 +235,11 @@ namespace Server.Game
                 return;
 
             bubble.Owner = player;
-            bubble.Power = player.Power;
+            bubble.Power = player.Stat.Power;
             bubble.Info.Name = $"Bubble_{bubble.Id}";
-            bubble.PosInfo.State = skillPacket.Info.PosInfo.State;
-            bubble.PosInfo.PosX = skillPacket.Info.PosInfo.PosX;
-            bubble.PosInfo.PosY = skillPacket.Info.PosInfo.PosY;
+            bubble.PosInfo.State = CreatureState.Idle;
+            bubble.CellPos = skillPos;
+
             Push(EnterGame, bubble);
         }
 

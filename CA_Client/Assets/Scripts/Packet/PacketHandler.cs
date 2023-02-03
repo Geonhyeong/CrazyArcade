@@ -73,4 +73,49 @@ internal class PacketHandler
         pc.Power = abilityPacket.Power;
         pc.AvailBubble = abilityPacket.AvailBubble;
     }
+
+    public static void S_PopHandler(PacketSession session, IMessage packet)
+    {
+        S_Pop popPacket = packet as S_Pop;
+
+        GameObject go = Managers.Object.FindById(popPacket.ObjectId);
+        if (go == null)
+            return;
+
+        CreatureController cc = go.GetComponent<CreatureController>();
+        if (cc == null)
+            return;
+
+        cc.State = CreatureState.Pop;
+    }
+
+    public static void S_TrapHandler(PacketSession session, IMessage packet)
+    {
+        S_Trap trapPacket = packet as S_Trap;
+
+        GameObject go = Managers.Object.FindById(trapPacket.PlayerId);
+        if (go == null)
+            return;
+
+        PlayerController pc = go.GetComponent<PlayerController>();
+        if (pc == null)
+            return;
+
+        pc.State = CreatureState.Trap;
+    }
+
+    public static void S_DieHandler(PacketSession session, IMessage packet)
+    {
+        S_Die diePacket = packet as S_Die;
+
+        GameObject go = Managers.Object.FindById(diePacket.PlayerId);
+        if (go == null)
+            return;
+
+        PlayerController pc = go.GetComponent<PlayerController>();
+        if (pc == null)
+            return;
+
+        pc.State = CreatureState.Dead;
+    }
 }

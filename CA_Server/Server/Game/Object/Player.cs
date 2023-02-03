@@ -1,4 +1,5 @@
 ﻿using Google.Protobuf.Protocol;
+using System.Collections.Generic;
 using System.Timers;
 
 namespace Server.Game
@@ -6,11 +7,6 @@ namespace Server.Game
     public class Player : GameObject
     {
         public ClientSession Session { get; set; }
-        public Data.Character Data { get; set; }
-
-        public int SpeedLvl { get; set; } = 1;
-        public int Power { get; set; } = 1;
-        public int AvailBubble { get; set; } = 1;
         public int BubbleCount { get; set; } = 0;
 
         public Player()
@@ -20,33 +16,60 @@ namespace Server.Game
 
         public override void OnAttacked(GameObject attacker)
         {
+            System.Console.WriteLine($"{Id} : Player is Attacked");
+
             if (Info.PosInfo.State == CreatureState.Trap || Info.PosInfo.State == CreatureState.Dead)
                 return;
 
-            System.Console.WriteLine($"{Id} : OnAttacked");
-
             PosInfo.State = CreatureState.Trap;
 
-            S_Move trapPacket = new S_Move();
-            trapPacket.ObjectId = Id;
-            trapPacket.PosInfo = PosInfo;
+            // Trap 패킷 Broacast
+            S_Trap trapPacket = new S_Trap();
+            trapPacket.PlayerId = Id;
 
             Room.Broadcast(trapPacket);
 
+            // 다른 플레이어가 접근했는지 체크
+            Room.Push(CheckCollision);
+
             // 5초 후 죽음
-            Timer t = new Timer();
-            t.Interval = 5000;
-            t.Elapsed += OnDeadEvent;
-            t.AutoReset = false;
-            t.Enabled = true;
+            Room.PushAfter(5000, OnDead);
         }
 
-        private void OnDeadEvent(object s, ElapsedEventArgs e)
+        private void CheckCollision()
         {
-            OnDead();
+            if (Room == null)
+                return;
+
+            if (Info.PosInfo.State != CreatureState.Trap)
+                return;
+
+            List<GameObject> gameObjects = Room.FindAll(CellPos);
+            if (gameObjects != null)
+            {
+                foreach (GameObject go in gameObjects)
+                {
+                    if (go.ObjectType == GameObjectType.Player)
+                    {
+                        Player p = go as Player;
+                        if (p.Id != Id)
+                        {
+                            CreatureState state = p.Info.PosInfo.State;
+                            if (state == CreatureState.Idle || state == CreatureState.Moving)
+                            {
+                                OnDead();
+                                return;
+                            }
+                        }    
+                    }
+                }
+            }
+
+            // 0.1초마다 체크
+            Room.PushAfter(100, CheckCollision);
         }
 
-        public void OnDead()
+        private void OnDead()
         {
             if (Room == null)
                 return;
@@ -56,11 +79,11 @@ namespace Server.Game
 
             PosInfo.State = CreatureState.Dead;
 
-            S_Move deadPacket = new S_Move();
-            deadPacket.ObjectId = Id;
-            deadPacket.PosInfo = PosInfo;
+            // Die 패킷 Broadcast
+            S_Die diePacket = new S_Die();
+            diePacket.PlayerId = Id;
 
-            Room.Broadcast(deadPacket);
+            Room.Broadcast(diePacket);
         }
 
         public void GetItem(Item item)
@@ -72,30 +95,30 @@ namespace Server.Game
             switch (item.ItemType)
             {
                 case 1: // ballon
-                    if (AvailBubble < Data.maxBubble)
-                        AvailBubble++;
+                    if (Stat.AvailBubble < Stat.MaxBubble)
+                        Stat.AvailBubble++;
                     break;
 
                 case 2: // potion
-                    if (Power < Data.maxPower)
-                        Power++;
+                    if (Stat.Power < Stat.MaxPower)
+                        Stat.Power++;
                     break;
 
                 case 3: // potion_make_power_max
-                    Power = Data.maxPower;
+                    Stat.Power = Stat.MaxPower;
                     break;
 
                 case 4: // skate
-                    if (SpeedLvl < Data.maxSpeedLvl)
-                        SpeedLvl++;
+                    if (Stat.SpeedLvl < Stat.MaxSpeedLvl)
+                        Stat.SpeedLvl++;
                     break;
             }
 
             S_Ability abilityPacket = new S_Ability();
             abilityPacket.PlayerId = Id;
-            abilityPacket.Speed = SpeedLvl * 0.8f;
-            abilityPacket.Power = Power;
-            abilityPacket.AvailBubble = AvailBubble;
+            abilityPacket.Speed = Stat.SpeedLvl * 0.8f;
+            abilityPacket.Power = Stat.Power;
+            abilityPacket.AvailBubble = Stat.AvailBubble;
 
             Room.Broadcast(abilityPacket);
         }

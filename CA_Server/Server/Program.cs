@@ -41,7 +41,6 @@ namespace Server
             _listener.Init(endPoint, () => { return SessionManager.Instance.Generate(); });
             Console.WriteLine("Listening...");
 
-            // TODO
             while (true)
             {
                 Thread.Sleep(100);

@@ -107,12 +107,17 @@ public class MyPlayerController : PlayerController
             else
             {
                 CreatureController cc = obstacle.GetComponent<CreatureController>();
-                if (cc != null && cc.Type == GameObjectType.Player)
+                if (cc != null)
                 {
+                    if (cc.Type == GameObjectType.Block || cc.Type == GameObjectType.Bubble)
+                    {
+                        CheckUpdatedFlag();
+                        return;
+                    }
+                    
                     CellPos = destPos;
                 }
             }
-            CellPos = destPos;
         }
         CheckUpdatedFlag();
     }
@@ -132,11 +137,10 @@ public class MyPlayerController : PlayerController
     {
         if (_coSkillCooltime == null && Input.GetKeyDown(KeyCode.Space))
         {
-            C_Skill skill = new C_Skill() { Info = new SkillInfo() { PosInfo = new PositionInfo() } };
+            C_Skill skill = new C_Skill() { Info = new SkillInfo() };
             skill.Info.Power = Power;
-            skill.Info.PosInfo.State = CreatureState.Idle;
-            skill.Info.PosInfo.PosX = PosInfo.PosX;
-            skill.Info.PosInfo.PosY = PosInfo.PosY;
+            skill.Info.PosX = PosInfo.PosX;
+            skill.Info.PosY = PosInfo.PosY;
             Managers.Network.Send(skill);
 
             _coSkillCooltime = StartCoroutine("CoInputCooltime", 0.2f);

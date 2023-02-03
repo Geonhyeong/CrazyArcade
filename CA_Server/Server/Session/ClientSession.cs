@@ -36,15 +36,16 @@ namespace Server
                 MyPlayer.Info.Name = $"Player_{MyPlayer.Id}";
                 MyPlayer.PosInfo.State = CreatureState.Idle;
                 MyPlayer.PosInfo.MoveDir = MoveDir.Down;
+                // TODO : 위치는 정해진 몇 곳에서 랜덤 배정 (위치는 미리 데이터로 저장해 놓자)
                 MyPlayer.PosInfo.PosX = 0;
                 MyPlayer.PosInfo.PosY = -1;
-                MyPlayer.Session = this;
 
                 // 지금은 배찌밖에 없기 때문에 무조건 배찌로 지정
-                Data.Character characterData = null;
-                if (DataManager.CharacterDict.TryGetValue(1, out characterData) == false)
-                    return;
-                MyPlayer.Data = characterData;
+                StatInfo stat = null;
+                DataManager.StatDict.TryGetValue(1, out stat);
+                MyPlayer.Stat.MergeFrom(stat);
+                
+                MyPlayer.Session = this;
             }
 
             GameRoom room = RoomManager.Instance.Find(1);

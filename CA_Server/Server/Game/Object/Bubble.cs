@@ -7,60 +7,45 @@ namespace Server.Game
 {
     public class Bubble : GameObject
     {
-        public GameObject Owner { get; set; }
-
+        public Player Owner { get; set; }
         public int Power { get; set; }
-
-        private bool _isPop = false;
-        private long _lifeTimeTick = Environment.TickCount64 + 2500;
-        private long _popTimeTick = Environment.TickCount64 + 3000;
 
         public Bubble()
         {
             ObjectType = GameObjectType.Bubble;
         }
 
-        public void Update()
+        public void OnSpawn()
         {
-            if (Owner == null || Room == null)
+            Console.WriteLine($"{Id} : Bubble Spawn ({CellPos.x}, {CellPos.y})");
+
+            Owner.BubbleCount++;
+            Room.PushAfter(2500, Pop);
+        }
+
+        private void Pop()
+        {
+            if (Room == null)
+                return;
+            if (Info.PosInfo.State == CreatureState.Pop)
                 return;
 
-            if (_lifeTimeTick >= Environment.TickCount64)
-                return;
+            Owner.BubbleCount--;
+            PosInfo.State = CreatureState.Pop;
 
-            RegisterPop();
+            // Pop 패킷 Broadcast
+            S_Pop popPacket = new S_Pop();
+            popPacket.ObjectId = Id;
 
-            // 플레이어 및 아이템 피격 판정
+            Room.Broadcast(popPacket);
+
+            // 플레이어 및 아이템이 존재하는지 확인
             List<GameObject> gameObjects = Room.FindAll(CellPos);
             if (gameObjects != null)
             {
                 foreach (GameObject go in gameObjects)
                     go.OnAttacked(this);
             }
-
-            // 소멸타임틱에 소멸
-            if (_popTimeTick >= Environment.TickCount64)
-                return;
-
-            GameRoom room = Room;
-            room.Push(room.LeaveGame, Id);
-        }
-
-        private void RegisterPop()
-        {
-            if (_isPop)
-                return;
-
-            _isPop = true;
-            _lifeTimeTick = Environment.TickCount64;
-            _popTimeTick = _lifeTimeTick + 500;
-
-            PosInfo.State = CreatureState.Pop;
-
-            S_Move movePacket = new S_Move();
-            movePacket.ObjectId = Id;
-            movePacket.PosInfo = PosInfo;
-            Room.Broadcast(movePacket);
 
             // 웨이브 소환
             for (int waveDir = 0; waveDir < 4; waveDir++)
@@ -70,7 +55,6 @@ namespace Server.Game
                     Vector2Int wavePos = GetFrontCellPos((MoveDir)waveDir, i);
                     if (Room.Map.CanGo(wavePos, true) == false)
                     {
-                        // Block 피격 판정
                         GameObject go = Room.Map.Find(wavePos);
                         if (go != null)
                         {
@@ -93,13 +77,23 @@ namespace Server.Game
                     room.Push(room.EnterGame, wave);
                 }
             }
+
+            // 0.5초 후에 소멸
+            Room.PushAfter(500, Despawn);
+        }
+
+        private void Despawn()
+        {
+            Room.Push(Room.LeaveGame, Id);
+            
+            Console.WriteLine($"{Id} : Bubble Despawn");
         }
 
         public override void OnAttacked(GameObject attacker)
         {
             Console.WriteLine($"{Id} : Bubble Attacked");
 
-            RegisterPop();
+            Pop();
         }
     }
 }

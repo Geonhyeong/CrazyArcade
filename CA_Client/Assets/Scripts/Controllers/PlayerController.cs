@@ -17,6 +17,7 @@ public class PlayerController : CreatureController
     {
         base.Init();
         Type = GameObjectType.Player;
+        transform.position += new Vector3(0, 0.12f);
     }
 
     protected override void UpdateAnimation()
@@ -101,7 +102,7 @@ public class PlayerController : CreatureController
 
     protected virtual void UpdateMoving()
     {
-        Vector3 destPos = Managers.Map.CurrentGrid.CellToWorld(CellPos) + new Vector3(0.26f, 0.26f, Managers.Map.GetZ(CellPos));
+        Vector3 destPos = Managers.Map.CurrentGrid.CellToWorld(CellPos) + new Vector3(0.26f, 0.38f, Managers.Map.GetZ(CellPos));
         Vector3 moveDir = destPos - transform.position;
 
         // 도착 여부 체크

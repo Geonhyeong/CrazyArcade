@@ -1,30 +1,26 @@
-﻿using System;
+﻿using Google.Protobuf.Protocol;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Server.Data
 {
-    #region Character
+    #region Stat
     [Serializable]
-    public class Character
+    public class StatData : ILoader<int, StatInfo>
     {
-        public int id;
-        public string name;
-        public int maxSpeedLvl;
-        public int maxPower;
-        public int maxBubble;
-    }
+        public List<StatInfo> stats = new List<StatInfo>();
 
-    [Serializable]
-    public class CharacterData : ILoader<int, Character>
-    {
-        public List<Character> characters = new List<Character>();
-
-        public Dictionary<int, Character> MakeDict()
+        public Dictionary<int, StatInfo> MakeDict()
         {
-            Dictionary<int, Character> dict = new Dictionary<int, Character>();
-            foreach (Character character in characters)
-                dict.Add(character.id, character);
+            Dictionary<int, StatInfo> dict = new Dictionary<int, StatInfo>();
+            foreach (StatInfo stat in stats)
+            {
+                stat.SpeedLvl = 1;
+                stat.Power = 1;
+                stat.AvailBubble = 1;
+                dict.Add(stat.Id, stat);
+            }
             return dict;
         }
     }
