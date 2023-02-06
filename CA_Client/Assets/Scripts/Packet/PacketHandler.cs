@@ -57,11 +57,11 @@ internal class PacketHandler
         cc.PosInfo = movePacket.PosInfo;
     }
 
-    public static void S_AbilityHandler(PacketSession session, IMessage packet)
+    public static void S_ChangeStatHandler(PacketSession session, IMessage packet)
     {
-        S_Ability abilityPacket = packet as S_Ability;
+        S_ChangeStat statPacket = packet as S_ChangeStat;
 
-        GameObject go = Managers.Object.FindById(abilityPacket.PlayerId);
+        GameObject go = Managers.Object.FindById(statPacket.PlayerId);
         if (go == null)
             return;
 
@@ -69,9 +69,9 @@ internal class PacketHandler
         if (pc == null)
             return;
 
-        pc.Speed = abilityPacket.Speed;
-        pc.Power = abilityPacket.Power;
-        pc.AvailBubble = abilityPacket.AvailBubble;
+        pc.Speed = statPacket.StatInfo.SpeedLvl * 0.8f;
+        pc.Power = statPacket.StatInfo.Power;
+        pc.AvailBubble = statPacket.StatInfo.AvailBubble;
     }
 
     public static void S_PopHandler(PacketSession session, IMessage packet)

@@ -114,13 +114,11 @@ namespace Server.Game
                     break;
             }
 
-            S_Ability abilityPacket = new S_Ability();
-            abilityPacket.PlayerId = Id;
-            abilityPacket.Speed = Stat.SpeedLvl * 0.8f;
-            abilityPacket.Power = Stat.Power;
-            abilityPacket.AvailBubble = Stat.AvailBubble;
+            S_ChangeStat statPacket = new S_ChangeStat() { StatInfo = new StatInfo() };
+            statPacket.PlayerId = Id;
+            statPacket.StatInfo = Stat;
 
-            Room.Broadcast(abilityPacket);
+               Room.Broadcast(statPacket);
         }
     }
 }

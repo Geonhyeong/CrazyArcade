@@ -12,7 +12,7 @@ enum MsgId {
   C_MOVE = 4;
   S_MOVE = 5;
   C_SKILL = 6;
-  S_ABILITY = 7;
+  S_CHANGE_STAT = 7;
   S_POP = 8;
   S_TRAP = 9;
   S_DIE = 10;
@@ -70,11 +70,9 @@ message C_Skill {
     SkillInfo info = 1;
 }
 
-message S_Ability {
+message S_ChangeStat {
     int32 playerId = 1;
-    float speed = 2;
-    int32 power = 3;
-    int32 availBubble = 4;
+    StatInfo statInfo = 2;
 }
 
 message S_Pop {
