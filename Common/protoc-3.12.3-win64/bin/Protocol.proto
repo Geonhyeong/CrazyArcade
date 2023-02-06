@@ -16,6 +16,9 @@ enum MsgId {
   S_POP = 8;
   S_TRAP = 9;
   S_DIE = 10;
+  S_CONNECTED = 11;
+  C_LOGIN = 12;
+  S_LOGIN = 13;
 }
 
 enum CreatureState {
@@ -85,6 +88,17 @@ message S_Trap {
 
 message S_Die {
     int32 playerId = 1;
+}
+
+message S_Connected {
+}
+
+message C_Login {
+    string uniqueId = 1;
+}
+
+message S_Login {
+    int32 loginOk = 1;
 }
 
 message ObjectInfo {
