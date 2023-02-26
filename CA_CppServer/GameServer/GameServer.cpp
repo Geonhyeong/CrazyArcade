@@ -2,32 +2,8 @@
 #include <iostream>
 #include "ThreadManager.h"
 #include "Service.h"
-#include "Session.h"
-
-class GameSession : public Session
-{
-public:
-	~GameSession()
-	{
-		cout << "~GameSession" << endl;
-	}
-
-
-	virtual int32 OnRecv(BYTE* buffer, int32 len) override
-	{
-		// Echo
-		cout << "OnRecv Len = " << len << endl;
-		Send(buffer, len);
-		return len;
-	}
-
-	virtual void OnSend(int32 len) override
-	{
-		cout << "OnSend Len = " << len << endl;
-	}
-
-};
-
+#include "GameSession.h"
+#include "GameSessionManager.h"
 
 int main()
 {
@@ -48,6 +24,23 @@ int main()
 					service->GetIocpCore()->Dispatch();
 				}
 			});
+	}
+
+	char sendData[] = "Hello World";
+	while (true)
+	{
+		SendBufferRef sendBuffer = GSendBufferManager->Open(64);
+
+		BYTE* buffer = sendBuffer->Buffer();
+		((PacketHeader*)buffer)->size = (sizeof(sendData) + sizeof(PacketHeader));
+		((PacketHeader*)buffer)->id = 1;	// 1 : Hello Msg
+
+		::memcpy(&buffer[4], sendData, sizeof(sendData));
+		sendBuffer->Close(sizeof(sendData) + sizeof(PacketHeader));
+
+		GSessionManager.Broadcast(sendBuffer);
+
+		this_thread::sleep_for(250ms);
 	}
 
 	GThreadManager->Join();

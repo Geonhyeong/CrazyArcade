@@ -6,6 +6,7 @@
 #include "CoreGlobal.h"
 
 #include <vector>
+#include <array>
 #include <list>
 #include <queue>
 #include <stack>
@@ -24,3 +25,4 @@ using namespace std;
 #pragma comment(lib, "ws2_32.lib")
 
 #include "Lock.h"
+#include "SendBuffer.h"

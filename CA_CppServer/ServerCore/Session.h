@@ -2,6 +2,7 @@
 #include "IocpCore.h"
 #include "IocpEvent.h"
 #include "NetAddress.h"
+#include "RecvBuffer.h"
 
 class Service;
 
@@ -15,13 +16,18 @@ class Session : public IocpObject
 	friend class IocpCore;
 	friend class Service;
 
+	enum
+	{
+		BUFFER_SIZE = 0x10000,	// 64KB
+	};
+
 public:
 	Session();
 	virtual ~Session();
 
 public:
 	/* 외부에서 사용 */
-	void				Send(BYTE* buffer, int32 len);
+	void				Send(SendBufferRef sendBuffer);
 	bool				Connect();
 	void				Disconnect(const WCHAR* cause);
 
@@ -46,12 +52,12 @@ private:
 	bool		RegisterConnect();
 	bool		RegisterDisconnect();
 	void		RegisterRecv();
-	void		RegisterSend(SendEvent* sendEvent);
+	void		RegisterSend();
 
 	void		ProcessConnect();
 	void		ProcessDisconnect();
 	void		ProcessRecv(int32 numOfBytes);
-	void		ProcessSend(SendEvent* sendEvent, int32 numOfBytes);
+	void		ProcessSend(int32 numOfBytes);
 
 	void		HandleError(int32 errorCode);
 
@@ -62,14 +68,6 @@ protected:
 	virtual void	OnSend(int32 len) {}
 	virtual void	OnDisconnected() {}
 
-public:
-	// TEMP
-	BYTE _recvBuffer[1000];
-
-	// Circular Buffer
-	char _sendBuffer[1000];
-	int32 _sendLen = 0;
-
 private:
 	weak_ptr<Service> _service;
 	SOCKET _socket = INVALID_SOCKET;
@@ -78,14 +76,39 @@ private:
 
 private:
 	USE_LOCK;
-	
-	/* 수신 관련 */
-
-	/* 송신 관련 */
+							/* 수신 관련 */
+	RecvBuffer				_recvBuffer;
+							/* 송신 관련 */
+	queue<SendBufferRef>	_sendQueue;
+	Atomic<bool>			_sendRegistered = false;
 
 private:
 	/* IocpEvent 재사용*/
 	ConnectEvent _connectEvent;
 	DisconnectEvent _disconnectEvent;
 	RecvEvent _recvEvent;
+	SendEvent _sendEvent;
+};
+
+/*-------------------
+	PacketSession
+-------------------*/
+
+struct PacketHeader
+{
+	uint16 size;
+	uint16 id;	// 프로토콜ID (ex. 1=로그인, 2=이동요청)
+};
+
+class PacketSession : public Session
+{
+public:
+	PacketSession();
+	virtual ~PacketSession();
+
+	PacketSessionRef GetPacketSessionRef() { return static_pointer_cast<PacketSession>(shared_from_this()); }
+
+protected:
+	virtual int32 OnRecv(BYTE* buffer, int32 len) sealed;
+	virtual int32 OnRecvPacket(BYTE* buffer, int32 len) abstract;
 };
