@@ -3,7 +3,14 @@
   CorePch.cpp
   CoreTLS.cpp
   DeadLockProfiler.cpp
+  IocpCore.cpp
+  IocpEvent.cpp
+  Listener.cpp
   Lock.cpp
+  NetAddress.cpp
+  Service.cpp
+  Session.cpp
+  SocketUtils.cpp
   ThreadManager.cpp
   코드를 생성하고 있습니다...
   ServerCore.vcxproj -> C:\Users\fools\OneDrive\Documents\GH\Portfolio\CrazyArcade\CA_CppServer\Libraries\Debug\ServerCore.lib
