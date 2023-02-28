@@ -1,0 +1,43 @@
+syntax = "proto3";
+package Protocol;
+
+enum PlayerType
+{
+    PLAYER_TYPE_NONE = 0;
+    PLAYER_TYPE_KNIGHT = 1;
+    PLAYER_TYPE_MAGE = 2;
+    PLAYER_TYPE_ARCHER = 3;
+}
+
+message BuffData
+{
+	uint64 buffId = 1;
+	float remainTime = 2;
+	repeated uint64 victims = 3;
+}
+
+message C_TEST
+{
+	uint64 id = 1;
+}
+
+message C_MOVE
+{
+	uint64 id = 1;
+	uint32 pos = 2;
+}
+
+message S_TEST
+{
+	uint64 id = 1;
+	uint32 hp = 2;
+	uint32 attack = 3;
+	repeated BuffData buffs = 4;
+
+	//enum PacketId { NONE = 0; PACKET_ID = 1; }
+}
+
+message S_LOGIN
+{
+	//enum PacketId { NONE = 0; PACKET_ID = 1;}
+}

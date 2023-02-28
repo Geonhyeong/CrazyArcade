@@ -2,6 +2,7 @@
 #include "ThreadManager.h"
 #include "Service.h"
 #include "Session.h"
+#include "ServerPacketHandler.h"
 
 char sendData[] = "Hello World";
 
@@ -23,16 +24,13 @@ public:
 		//cout << "Disconnected" << endl;
 	}
 
-	virtual int32 OnRecvPacket(BYTE* buffer, int32 len) override
+	virtual void OnRecvPacket(BYTE* buffer, int32 len) override
 	{
-		PacketHeader header = *((PacketHeader*)&buffer[0]);
-		cout << "Packet ID : " << header.id << " Size : " << header.size << endl;
+		PacketSessionRef session = GetPacketSessionRef();
+		PacketHeader* header = reinterpret_cast<PacketHeader*>(buffer);
 
-		char recvBuffer[4096];
-		::memcpy(recvBuffer, &buffer[4], header.size - sizeof(PacketHeader));
-		cout << recvBuffer << endl;
-
-		return len;
+		// TODO : packetId 대역 체크
+		ServerPacketHandler::HandlePacket(session, buffer, len);
 	}
 
 	virtual void OnSend(int32 len) override
@@ -44,6 +42,8 @@ public:
 
 int main()
 {
+	ServerPacketHandler::Init();
+
 	this_thread::sleep_for(1s);
 
 	ClientServiceRef service = make_shared<ClientService>(

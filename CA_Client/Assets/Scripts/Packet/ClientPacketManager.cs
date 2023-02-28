@@ -25,28 +25,6 @@ class PacketManager
 
 	public void Register()
 	{
-		_onRecv.Add((ushort)MsgId.SEnterGame, MakePacket<S_EnterGame>);
-		_handler.Add((ushort)MsgId.SEnterGame, PacketHandler.S_EnterGameHandler);
-		_onRecv.Add((ushort)MsgId.SLeaveGame, MakePacket<S_LeaveGame>);
-		_handler.Add((ushort)MsgId.SLeaveGame, PacketHandler.S_LeaveGameHandler);
-		_onRecv.Add((ushort)MsgId.SSpawn, MakePacket<S_Spawn>);
-		_handler.Add((ushort)MsgId.SSpawn, PacketHandler.S_SpawnHandler);
-		_onRecv.Add((ushort)MsgId.SDespawn, MakePacket<S_Despawn>);
-		_handler.Add((ushort)MsgId.SDespawn, PacketHandler.S_DespawnHandler);
-		_onRecv.Add((ushort)MsgId.SMove, MakePacket<S_Move>);
-		_handler.Add((ushort)MsgId.SMove, PacketHandler.S_MoveHandler);
-		_onRecv.Add((ushort)MsgId.SChangeStat, MakePacket<S_ChangeStat>);
-		_handler.Add((ushort)MsgId.SChangeStat, PacketHandler.S_ChangeStatHandler);
-		_onRecv.Add((ushort)MsgId.SPop, MakePacket<S_Pop>);
-		_handler.Add((ushort)MsgId.SPop, PacketHandler.S_PopHandler);
-		_onRecv.Add((ushort)MsgId.STrap, MakePacket<S_Trap>);
-		_handler.Add((ushort)MsgId.STrap, PacketHandler.S_TrapHandler);
-		_onRecv.Add((ushort)MsgId.SDie, MakePacket<S_Die>);
-		_handler.Add((ushort)MsgId.SDie, PacketHandler.S_DieHandler);
-		_onRecv.Add((ushort)MsgId.SConnected, MakePacket<S_Connected>);
-		_handler.Add((ushort)MsgId.SConnected, PacketHandler.S_ConnectedHandler);
-		_onRecv.Add((ushort)MsgId.SLogin, MakePacket<S_Login>);
-		_handler.Add((ushort)MsgId.SLogin, PacketHandler.S_LoginHandler);
 	}
 
 	public void OnRecvPacket(PacketSession session, ArraySegment<byte> buffer)

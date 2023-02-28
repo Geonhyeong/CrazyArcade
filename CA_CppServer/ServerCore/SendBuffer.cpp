@@ -5,7 +5,7 @@
 	SendBuffer
 ---------------*/
 
-SendBuffer::SendBuffer(SendBufferChunkRef owner, BYTE* buffer, int32 allocSize)
+SendBuffer::SendBuffer(SendBufferChunkRef owner, BYTE* buffer, uint32 allocSize)
 	:_owner(owner), _buffer(buffer), _allocSize(allocSize)
 {
 }
@@ -79,7 +79,7 @@ SendBufferRef SendBufferManager::Open(uint32 size)
 		LSendBufferChunk->Reset();
 	}
 
-	cout << "THREAD_ID : " << LThreadId << ", FREE : " << LSendBufferChunk->FreeSize() << endl;
+	//cout << "THREAD_ID : " << LThreadId << ", FREE : " << LSendBufferChunk->FreeSize() << endl;
 
 	return LSendBufferChunk->Open(size);
 }

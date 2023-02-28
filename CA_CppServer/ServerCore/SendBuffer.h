@@ -9,11 +9,12 @@ class SendBufferChunk;
 class SendBuffer
 {
 public:
-	SendBuffer(SendBufferChunkRef owner, BYTE* buffer, int32 allocSize);
+	SendBuffer(SendBufferChunkRef owner, BYTE* buffer, uint32 allocSize);
 	~SendBuffer();
 
 	BYTE* Buffer() { return _buffer; }
-	int32 WriteSize() { return _writeSize; }
+	uint32 AllocSize() { return _allocSize; }
+	uint32 WriteSize() { return _writeSize; }
 	void Close(uint32 writeSize);
 
 private:
@@ -31,7 +32,7 @@ class SendBufferChunk : public enable_shared_from_this<SendBufferChunk>
 {
 	enum
 	{
-		SEND_BUFFER_CHUNK_SIZE = 128
+		SEND_BUFFER_CHUNK_SIZE = 6000
 	};
 
 public:

@@ -4,9 +4,13 @@
 #include "Service.h"
 #include "GameSession.h"
 #include "GameSessionManager.h"
+#include "Protocol.pb.h"
+#include "ClientPacketHandler.h"
 
 int main()
 {
+	ClientPacketHandler::Init();
+
 	ServerServiceRef service = make_shared<ServerService>(
 		NetAddress(L"127.0.0.1", 7777),
 		make_shared<IocpCore>(),
@@ -29,15 +33,25 @@ int main()
 	char sendData[] = "Hello World";
 	while (true)
 	{
-		SendBufferRef sendBuffer = GSendBufferManager->Open(64);
+		Protocol::S_TEST pkt;
+		pkt.set_id(1000);
+		pkt.set_hp(100);
+		pkt.set_attack(10);
+		{
+			Protocol::BuffData* data = pkt.add_buffs();
+			data->set_buffid(100);
+			data->set_remaintime(1.2f);
+			data->add_victims(4000);
+		}
+		{
+			Protocol::BuffData* data = pkt.add_buffs();
+			data->set_buffid(200);
+			data->set_remaintime(2.5f);
+			data->add_victims(1000);
+			data->add_victims(2000);
+		}
 
-		BYTE* buffer = sendBuffer->Buffer();
-		((PacketHeader*)buffer)->size = (sizeof(sendData) + sizeof(PacketHeader));
-		((PacketHeader*)buffer)->id = 1;	// 1 : Hello Msg
-
-		::memcpy(&buffer[4], sendData, sizeof(sendData));
-		sendBuffer->Close(sizeof(sendData) + sizeof(PacketHeader));
-
+		SendBufferRef sendBuffer = ClientPacketHandler::MakeSendBuffer(pkt);
 		GSessionManager.Broadcast(sendBuffer);
 
 		this_thread::sleep_for(250ms);
