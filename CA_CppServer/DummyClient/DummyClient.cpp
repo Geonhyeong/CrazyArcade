@@ -6,7 +6,7 @@
 
 char sendData[] = "Hello World";
 
-class ServerSession: public PacketSession
+class ServerSession : public PacketSession
 {
 public:
 	~ServerSession()
@@ -16,12 +16,9 @@ public:
 
 	virtual void OnConnected() override
 	{
-		//cout << "Connected To Server" << endl;
-	}
-
-	virtual void OnDisconnected() override
-	{
-		//cout << "Disconnected" << endl;
+		Protocol::C_LOGIN pkt;
+		auto sendBuffer = ServerPacketHandler::MakeSendBuffer(pkt);
+		Send(sendBuffer);
 	}
 
 	virtual void OnRecvPacket(BYTE* buffer, int32 len) override
@@ -38,6 +35,10 @@ public:
 		//cout << "OnSend Len = " << len << endl;
 	}
 
+	virtual void OnDisconnected() override
+	{
+		//cout << "Disconnected" << endl;
+	}
 };
 
 int main()
@@ -63,6 +64,16 @@ int main()
 					service->GetIocpCore()->Dispatch();
 				}
 			});
+	}
+
+	Protocol::C_CHAT chatPkt;
+	chatPkt.set_msg(u8"Hello World !");
+	auto sendBuffer = ServerPacketHandler::MakeSendBuffer(chatPkt);
+
+	while (true)
+	{
+		//service->Broadcast(sendBuffer);
+		this_thread::sleep_for(1s);
 	}
 
 	GThreadManager->Join();

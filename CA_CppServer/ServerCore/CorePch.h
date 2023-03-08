@@ -1,12 +1,7 @@
 #pragma once
 
-#include "Types.h"
-#include "CoreMacro.h"
-#include "CoreTLS.h"
-#include "CoreGlobal.h"
-
-#include <vector>
 #include <array>
+#include <vector>
 #include <list>
 #include <queue>
 #include <stack>
@@ -19,11 +14,16 @@
 #include <iostream>
 using namespace std;
 
-#include <WinSock2.h>
-#include <MSWSock.h>
-#include <WS2tcpip.h>
+#include <winsock2.h>
+#include <mswsock.h>
+#include <ws2tcpip.h>
 #pragma comment(lib, "ws2_32.lib")
 
+#include "Types.h"
+#include "CoreMacro.h"
+#include "CoreTLS.h"
+#include "CoreGlobal.h"
 #include "Lock.h"
 #include "SendBuffer.h"
 #include "Session.h"
+#include "LockQueue.h"

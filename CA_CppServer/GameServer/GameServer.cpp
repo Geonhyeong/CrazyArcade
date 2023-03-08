@@ -6,9 +6,37 @@
 #include "GameSessionManager.h"
 #include "Protocol.pb.h"
 #include "ClientPacketHandler.h"
+#include "Room.h"
+
+enum
+{
+	WORKER_TICK = 64
+};
+
+void DoWorkerJob(ServerServiceRef& service)
+{
+	while (true)
+	{
+		LEndTickCount = ::GetTickCount64() + WORKER_TICK;
+
+		// 네트워크 입출력 처리 -> 인게임 로직까지 (패킷 핸들러에 의해)
+		service->GetIocpCore()->Dispatch(10);
+
+		// 예약된 일감 처리
+		ThreadManager::DistributeReservedJobs();
+
+		// 글로벌 큐
+		ThreadManager::DoGlobalQueueWork();
+	}
+}
+
 
 int main()
 {
+	GRoom->DoTimer(1000, [] { cout << "Hello 1000" << endl; });
+	GRoom->DoTimer(2000, [] { cout << "Hello 2000" << endl; });
+	GRoom->DoTimer(3000, [] { cout << "Hello 3000" << endl; });
+
 	ClientPacketHandler::Init();
 
 	ServerServiceRef service = make_shared<ServerService>(
@@ -21,41 +49,13 @@ int main()
 
 	for (int32 i = 0; i < 5; i++)
 	{
-		GThreadManager->Launch([=]()
+		GThreadManager->Launch([&service]()
 			{
-				while (true)
-				{
-					service->GetIocpCore()->Dispatch();
-				}
+				DoWorkerJob(service);
 			});
 	}
-
-	char sendData[] = "Hello World";
-	while (true)
-	{
-		Protocol::S_TEST pkt;
-		pkt.set_id(1000);
-		pkt.set_hp(100);
-		pkt.set_attack(10);
-		{
-			Protocol::BuffData* data = pkt.add_buffs();
-			data->set_buffid(100);
-			data->set_remaintime(1.2f);
-			data->add_victims(4000);
-		}
-		{
-			Protocol::BuffData* data = pkt.add_buffs();
-			data->set_buffid(200);
-			data->set_remaintime(2.5f);
-			data->add_victims(1000);
-			data->add_victims(2000);
-		}
-
-		SendBufferRef sendBuffer = ClientPacketHandler::MakeSendBuffer(pkt);
-		GSessionManager.Broadcast(sendBuffer);
-
-		this_thread::sleep_for(250ms);
-	}
+	
+	DoWorkerJob(service);
 
 	GThreadManager->Join();
 }
