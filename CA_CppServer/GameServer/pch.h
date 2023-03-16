@@ -14,4 +14,4 @@
 #include "Protocol.pb.h"
 
 using GameSessionRef = std::shared_ptr<class GameSession>;
-using PlayerRef = std::shared_ptr<class Player>;
+using RoomRef = std::shared_ptr<class Room>;

@@ -12,7 +12,7 @@ namespace PacketGenerator
 
         private static void Main(string[] args)
         {
-            string file = "../../../Common/protoc-3.12.3-win64/bin/Protocol.proto";
+            string file = "../../../Common/Protobuf/bin/Protocol.proto";
             if (args.Length >= 1)
                 file = args[0];
 

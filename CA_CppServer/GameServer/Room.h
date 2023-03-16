@@ -4,14 +4,15 @@
 class Room : public JobQueue
 {
 public:
-	// 싱글쓰레드 환경인마냥 코딩
-	void Enter(PlayerRef player);
-	void Leave(PlayerRef player);
+	void Enter(GameObject gameObject);
+	void Leave(int objectId);
 	void Broadcast(SendBufferRef sendBuffer);
 
+public:
+	int32 GetRoomId() { return _roomId; }
+	void SetRoomId(int32 roomId) { _roomId = roomId; }
+
 private:
-	map<uint64, PlayerRef> _players;
+	int32 _roomId;
 };
 
-// TEMP
-extern shared_ptr<Room> GRoom;

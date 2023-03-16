@@ -15,8 +15,9 @@ public:
 	virtual void OnSend(int32 len) override;
 
 public:
-	vector<PlayerRef> _players;
+	int32 GetSessionId() { return _sessionId; }
+	void SetSessionId(int32 sessionId) { _sessionId = sessionId; }
 
-	PlayerRef _currentPlayer;
-	weak_ptr<class Room> _room;
+private:
+	int32 _sessionId;
 };

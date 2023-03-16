@@ -1,6 +1,7 @@
 ﻿using Google.Protobuf;
 using Google.Protobuf.Protocol;
 using ServerCore;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -122,9 +123,9 @@ internal class PacketHandler
     public static void S_ConnectedHandler(PacketSession session, IMessage packet)
     {
         Debug.Log("S_ConnectedHandler");
-        C_Login loginPacket = new C_Login();
+        /*C_Login loginPacket = new C_Login();
         loginPacket.UniqueId = SystemInfo.deviceUniqueIdentifier;
-        Managers.Network.Send(loginPacket);
+        Managers.Network.Send(loginPacket);*/
     }
 
     public static void S_LoginHandler(PacketSession session, IMessage packet)

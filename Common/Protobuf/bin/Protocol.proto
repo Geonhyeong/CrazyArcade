@@ -1,49 +1,133 @@
 syntax = "proto3";
 package Protocol;
 
-enum PlayerType
-{
-    PLAYER_TYPE_NONE = 0;
-    PLAYER_TYPE_KNIGHT = 1;
-    PLAYER_TYPE_MAGE = 2;
-    PLAYER_TYPE_ARCHER = 3;
+option csharp_namespace = "Google.Protobuf.Protocol";
+
+enum MsgId {
+  S_ENTER_GAME = 0;
+  S_LEAVE_GAME = 1;
+  S_SPAWN = 2;
+  S_DESPAWN = 3;
+  C_MOVE = 4;
+  S_MOVE = 5;
+  C_SKILL = 6;
+  S_CHANGE_STAT = 7;
+  S_POP = 8;
+  S_TRAP = 9;
+  S_DIE = 10;
+  S_CONNECTED = 11;
+  C_LOGIN = 12;
+  S_LOGIN = 13;
 }
 
-message C_LOGIN
-{
-
+enum CreatureState {
+    IDLE = 0;
+    MOVING = 1;
+    DEAD = 2;
+    POP = 3;
+    TRAP = 4;
 }
 
-message S_LOGIN
-{
-    bool success = 1;
-    repeated Player players = 2; // 아이디 발급 전
+enum MoveDir {
+    UP = 0;
+    DOWN = 1;
+    LEFT = 2;
+    RIGHT = 3;
 }
 
-message C_ENTER_GAME
-{
-    uint64 playerIndex = 1;
+enum GameObjectType {
+    NONE = 0;
+    PLAYER = 1;
+    BLOCK = 2;
+    BUBBLE = 3;
+    WAVE = 4;
+    ITEM = 5;
 }
 
-message S_ENTER_GAME
-{
-    bool success = 1;
+message S_EnterGame {
+  ObjectInfo player = 1;
 }
 
-message C_CHAT
-{
-    string msg = 1;
+message S_LeaveGame {
 }
 
-message S_CHAT
-{
-    uint64 playerId = 1;
-    string msg = 2;
+message S_Spawn {
+    repeated ObjectInfo objects = 1;
 }
 
-message Player
-{
-    uint64 id = 1;
+message S_Despawn {
+    repeated int32 objectIds = 1;
+}
+
+message C_Move {
+    PositionInfo posInfo = 1;
+}
+
+message S_Move {
+    int32 objectId = 1;
+    PositionInfo posInfo = 2;
+}
+
+message C_Skill {
+    SkillInfo info = 1;
+}
+
+message S_ChangeStat {
+    int32 playerId = 1;
+    StatInfo statInfo = 2;
+}
+
+message S_Pop {
+    int32 objectId = 1;
+}
+
+message S_Trap {
+    int32 playerId = 1;
+}
+
+message S_Die {
+    int32 playerId = 1;
+}
+
+message S_Connected {
+}
+
+message C_Login {
+    string uniqueId = 1;
+}
+
+message S_Login {
+    int32 loginOk = 1;
+}
+
+message ObjectInfo {
+    int32 objectId = 1;
     string name = 2;
-    PlayerType playerType = 3;
+    PositionInfo posInfo = 3;
+    StatInfo statInfo = 4;
+    bool isEdge = 5;
+}
+
+message PositionInfo {
+    CreatureState state = 1;
+    MoveDir moveDir = 2;
+    int32 posX = 3;
+    int32 posY = 4;
+}
+
+message StatInfo {
+    int32 id = 1;
+    string name = 2;
+    int32 speedLvl = 3;
+    int32 power = 4;
+    int32 availBubble = 5;
+    int32 maxSpeedLvl = 6;
+    int32 maxPower = 7;
+    int32 maxBubble = 8;
+}
+
+message SkillInfo {
+    int32 power = 1;
+    int32 posX = 2;
+    int32 posY = 3;
 }

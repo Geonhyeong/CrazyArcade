@@ -1,27 +1,21 @@
 #include "pch.h"
 #include "GameSession.h"
-#include "GameSessionManager.h"
 #include "ClientPacketHandler.h"
-#include "Room.h"
+#include "SessionManager.h"
 
 void GameSession::OnConnected()
 {
-	GSessionManager.Add(static_pointer_cast<GameSession>(shared_from_this()));
+	GSessionManager.Generate(static_pointer_cast<GameSession>(shared_from_this()));
+
+	// S_Connected 패킷 전송 (단지 연결되었다는 신호용 패킷이기 때문에 비어있다)
+	Protocol::S_Connected connectedPkt;
+	auto sendBuffer = ClientPacketHandler::MakeSendBuffer(connectedPkt);
+	Send(sendBuffer);
 }
 
 void GameSession::OnDisconnected()
 {
 	GSessionManager.Remove(static_pointer_cast<GameSession>(shared_from_this()));
-
-	if (_currentPlayer)
-	{
-		if (auto room = _room.lock())
-			room->DoAsync(&Room::Leave, _currentPlayer);
-	}
-
-	_currentPlayer = nullptr;
-	_players.clear();
-
 }
 
 void GameSession::OnRecvPacket(BYTE* buffer, int32 len)

@@ -3,10 +3,9 @@
 #include "ThreadManager.h"
 #include "Service.h"
 #include "GameSession.h"
-#include "GameSessionManager.h"
 #include "Protocol.pb.h"
 #include "ClientPacketHandler.h"
-#include "Room.h"
+#include "SessionManager.h"
 
 enum
 {
@@ -33,10 +32,6 @@ void DoWorkerJob(ServerServiceRef& service)
 
 int main()
 {
-	GRoom->DoTimer(1000, [] { cout << "Hello 1000" << endl; });
-	GRoom->DoTimer(2000, [] { cout << "Hello 2000" << endl; });
-	GRoom->DoTimer(3000, [] { cout << "Hello 3000" << endl; });
-
 	ClientPacketHandler::Init();
 
 	ServerServiceRef service = make_shared<ServerService>(
@@ -46,6 +41,8 @@ int main()
 		100);
 
 	ASSERT_CRASH(service->Start());
+
+	cout << "Listening...." << endl;
 
 	for (int32 i = 0; i < 5; i++)
 	{
