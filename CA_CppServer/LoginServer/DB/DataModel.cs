@@ -9,6 +9,7 @@ namespace LoginServer.DB
         public int AccountDbId { get; set; }
         public string AccountName { get; set; }
         public string Password { get; set; }
+        public string Nickname { get; set; }
 
         internal AppDbContext Context { get; set; }
 
@@ -22,7 +23,7 @@ namespace LoginServer.DB
         public async Task InsertAsync()
         {
             using var cmd = Context.Connection.CreateCommand();
-            cmd.CommandText = @"INSERT INTO `Account` (`AccountName`, `Password`) VALUES (@accountname, @password);";
+            cmd.CommandText = @"INSERT INTO `Account` (`AccountName`, `Password`, `Nickname`) VALUES (@accountname, @password, @nickname);";
             BindParams(cmd);
             await cmd.ExecuteNonQueryAsync();
             AccountDbId = (int)cmd.LastInsertedId;
@@ -31,7 +32,7 @@ namespace LoginServer.DB
         public async Task UpdateAsync()
         {
             using var cmd = Context.Connection.CreateCommand();
-            cmd.CommandText = @"UPDATE `Account` SET `AccountName` = @accountname, `Password` = @password WHERE `AccountDbId` = @accountdbid;";
+            cmd.CommandText = @"UPDATE `Account` SET `AccountName` = @accountname, `Password` = @password, `Nickname` = @nickname WHERE `AccountDbId` = @accountdbid;";
             BindParams(cmd);
             BindId(cmd);
             await cmd.ExecuteNonQueryAsync();
@@ -68,6 +69,12 @@ namespace LoginServer.DB
                 ParameterName = "@password",
                 DbType = DbType.String,
                 Value = Password,
+            });
+            cmd.Parameters.Add(new MySqlParameter
+            {
+                ParameterName = "@nickname",
+                DbType = DbType.String,
+                Value = Nickname,
             });
         }
 

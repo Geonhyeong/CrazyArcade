@@ -23,12 +23,13 @@ namespace LoginServer.Controllers
 
             await Context.Connection.OpenAsync();
             var query = new AccountQuery(Context);
-            var result = await query.FindOneAsync(req.AccountName);
+            var result = await query.FindOneAsyncByNickname(req.Nickname);
             if (result is null)
             {
                 AccountDb account = new AccountDb(Context);
                 account.AccountName = req.AccountName;
                 account.Password = req.Password;
+                account.Nickname = req.Nickname;
                 await account.InsertAsync();
 
                 res.RegisterOk = true;
@@ -49,7 +50,7 @@ namespace LoginServer.Controllers
 
             await Context.Connection.OpenAsync();
             var query = new AccountQuery(Context);
-            var result = await query.FindOneAsync(req.AccountName);
+            var result = await query.FindOneAsyncByAccountName(req.AccountName);
             if (result is null)
             {
                 res.LoginOk = false;

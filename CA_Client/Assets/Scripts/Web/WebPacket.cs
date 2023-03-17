@@ -5,6 +5,7 @@ using UnityEngine;
 public class RegisterPacketReq
 {
     public string AccountName;
+    public string Nickname;
     public string Password;
 }
 
