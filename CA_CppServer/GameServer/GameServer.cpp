@@ -6,6 +6,7 @@
 #include "Protocol.pb.h"
 #include "ClientPacketHandler.h"
 #include "SessionManager.h"
+#include "RedisManager.h"
 
 enum
 {
@@ -29,10 +30,10 @@ void DoWorkerJob(ServerServiceRef& service)
 	}
 }
 
-
 int main()
 {
 	ClientPacketHandler::Init();
+	GRedisManager = new RedisManager();
 
 	ServerServiceRef service = make_shared<ServerService>(
 		NetAddress(L"127.0.0.1", 7777),
@@ -55,4 +56,5 @@ int main()
 	DoWorkerJob(service);
 
 	GThreadManager->Join();
+	delete GRedisManager;
 }

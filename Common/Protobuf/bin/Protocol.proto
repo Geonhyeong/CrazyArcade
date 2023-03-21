@@ -16,8 +16,12 @@ enum MsgId {
   S_TRAP = 9;
   S_DIE = 10;
   S_CONNECTED = 11;
-  C_LOGIN = 12;
-  S_LOGIN = 13;
+  S_DISCONNECTED = 12;
+  C_LOGIN = 13;
+  S_LOGIN = 14;
+  C_CREATE_ROOM = 15;
+  C_ENTER_ROOM = 16;
+  S_ENTER_ROOM = 17;
 }
 
 enum CreatureState {
@@ -92,12 +96,39 @@ message S_Die {
 message S_Connected {
 }
 
+message S_Disconnected {
+}
+
 message C_Login {
-    string uniqueId = 1;
+    int32 accountDbId = 1;
+    int32 token = 2;
 }
 
 message S_Login {
-    int32 loginOk = 1;
+    bool loginOk = 1;
+}
+
+message C_CreateRoom {
+    string nickname = 1;
+}
+
+message C_EnterRoom {
+    string nickname = 1;
+    string roomCode = 2;
+}
+
+message S_EnterRoom {
+    bool enterRoomOk = 1;
+    RoomInfo roomInfo = 2;
+    repeated PlayerInfo players = 3;
+}
+
+message RoomInfo {
+
+}
+
+message PlayerInfo {
+
 }
 
 message ObjectInfo {

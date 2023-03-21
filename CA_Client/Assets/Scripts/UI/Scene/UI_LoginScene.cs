@@ -53,16 +53,14 @@ public class UI_LoginScene : UI_Scene
 
         Managers.Web.SendPostRequest<LoginPacketRes>("login/login", packet, (res) =>
         {
-            Debug.Log("Login : " + res.LoginOk);
             Get<GameObject>((int)GameObjects.Id).GetComponent<TMPro.TMP_InputField>().text = "";
             Get<GameObject>((int)GameObjects.Password).GetComponent<TMPro.TMP_InputField>().text = "";
 
             if (res.LoginOk)
             {
-                // TODO : 토큰 발급받기
                 Managers.Network.AccountId = res.AccountId;
                 Managers.Network.Token = res.Token;
-                
+
                 // 결과 팝업 출력
                 Managers.UI.ShowPopupUI<UI_LoginSuccessPopup>();
             }

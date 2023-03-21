@@ -16,6 +16,15 @@
     <Filter Include="Session">
       <UniqueIdentifier>{18d56529-3136-46e9-aff3-2378ed0c55fd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Redis">
+      <UniqueIdentifier>{f7f8edfa-5f1e-4f66-899f-ce11c6c280ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameContents\Room">
+      <UniqueIdentifier>{d0fc7b00-7e5c-4a4d-af20-1a749795b2c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameContents\Object">
+      <UniqueIdentifier>{1add506b-b992-4301-ac2b-9e086472e113}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameServer.cpp">
@@ -36,11 +45,20 @@
     <ClCompile Include="SessionManager.cpp">
       <Filter>Session</Filter>
     </ClCompile>
+    <ClCompile Include="RedisManager.cpp">
+      <Filter>Redis</Filter>
+    </ClCompile>
+    <ClCompile Include="GameRoom.cpp">
+      <Filter>GameContents\Room</Filter>
+    </ClCompile>
     <ClCompile Include="Room.cpp">
-      <Filter>GameContents</Filter>
+      <Filter>GameContents\Room</Filter>
     </ClCompile>
     <ClCompile Include="RoomManager.cpp">
-      <Filter>GameContents</Filter>
+      <Filter>GameContents\Room</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>GameContents\Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -59,11 +77,23 @@
     <ClInclude Include="SessionManager.h">
       <Filter>Session</Filter>
     </ClInclude>
+    <ClInclude Include="RedisManager.h">
+      <Filter>Redis</Filter>
+    </ClInclude>
+    <ClInclude Include="GameRoom.h">
+      <Filter>GameContents\Room</Filter>
+    </ClInclude>
     <ClInclude Include="Room.h">
-      <Filter>GameContents</Filter>
+      <Filter>GameContents\Room</Filter>
     </ClInclude>
     <ClInclude Include="RoomManager.h">
-      <Filter>GameContents</Filter>
+      <Filter>GameContents\Room</Filter>
     </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>GameContents\Object</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 public class RegisterPacketReq
 {
     public string AccountName { get; set; }
-    public string Nickname { get; set; }
     public string Password { get; set; }
 }
 

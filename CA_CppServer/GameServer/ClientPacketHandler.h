@@ -9,6 +9,8 @@ bool Handle_INVALID(PacketSessionRef& session, BYTE* buffer, int32 len);
 bool Handle_C_MOVE(PacketSessionRef& session, Protocol::C_Move& pkt);
 bool Handle_C_SKILL(PacketSessionRef& session, Protocol::C_Skill& pkt);
 bool Handle_C_LOGIN(PacketSessionRef& session, Protocol::C_Login& pkt);
+bool Handle_C_CREATE_ROOM(PacketSessionRef& session, Protocol::C_CreateRoom& pkt);
+bool Handle_C_ENTER_ROOM(PacketSessionRef& session, Protocol::C_EnterRoom& pkt);
 
 class ClientPacketHandler
 {
@@ -20,6 +22,8 @@ public:
 		GPacketHandler[Protocol::C_MOVE] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::C_Move>(Handle_C_MOVE, session, buffer, len); };
 		GPacketHandler[Protocol::C_SKILL] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::C_Skill>(Handle_C_SKILL, session, buffer, len); };
 		GPacketHandler[Protocol::C_LOGIN] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::C_Login>(Handle_C_LOGIN, session, buffer, len); };
+		GPacketHandler[Protocol::C_CREATE_ROOM] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::C_CreateRoom>(Handle_C_CREATE_ROOM, session, buffer, len); };
+		GPacketHandler[Protocol::C_ENTER_ROOM] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::C_EnterRoom>(Handle_C_ENTER_ROOM, session, buffer, len); };
 	}
 
 	static bool HandlePacket(PacketSessionRef& session, BYTE* buffer, int32 len)
@@ -37,7 +41,9 @@ public:
 	static SendBufferRef MakeSendBuffer(Protocol::S_Trap& pkt) { return MakeSendBuffer(pkt, Protocol::S_TRAP); }
 	static SendBufferRef MakeSendBuffer(Protocol::S_Die& pkt) { return MakeSendBuffer(pkt, Protocol::S_DIE); }
 	static SendBufferRef MakeSendBuffer(Protocol::S_Connected& pkt) { return MakeSendBuffer(pkt, Protocol::S_CONNECTED); }
+	static SendBufferRef MakeSendBuffer(Protocol::S_Disconnected& pkt) { return MakeSendBuffer(pkt, Protocol::S_DISCONNECTED); }
 	static SendBufferRef MakeSendBuffer(Protocol::S_Login& pkt) { return MakeSendBuffer(pkt, Protocol::S_LOGIN); }
+	static SendBufferRef MakeSendBuffer(Protocol::S_EnterRoom& pkt) { return MakeSendBuffer(pkt, Protocol::S_ENTER_ROOM); }
 
 private:
 	template<typename PacketType, typename ProcessFunc>

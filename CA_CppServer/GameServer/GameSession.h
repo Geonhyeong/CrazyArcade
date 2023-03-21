@@ -17,7 +17,13 @@ public:
 public:
 	int32 GetSessionId() { return _sessionId; }
 	void SetSessionId(int32 sessionId) { _sessionId = sessionId; }
+	string GetNickname() { return _nickname; }
+	void SetNickname(string nickname) { _nickname = nickname; }
+
+public:
+	weak_ptr<class Room> room;
 
 private:
 	int32 _sessionId;
+	string _nickname;
 };

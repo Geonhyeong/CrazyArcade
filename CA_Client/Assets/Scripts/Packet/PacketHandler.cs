@@ -122,15 +122,38 @@ internal class PacketHandler
 
     public static void S_ConnectedHandler(PacketSession session, IMessage packet)
     {
-        Debug.Log("S_ConnectedHandler");
-        /*C_Login loginPacket = new C_Login();
-        loginPacket.UniqueId = SystemInfo.deviceUniqueIdentifier;
-        Managers.Network.Send(loginPacket);*/
+        // 입장 Request (with Token, AccountDbId)
+        C_Login loginPacket = new C_Login();
+        loginPacket.AccountDbId = Managers.Network.AccountId;
+        loginPacket.Token = Managers.Network.Token;
+        Managers.Network.Send(loginPacket);
+    }
+
+    public static void S_DisconnectedHandler(PacketSession session, IMessage packet)
+    {
+        Managers.Scene.LoadScene(Define.Scene.Login);
+        // TODO : disconnect 팝업 출력
     }
 
     public static void S_LoginHandler(PacketSession session, IMessage packet)
     {
         S_Login loginPacket = (S_Login)packet;
-        Debug.Log($"LoginOk({loginPacket.LoginOk})");
+        
+        if (loginPacket.LoginOk)
+        {
+            // 게임서버에 접속 성공 시 로비(또는 방선택화면)로 이동
+            Managers.Scene.LoadScene(Define.Scene.Lobby);
+        }
+    }
+
+    public static void S_EnterRoomHandler(PacketSession session, IMessage packet)
+    {
+        S_EnterRoom enterRoomPacket = (S_EnterRoom)packet;
+
+        if (enterRoomPacket.EnterRoomOk)
+        {
+            Managers.Scene.LoadScene(Define.Scene.Room);
+            // TODO
+        }
     }
 }

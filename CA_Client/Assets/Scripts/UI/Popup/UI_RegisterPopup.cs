@@ -11,7 +11,6 @@ public class UI_RegisterPopup : UI_Popup
 	enum GameObjects
 	{
 		Id,
-		Nickname,
 		Password,
 		PasswordCheck
 	}
@@ -38,7 +37,6 @@ public class UI_RegisterPopup : UI_Popup
 	private void OnClickSubmitButton(PointerEventData evt)
     {
 		string id = Get<GameObject>((int)GameObjects.Id).GetComponent<TMPro.TMP_InputField>().text;
-		string nickname = Get<GameObject>((int)GameObjects.Nickname).GetComponent<TMPro.TMP_InputField>().text;
 		string password = Get<GameObject>((int)GameObjects.Password).GetComponent<TMPro.TMP_InputField>().text;
 		string passwordCheck = Get<GameObject>((int)GameObjects.PasswordCheck).GetComponent<TMPro.TMP_InputField>().text;
 
@@ -52,7 +50,6 @@ public class UI_RegisterPopup : UI_Popup
 		RegisterPacketReq packet = new RegisterPacketReq()
 		{
 			AccountName = id,
-			Nickname = nickname,
 			Password = password
 		};
 
@@ -65,7 +62,7 @@ public class UI_RegisterPopup : UI_Popup
             }
 			else
             {
-				Get<GameObject>((int)GameObjects.Nickname).GetComponent<TMPro.TMP_InputField>().text = "";
+				Get<GameObject>((int)GameObjects.Id).GetComponent<TMPro.TMP_InputField>().text = "";
 			}
 		});
     }

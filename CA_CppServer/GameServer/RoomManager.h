@@ -5,9 +5,14 @@ class Room;
 class RoomManager
 {
 public:
-	RoomRef Generate(int mapId);
+	RoomRef Generate();
 	void Remove(int roomId);
 	RoomRef Find(int roomId);
+	RoomRef FindByCode(string roomCode);
+	RoomRef GetRandomRoom();
+
+private:
+	string MakeRoomCode();
 
 private:
 	USE_LOCK;
@@ -16,4 +21,3 @@ private:
 };
 
 extern RoomManager GRoomManager;
-

@@ -22,9 +22,8 @@ public class UI_LoginSuccessPopup : UI_Popup
 
     private void OnClickOkButton(PointerEventData evt)
     {
-        // 로그인 성공하면 로비로 입장
+        // 로그인 성공하면 게임서버에 접속 시도
         Managers.Network.ConnectToGame();
-        Managers.Scene.LoadScene(Define.Scene.Lobby);
         Managers.UI.ClosePopupUI();
     }
 }

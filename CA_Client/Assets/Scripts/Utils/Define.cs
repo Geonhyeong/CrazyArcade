@@ -9,6 +9,7 @@ public class Define
         Unknown,
         Login,
         Lobby,
+        Room,
         Game,
     }
 

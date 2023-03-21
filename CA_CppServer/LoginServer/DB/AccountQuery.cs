@@ -20,7 +20,7 @@ namespace LoginServer.DB
         public async Task<AccountDb> FindOneAsync(int accountDbId)
         {
             using var cmd = Context.Connection.CreateCommand();
-            cmd.CommandText = @"SELECT `AccountDbId`, `AccountName`, `Password`, `Nickname` FROM `Account` WHERE `AccountDbId` = @accountDbId";
+            cmd.CommandText = @"SELECT `AccountDbId`, `AccountName`, `Password` FROM `Account` WHERE `AccountDbId` = @accountDbId";
             cmd.Parameters.Add(new MySqlParameter
             {
                 ParameterName = "@accountDbId",
@@ -31,24 +31,10 @@ namespace LoginServer.DB
             return result.Count > 0 ? result[0] : null;
         }
 
-        public async Task<AccountDb> FindOneAsyncByNickname(string nickname)
-        {
-            using var cmd = Context.Connection.CreateCommand();
-            cmd.CommandText = @"SELECT `AccountDbId`, `AccountName`, `Password`, `Nickname` FROM `Account` WHERE `Nickname` = @nickname";
-            cmd.Parameters.Add(new MySqlParameter
-            {
-                ParameterName = "@nickname",
-                DbType = DbType.String,
-                Value = nickname,
-            });
-            var result = await ReadAllAsync(await cmd.ExecuteReaderAsync());
-            return result.Count > 0 ? result[0] : null;
-        }
-
         public async Task<AccountDb> FindOneAsyncByAccountName(string accountName)
         {
             using var cmd = Context.Connection.CreateCommand();
-            cmd.CommandText = @"SELECT `AccountDbId`, `AccountName`, `Password`, `Nickname` FROM `Account` WHERE `AccountName` = @accountName";
+            cmd.CommandText = @"SELECT `AccountDbId`, `AccountName`, `Password` FROM `Account` WHERE `AccountName` = @accountName";
             cmd.Parameters.Add(new MySqlParameter
             {
                 ParameterName = "@accountName",
@@ -79,8 +65,7 @@ namespace LoginServer.DB
                     {
                         AccountDbId = reader.GetInt32(0),
                         AccountName = reader.GetString(1),
-                        Password = reader.GetString(2),
-                        Nickname = reader.GetString(3),
+                        Password = reader.GetString(2)
                     };
                     accounts.Add(account);
                 }

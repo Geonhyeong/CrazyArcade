@@ -1,6 +1,12 @@
 #include "pch.h"
 #include "ClientPacketHandler.h"
 #include "GameSession.h"
+#include "RedisManager.h"
+#include <nlohmann/json.hpp>
+#include "RoomManager.h"
+#include "Room.h"
+
+using json = nlohmann::json;
 
 PacketHandlerFunc GPacketHandler[UINT16_MAX];
 
@@ -25,7 +31,81 @@ bool Handle_C_SKILL(PacketSessionRef& session, Protocol::C_Skill& pkt)
 
 bool Handle_C_LOGIN(PacketSessionRef& session, Protocol::C_Login& pkt)
 {
-	return false;
+	// Validation 체크 (RedisDB에 token 검증)
+	string value = GRedisManager->GetValue(to_string(pkt.accountdbid()));
+	json j = json::parse(value);
+
+	bool isValid = true;
+	if (pkt.accountdbid() != j["AccountDbId"] || pkt.token() != j["Token"] || j["Expired"] < ::GetTickCount64())
+		isValid = false;
+
+	cout << "AccountId: " << pkt.accountdbid() << " Access Complete!" << endl;
+
+	Protocol::S_Login loginPkt;
+	loginPkt.set_loginok(isValid);
+	auto sendBuffer = ClientPacketHandler::MakeSendBuffer(loginPkt);
+	session->Send(sendBuffer);
+	
+	if (!isValid)
+		session->Disconnect(L"Invalid Session!");
+	
+	return true;
+}
+
+bool Handle_C_CREATE_ROOM(PacketSessionRef& session, Protocol::C_CreateRoom& pkt)
+{
+	GameSessionRef gameSession = static_pointer_cast<GameSession>(session);
+	
+	string nickname = pkt.nickname();
+	gameSession->SetNickname(nickname);
+
+	// 방 생성 및 입장
+	RoomRef room = GRoomManager.Generate();
+	room->DoAsync(&Room::Enter, gameSession);
+
+	return true;
+}
+
+bool Handle_C_ENTER_ROOM(PacketSessionRef& session, Protocol::C_EnterRoom& pkt)
+{
+	GameSessionRef gameSession = static_pointer_cast<GameSession>(session);
+
+	string nickname = pkt.nickname();
+	gameSession->SetNickname(nickname);
+
+	// 방 검색 후 입장
+	if (pkt.roomcode() == "RANDOM")
+	{
+		RoomRef room = GRoomManager.GetRandomRoom();
+		if (room != nullptr)
+		{
+			room->DoAsync(&Room::Enter, gameSession);
+		}
+		else
+		{
+			Protocol::S_EnterRoom enterRoomPkt;
+			enterRoomPkt.set_enterroomok(false);
+			auto sendBuffer = ClientPacketHandler::MakeSendBuffer(enterRoomPkt);
+			session->Send(sendBuffer);
+		}
+	}
+	else
+	{
+		RoomRef room = GRoomManager.FindByCode(pkt.roomcode());
+		if (room != nullptr && room->CanEnter())
+		{
+			room->DoAsync(&Room::Enter, gameSession);
+		}
+		else
+		{
+			Protocol::S_EnterRoom enterRoomPkt;
+			enterRoomPkt.set_enterroomok(false);
+			auto sendBuffer = ClientPacketHandler::MakeSendBuffer(enterRoomPkt);
+			session->Send(sendBuffer);
+		}
+	}
+
+	return true;
 }
 
 //bool Handle_C_LOGIN(PacketSessionRef& session, Protocol::C_LOGIN& pkt)
