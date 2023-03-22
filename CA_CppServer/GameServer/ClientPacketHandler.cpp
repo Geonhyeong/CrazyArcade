@@ -5,6 +5,7 @@
 #include <nlohmann/json.hpp>
 #include "RoomManager.h"
 #include "Room.h"
+#include "SessionManager.h"
 
 using json = nlohmann::json;
 
@@ -31,12 +32,18 @@ bool Handle_C_SKILL(PacketSessionRef& session, Protocol::C_Skill& pkt)
 
 bool Handle_C_LOGIN(PacketSessionRef& session, Protocol::C_Login& pkt)
 {
+	GameSessionRef gameSession = static_pointer_cast<GameSession>(session);
+
 	// Validation 체크 (RedisDB에 token 검증)
 	string value = GRedisManager->GetValue(to_string(pkt.accountdbid()));
 	json j = json::parse(value);
 
 	bool isValid = true;
 	if (pkt.accountdbid() != j["AccountDbId"] || pkt.token() != j["Token"] || j["Expired"] < ::GetTickCount64())
+		isValid = false;
+
+	// 현재 접속중인데 또 로그인 시도한건지 확인
+	if (GSessionManager.FindByAccountDbId(pkt.accountdbid()) != nullptr)
 		isValid = false;
 
 	cout << "AccountId: " << pkt.accountdbid() << " Access Complete!" << endl;
@@ -46,7 +53,9 @@ bool Handle_C_LOGIN(PacketSessionRef& session, Protocol::C_Login& pkt)
 	auto sendBuffer = ClientPacketHandler::MakeSendBuffer(loginPkt);
 	session->Send(sendBuffer);
 	
-	if (!isValid)
+	if (isValid)
+		gameSession->SetAccountDbId(pkt.accountdbid());
+	else
 		session->Disconnect(L"Invalid Session!");
 	
 	return true;
@@ -104,6 +113,16 @@ bool Handle_C_ENTER_ROOM(PacketSessionRef& session, Protocol::C_EnterRoom& pkt)
 			session->Send(sendBuffer);
 		}
 	}
+
+	return true;
+}
+
+bool Handle_C_LEAVE_ROOM(PacketSessionRef& session, Protocol::C_LeaveRoom& pkt)
+{
+	GameSessionRef gameSession = static_pointer_cast<GameSession>(session);
+
+	RoomRef room = gameSession->room.lock();
+	room->DoAsync(&Room::Leave, gameSession);
 
 	return true;
 }

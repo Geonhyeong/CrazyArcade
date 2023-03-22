@@ -152,8 +152,34 @@ internal class PacketHandler
 
         if (enterRoomPacket.EnterRoomOk)
         {
+            Debug.Log("EnterRoomOk");
             Managers.Scene.LoadScene(Define.Scene.Room);
-            // TODO
         }
+    }
+
+    public static void S_RoomPlayerListHandler(PacketSession session, IMessage packet)
+    {
+        Debug.Log("Room Player List Received!");
+
+        S_RoomPlayerList playerListPacket = (S_RoomPlayerList)packet;
+
+        RoomInfo roomInfo = playerListPacket.RoomInfo;
+        Managers.Room.RoomId = roomInfo.RoomId;
+        Managers.Room.RoomCode = roomInfo.RoomCode;
+        Managers.Room.HostSessionId = roomInfo.HostSessionId;
+
+        Managers.Room.Clear();
+        foreach (GameSessionInfo gameSession in playerListPacket.GameSessions)
+        {
+            Managers.Room.Add(gameSession);
+        }
+        
+        Managers.Room.RefreshUI();
+    }
+
+    public static void S_LeaveRoomHandler(PacketSession session, IMessage packet)
+    {
+        Debug.Log("Leave Room");
+        Managers.Scene.LoadScene(Define.Scene.Lobby);
     }
 }

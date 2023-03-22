@@ -15,6 +15,7 @@ public class Managers : MonoBehaviour
     private ObjectManager _obj = new ObjectManager();
     private NetworkManager _network = new NetworkManager();
     private WebManager _web = new WebManager();
+    private RoomManager _room = new RoomManager();
 
     public static MapManager Map
     { get { return Instance._map; } }
@@ -27,6 +28,9 @@ public class Managers : MonoBehaviour
 
     public static WebManager Web
     { get { return Instance._web; } }
+
+    public static RoomManager Room
+    { get { return Instance._room; } }
 
     #endregion Contents
 

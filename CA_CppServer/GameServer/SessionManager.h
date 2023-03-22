@@ -5,7 +5,8 @@ class SessionManager
 public:
 	void			Generate(GameSessionRef session);
 	void			Remove(GameSessionRef session);
-	GameSessionRef	Find(int id);
+	GameSessionRef	Find(int32 id);
+	GameSessionRef	FindByAccountDbId(int32 accountDbId);
 
 private:
 	USE_LOCK;

@@ -19,11 +19,14 @@ public:
 	void SetSessionId(int32 sessionId) { _sessionId = sessionId; }
 	string GetNickname() { return _nickname; }
 	void SetNickname(string nickname) { _nickname = nickname; }
+	int32 GetAccountDbId() { return _accountDbId; }
+	void SetAccountDbId(int32 accountDbId) { _accountDbId = accountDbId; }
 
 public:
 	weak_ptr<class Room> room;
 
 private:
 	int32 _sessionId;
+	int32 _accountDbId;
 	string _nickname;
 };

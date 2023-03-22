@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class LoginScene : BaseScene
 {
+    UI_LoginScene _sceneUI;
+
     protected override void Init()
     {
         base.Init();
 
         SceneType = Define.Scene.Login;
 
-        GameObject go = Managers.Resource.Instantiate("UI/Scene/UI_Login");
+        _sceneUI = Managers.UI.ShowSceneUI<UI_LoginScene>();
     }
 
     public override void Clear()

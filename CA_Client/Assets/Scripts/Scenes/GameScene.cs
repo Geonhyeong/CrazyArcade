@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GameScene : BaseScene
 {
+    // UI_GameScene _sceneUI;
+
     protected override void Init()
     {
         base.Init();
@@ -27,6 +29,9 @@ public class GameScene : BaseScene
         //GameObject go = new GameObject { name = "SpawningPool" };
         //SpawningPool pool = go.GetOrAddComponent<SpawningPool>();
         //pool.SetKeepMonsterCount(2);
+
+
+        //_sceneUI = Managers.UI.ShowSceneUI<UI_GameScene>();
     }
 
     public override void Clear()

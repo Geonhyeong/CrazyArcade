@@ -26,9 +26,11 @@ public:
 	void SetRoomId(int32 roomId) { _roomId = roomId; }
 	string GetRoomCode() { return _roomCode; }
 	void SetRoomCode(string roomCode) { _roomCode = roomCode; }
+	int32 GetHostSessionId() { return _hostSessionId; }
 
 private:
 	int32 _roomId;
 	string _roomCode;
 	map<int32, GameSessionRef> _gameSessions;
+	int32 _hostSessionId;
 };

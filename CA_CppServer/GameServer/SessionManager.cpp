@@ -10,6 +10,7 @@ void SessionManager::Generate(GameSessionRef session)
 	int32 sessionId = ++_sessionId;
 
 	session->SetSessionId(sessionId);
+	session->SetAccountDbId(-1);
 	_sessions.insert(make_pair(sessionId, session));
 
 	cout << "Session is Generated : " << sessionId << endl;
@@ -26,12 +27,24 @@ void SessionManager::Remove(GameSessionRef session)
 	cout << "Session is Removed : " << session->GetSessionId() << endl;
 }
 
-GameSessionRef SessionManager::Find(int id)
+GameSessionRef SessionManager::Find(int32 id)
 {
 	READ_LOCK;
 	auto it = _sessions.find(id);
 	if (it != _sessions.end())
 		return it->second;
+
+	return nullptr;
+}
+
+GameSessionRef SessionManager::FindByAccountDbId(int32 accountDbId)
+{
+	READ_LOCK;
+	for (auto it : _sessions)
+	{
+		if (it.second->GetAccountDbId() == accountDbId)
+			return it.second;
+	}
 
 	return nullptr;
 }

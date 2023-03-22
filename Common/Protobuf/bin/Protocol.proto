@@ -22,6 +22,9 @@ enum MsgId {
   C_CREATE_ROOM = 15;
   C_ENTER_ROOM = 16;
   S_ENTER_ROOM = 17;
+  S_ROOM_PLAYER_LIST = 18;
+  C_LEAVE_ROOM = 19;
+  S_LEAVE_ROOM = 20;
 }
 
 enum CreatureState {
@@ -119,16 +122,28 @@ message C_EnterRoom {
 
 message S_EnterRoom {
     bool enterRoomOk = 1;
-    RoomInfo roomInfo = 2;
-    repeated PlayerInfo players = 3;
+}
+
+message S_RoomPlayerList {
+    RoomInfo roomInfo = 1;
+    repeated GameSessionInfo gameSessions = 2;
+}
+
+message C_LeaveRoom {
+}
+
+message S_LeaveRoom {
 }
 
 message RoomInfo {
-
+    int32 roomId = 1;
+    string roomCode = 2;
+    int32 hostSessionId = 3;
 }
 
-message PlayerInfo {
-
+message GameSessionInfo {
+    int32 sessionId = 1;
+    string nickname = 2;
 }
 
 message ObjectInfo {

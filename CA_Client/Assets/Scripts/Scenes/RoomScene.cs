@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class RoomScene : BaseScene
 {
+    UI_RoomScene _sceneUI;
+
     protected override void Init()
     {
         base.Init();
 
         SceneType = Define.Scene.Room;
 
-        GameObject go = Managers.Resource.Instantiate("UI/Scene/UI_Room");
+        _sceneUI = Managers.UI.ShowSceneUI<UI_RoomScene>();
     }
 
     public override void Clear()
