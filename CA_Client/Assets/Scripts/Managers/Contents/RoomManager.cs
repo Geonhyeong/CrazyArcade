@@ -11,6 +11,7 @@ public class RoomManager
     public int HostSessionId { get; set; }
 
     public Dictionary<int, GameSessionInfo> Players { get; } = new Dictionary<int, GameSessionInfo>();
+    public GameSessionInfo MyGameSession { get; set; }
 
     public void Add(GameSessionInfo player)
     {

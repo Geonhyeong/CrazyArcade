@@ -6,6 +6,10 @@
 #include "RoomManager.h"
 #include "Room.h"
 #include "SessionManager.h"
+#include "GameRoomManager.h"
+#include "GameRoom.h"
+#include "ObjectManager.h"
+#include "Player.h"
 
 using json = nlohmann::json;
 
@@ -122,90 +126,64 @@ bool Handle_C_LEAVE_ROOM(PacketSessionRef& session, Protocol::C_LeaveRoom& pkt)
 	GameSessionRef gameSession = static_pointer_cast<GameSession>(session);
 
 	RoomRef room = gameSession->room.lock();
-	room->DoAsync(&Room::Leave, gameSession);
+	if (room != nullptr)
+		room->DoAsync(&Room::Leave, gameSession);
 
 	return true;
 }
 
-//bool Handle_C_LOGIN(PacketSessionRef& session, Protocol::C_LOGIN& pkt)
-//{
-//	GameSessionRef gameSession = static_pointer_cast<GameSession>(session);
-//
-//	// TODO : Validation 체크
-//
-//	Protocol::S_LOGIN loginPkt;
-//	loginPkt.set_success(true);
-//	
-//	// DB에서 플레이 정보를 긁어온다
-//	// GameSession에 플레이 정보를 저장 (메모리)
-//	
-//	// ID 발급 (DB 아이디가 아니고, 인게임 아이디)
-//	static Atomic<uint64> idGenerator = 1;
-//
-//	{
-//		auto player = loginPkt.add_players();
-//		player->set_name(u8"DB에서 긁어온 이름1");
-//		player->set_playertype(Protocol::PLAYER_TYPE_KNIGHT);
-//
-//		PlayerRef playerRef = make_shared<Player>();
-//		playerRef->playerId = idGenerator++;
-//		playerRef->name = player->name();
-//		playerRef->type = player->playertype();
-//		playerRef->ownerSession = gameSession;
-//
-//		gameSession->_players.push_back(playerRef);
-//	}
-//
-//	{
-//		auto player = loginPkt.add_players();
-//		player->set_name(u8"DB에서 긁어온 이름2");
-//		player->set_playertype(Protocol::PLAYER_TYPE_MAGE);
-//
-//		PlayerRef playerRef = make_shared<Player>();
-//		playerRef->playerId = idGenerator++;
-//		playerRef->name = player->name();
-//		playerRef->type = player->playertype();
-//		playerRef->ownerSession = gameSession;
-//
-//		gameSession->_players.push_back(playerRef);
-//	}
-//
-//	auto sendBuffer = ClientPacketHandler::MakeSendBuffer(loginPkt);
-//	session->Send(sendBuffer);
-//
-//	return true;
-//}
-//
-//bool Handle_C_ENTER_GAME(PacketSessionRef& session, Protocol::C_ENTER_GAME& pkt)
-//{
-//	GameSessionRef gameSession = static_pointer_cast<GameSession>(session);
-//
-//	uint64 index = pkt.playerindex();
-//	// TODO : Validation
-//
-//	gameSession->_currentPlayer = gameSession->_players[index]; // READ_ONLY?
-//	gameSession->_room = GRoom;
-//
-//	GRoom->DoAsync(&Room::Enter, gameSession->_currentPlayer);
-//
-//	Protocol::S_ENTER_GAME enterGamePkt;
-//	enterGamePkt.set_success(true);
-//	auto sendBuffer = ClientPacketHandler::MakeSendBuffer(enterGamePkt);
-//	gameSession->_currentPlayer->ownerSession->Send(sendBuffer);
-//
-//	return true;
-//
-//}
-//
-//bool Handle_C_CHAT(PacketSessionRef& session, Protocol::C_CHAT& pkt)
-//{
-//	std::cout << pkt.msg() << endl;
-//
-//	Protocol::S_CHAT chatPkt;
-//	chatPkt.set_msg(pkt.msg());
-//	auto sendBuffer = ClientPacketHandler::MakeSendBuffer(chatPkt);
-//
-//	GRoom->DoAsync(&Room::Broadcast, sendBuffer);
-//
-//	return true;
-//}
+bool Handle_C_START_GAME(PacketSessionRef& session, Protocol::C_StartGame& pkt)
+{
+	GameSessionRef gameSession = static_pointer_cast<GameSession>(session);
+	RoomRef room = gameSession->room.lock();
+
+	if (room != nullptr)
+	{
+		if (gameSession->GetSessionId() == room->GetHostSessionId())
+		{
+			// 게임이 시작되었다는 신호를 방 안 세션들에게 Broadcast
+			Protocol::S_StartGame startGamePkt;
+			auto sendBuffer = ClientPacketHandler::MakeSendBuffer(startGamePkt);
+			room->DoAsync(&Room::Broadcast, sendBuffer);
+			 
+			// 게임 방 생성
+			GameRoomRef gameRoom = GGameRoomManager.Add();
+			room->SetGameRoomId(gameRoom->GetGameRoomId());
+			gameRoom->DoAsync(&GameRoom::Init, room);
+		}
+	}
+
+	return true;
+}
+
+bool Handle_C_ENTER_GAME(PacketSessionRef& session, Protocol::C_EnterGame& pkt)
+{
+	GameSessionRef gameSession = static_pointer_cast<GameSession>(session);
+	RoomRef room = gameSession->room.lock();
+	
+	if (room != nullptr)
+	{
+		// 플레이어 생성
+		PlayerRef player = make_shared<Player>();
+		player->SetObjectId(GObjectManager.GenerateId(Protocol::GameObjectType::PLAYER));
+		player->SetOwnerSession(gameSession);
+		player->info->set_name("Player_" + to_string(player->GetObjectId()));
+		{
+			Protocol::PositionInfo posInfo = player->info->posinfo();
+			posInfo.set_state(Protocol::CreatureState::IDLE);
+			posInfo.set_movedir(Protocol::MoveDir::DOWN);
+			// TODO : 위치는 정해진 몇 곳에서 랜덤 배정
+			posInfo.set_posx(0);
+			posInfo.set_posy(-1);
+			player->info->set_allocated_posinfo(&posInfo);
+		}
+		// TODO : 스탯 관련 추가
+		gameSession->myPlayer = player;
+
+		// 플레이어를 게임에 입장시키기
+		GameRoomRef gameRoom = GGameRoomManager.Find(room->GetGameRoomId());
+		gameRoom->DoAsync(&GameRoom::EnterGame, static_pointer_cast<GameObject>(player));
+	}
+
+	return true;
+}

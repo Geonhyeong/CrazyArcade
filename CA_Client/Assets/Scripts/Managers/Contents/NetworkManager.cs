@@ -10,7 +10,6 @@ public class NetworkManager
 {
     public int AccountId { get; set; }
     public int Token { get; set; }
-    public string Nickname { get; set; }
 
     private ServerSession _session = new ServerSession();
 

@@ -80,7 +80,6 @@ public class UI_LobbyScene : UI_Scene
 			return false;
         }
 
-		Managers.Network.Nickname = nickname;
 		return true;
     }
 }

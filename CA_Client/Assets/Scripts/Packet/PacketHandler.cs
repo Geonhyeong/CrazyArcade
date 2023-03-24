@@ -154,6 +154,7 @@ internal class PacketHandler
         {
             Debug.Log("EnterRoomOk");
             Managers.Scene.LoadScene(Define.Scene.Room);
+            Managers.Room.MyGameSession = enterRoomPacket.Info;
         }
     }
 
@@ -180,6 +181,20 @@ internal class PacketHandler
     public static void S_LeaveRoomHandler(PacketSession session, IMessage packet)
     {
         Debug.Log("Leave Room");
+
+        Managers.Room.Clear();
+        Managers.Room.RoomId = -1;
+        Managers.Room.RoomCode = "";
+        Managers.Room.HostSessionId = -1;
         Managers.Scene.LoadScene(Define.Scene.Lobby);
+    }
+
+    public static void S_StartGameHandler(PacketSession session, IMessage packet)
+    {
+        Debug.Log("Start Game");
+        Managers.Scene.LoadScene(Define.Scene.Game);
+
+        C_EnterGame enterGamePkt = new C_EnterGame();
+        Managers.Network.Send(enterGamePkt);
     }
 }

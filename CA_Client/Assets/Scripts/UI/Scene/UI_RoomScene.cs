@@ -3,17 +3,28 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class UI_RoomScene : UI_Scene
 {
     [SerializeField]
     public TMPro.TMP_Text RoomCode = null;
-
     public List<UI_Room_Player> PlayerUIs { get; } = new List<UI_Room_Player>();
-    
+
+    enum Images
+    {
+        LeaveRoomBtn,
+        GameStartBtn
+    }
+
     public override void Init()
     {
         base.Init();
+
+        Bind<Image>(typeof(Images));
+        GetImage((int)Images.LeaveRoomBtn).gameObject.BindEvent(OnClickLeaveRoomButton);
+        GetImage((int)Images.GameStartBtn).gameObject.BindEvent(OnClickGameStartButton);
 
         RefreshUI();
     }
@@ -49,5 +60,20 @@ public class UI_RoomScene : UI_Scene
         GameObject grid = transform.Find("PlayerGrid").gameObject;
         foreach (Transform child in grid.transform)
             Destroy(child.gameObject);
+    }
+
+    private void OnClickLeaveRoomButton(PointerEventData evt)
+    {
+        C_LeaveRoom leaveRoomPacket = new C_LeaveRoom();
+        Managers.Network.Send(leaveRoomPacket);
+    }
+
+    private void OnClickGameStartButton(PointerEventData evt)
+    {
+        if (Managers.Room.MyGameSession.SessionId == Managers.Room.HostSessionId)
+        {
+            C_StartGame startGamePacket = new C_StartGame();
+            Managers.Network.Send(startGamePacket);
+        }
     }
 }

@@ -24,6 +24,7 @@ public:
 
 public:
 	weak_ptr<class Room> room;
+	weak_ptr<class Player> myPlayer;
 
 private:
 	int32 _sessionId;

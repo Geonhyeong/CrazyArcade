@@ -3,6 +3,9 @@
 #include "GameSession.h"
 #include "RoomManager.h"
 #include "ClientPacketHandler.h"
+#include "GameRoomManager.h"
+#include "GameRoom.h"
+#include "Player.h"
 
 void Room::Enter(GameSessionRef gameSession)
 {
@@ -18,6 +21,12 @@ void Room::Enter(GameSessionRef gameSession)
 	// 본인에게 S_EnterGame 전송
 	Protocol::S_EnterRoom enterRoomPkt;
 	enterRoomPkt.set_enterroomok(true);
+	{
+		Protocol::GameSessionInfo* info = new Protocol::GameSessionInfo();
+		info->set_sessionid(gameSession->GetSessionId());
+		info->set_nickname(gameSession->GetNickname());
+		enterRoomPkt.set_allocated_info(info);
+	}
 	auto sendBuffer = ClientPacketHandler::MakeSendBuffer(enterRoomPkt);
 	gameSession->Send(sendBuffer);
 
@@ -38,8 +47,8 @@ void Room::Enter(GameSessionRef gameSession)
 			gameSession->set_nickname(it.second->GetNickname());
 		}
 	}
-	sendBuffer = ClientPacketHandler::MakeSendBuffer(listPkt);
-	DoAsync(&Room::Broadcast, sendBuffer);
+	auto sendBuffer2 = ClientPacketHandler::MakeSendBuffer(listPkt);
+	DoAsync(&Room::Broadcast, sendBuffer2);
 }
 
 void Room::Leave(GameSessionRef gameSession)
@@ -48,6 +57,17 @@ void Room::Leave(GameSessionRef gameSession)
 	gameSession->room.reset();
 
 	cout << "Room(" << _roomCode << ")'s SessionCount : " << _gameSessions.size() << endl;
+
+	// 혹시 게임방이 있다면 게임방에서도 나가도록 한다
+	GameRoomRef gameRoom = GGameRoomManager.Find(_gameRoomId);
+	if (gameRoom != nullptr)
+	{
+		PlayerRef player = gameSession->myPlayer.lock();
+		if (player != nullptr)
+		{
+			gameRoom->DoAsync(&GameRoom::LeaveGame, player->GetObjectId());
+		}
+	}
 
 	// 남은 사람이 있는지 체크
 	if (_gameSessions.size() == 0)
@@ -83,8 +103,8 @@ void Room::Leave(GameSessionRef gameSession)
 			gameSession->set_nickname(it.second->GetNickname());
 		}
 	}
-	sendBuffer = ClientPacketHandler::MakeSendBuffer(listPkt);
-	DoAsync(&Room::Broadcast, sendBuffer);
+	auto sendBuffer2 = ClientPacketHandler::MakeSendBuffer(listPkt);
+	DoAsync(&Room::Broadcast, sendBuffer2);
 }
 
 void Room::Broadcast(SendBufferRef sendBuffer)

@@ -12,6 +12,8 @@ bool Handle_C_LOGIN(PacketSessionRef& session, Protocol::C_Login& pkt);
 bool Handle_C_CREATE_ROOM(PacketSessionRef& session, Protocol::C_CreateRoom& pkt);
 bool Handle_C_ENTER_ROOM(PacketSessionRef& session, Protocol::C_EnterRoom& pkt);
 bool Handle_C_LEAVE_ROOM(PacketSessionRef& session, Protocol::C_LeaveRoom& pkt);
+bool Handle_C_START_GAME(PacketSessionRef& session, Protocol::C_StartGame& pkt);
+bool Handle_C_ENTER_GAME(PacketSessionRef& session, Protocol::C_EnterGame& pkt);
 
 class ClientPacketHandler
 {
@@ -26,6 +28,8 @@ public:
 		GPacketHandler[Protocol::C_CREATE_ROOM] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::C_CreateRoom>(Handle_C_CREATE_ROOM, session, buffer, len); };
 		GPacketHandler[Protocol::C_ENTER_ROOM] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::C_EnterRoom>(Handle_C_ENTER_ROOM, session, buffer, len); };
 		GPacketHandler[Protocol::C_LEAVE_ROOM] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::C_LeaveRoom>(Handle_C_LEAVE_ROOM, session, buffer, len); };
+		GPacketHandler[Protocol::C_START_GAME] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::C_StartGame>(Handle_C_START_GAME, session, buffer, len); };
+		GPacketHandler[Protocol::C_ENTER_GAME] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::C_EnterGame>(Handle_C_ENTER_GAME, session, buffer, len); };
 	}
 
 	static bool HandlePacket(PacketSessionRef& session, BYTE* buffer, int32 len)
@@ -48,6 +52,7 @@ public:
 	static SendBufferRef MakeSendBuffer(Protocol::S_EnterRoom& pkt) { return MakeSendBuffer(pkt, Protocol::S_ENTER_ROOM); }
 	static SendBufferRef MakeSendBuffer(Protocol::S_RoomPlayerList& pkt) { return MakeSendBuffer(pkt, Protocol::S_ROOM_PLAYER_LIST); }
 	static SendBufferRef MakeSendBuffer(Protocol::S_LeaveRoom& pkt) { return MakeSendBuffer(pkt, Protocol::S_LEAVE_ROOM); }
+	static SendBufferRef MakeSendBuffer(Protocol::S_StartGame& pkt) { return MakeSendBuffer(pkt, Protocol::S_START_GAME); }
 
 private:
 	template<typename PacketType, typename ProcessFunc>

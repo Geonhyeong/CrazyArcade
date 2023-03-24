@@ -30,9 +30,10 @@ public class ObjectManager
                 MyPlayer = go.GetComponent<MyPlayerController>();
                 MyPlayer.Id = info.ObjectId;
                 MyPlayer.PosInfo = info.PosInfo;
-                MyPlayer.Speed = info.StatInfo.SpeedLvl * 0.8f;
+                MyPlayer.Speed = 1.0f; // TEMP
+                /*MyPlayer.Speed = info.StatInfo.SpeedLvl * 0.8f;
                 MyPlayer.Power = info.StatInfo.Power;
-                MyPlayer.AvailBubble = info.StatInfo.AvailBubble;
+                MyPlayer.AvailBubble = info.StatInfo.AvailBubble;*/
                 MyPlayer.SyncPos();
             }
             else
@@ -44,9 +45,10 @@ public class ObjectManager
                 PlayerController pc = go.GetComponent<PlayerController>();
                 pc.Id = info.ObjectId;
                 pc.PosInfo = info.PosInfo;
-                pc.Speed = info.StatInfo.SpeedLvl * 0.8f;
+                pc.Speed = 1.0f; // TEMP
+                /*pc.Speed = info.StatInfo.SpeedLvl * 0.8f;
                 pc.Power = info.StatInfo.Power;
-                pc.AvailBubble = info.StatInfo.AvailBubble;
+                pc.AvailBubble = info.StatInfo.AvailBubble;*/
                 pc.SyncPos();
             }
         }

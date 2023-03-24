@@ -37,6 +37,10 @@ class PacketManager
 		_handler.Add((ushort)MsgId.CEnterRoom, PacketHandler.C_EnterRoomHandler);
 		_onRecv.Add((ushort)MsgId.CLeaveRoom, MakePacket<C_LeaveRoom>);
 		_handler.Add((ushort)MsgId.CLeaveRoom, PacketHandler.C_LeaveRoomHandler);
+		_onRecv.Add((ushort)MsgId.CStartGame, MakePacket<C_StartGame>);
+		_handler.Add((ushort)MsgId.CStartGame, PacketHandler.C_StartGameHandler);
+		_onRecv.Add((ushort)MsgId.CEnterGame, MakePacket<C_EnterGame>);
+		_handler.Add((ushort)MsgId.CEnterGame, PacketHandler.C_EnterGameHandler);
 	}
 
 	public void OnRecvPacket(PacketSession session, ArraySegment<byte> buffer)

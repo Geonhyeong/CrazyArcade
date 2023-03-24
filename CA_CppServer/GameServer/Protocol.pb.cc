@@ -243,7 +243,8 @@ struct C_EnterRoomDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 C_EnterRoomDefaultTypeInternal _C_EnterRoom_default_instance_;
 PROTOBUF_CONSTEXPR S_EnterRoom::S_EnterRoom(
     ::_pbi::ConstantInitialized): _impl_{
-    /*decltype(_impl_.enterroomok_)*/false
+    /*decltype(_impl_.info_)*/nullptr
+  , /*decltype(_impl_.enterroomok_)*/false
   , /*decltype(_impl_._cached_size_)*/{}} {}
 struct S_EnterRoomDefaultTypeInternal {
   PROTOBUF_CONSTEXPR S_EnterRoomDefaultTypeInternal()
@@ -290,6 +291,39 @@ struct S_LeaveRoomDefaultTypeInternal {
   };
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 S_LeaveRoomDefaultTypeInternal _S_LeaveRoom_default_instance_;
+PROTOBUF_CONSTEXPR C_StartGame::C_StartGame(
+    ::_pbi::ConstantInitialized) {}
+struct C_StartGameDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR C_StartGameDefaultTypeInternal()
+      : _instance(::_pbi::ConstantInitialized{}) {}
+  ~C_StartGameDefaultTypeInternal() {}
+  union {
+    C_StartGame _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 C_StartGameDefaultTypeInternal _C_StartGame_default_instance_;
+PROTOBUF_CONSTEXPR S_StartGame::S_StartGame(
+    ::_pbi::ConstantInitialized) {}
+struct S_StartGameDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR S_StartGameDefaultTypeInternal()
+      : _instance(::_pbi::ConstantInitialized{}) {}
+  ~S_StartGameDefaultTypeInternal() {}
+  union {
+    S_StartGame _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 S_StartGameDefaultTypeInternal _S_StartGame_default_instance_;
+PROTOBUF_CONSTEXPR C_EnterGame::C_EnterGame(
+    ::_pbi::ConstantInitialized) {}
+struct C_EnterGameDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR C_EnterGameDefaultTypeInternal()
+      : _instance(::_pbi::ConstantInitialized{}) {}
+  ~C_EnterGameDefaultTypeInternal() {}
+  union {
+    C_EnterGame _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 C_EnterGameDefaultTypeInternal _C_EnterGame_default_instance_;
 PROTOBUF_CONSTEXPR RoomInfo::RoomInfo(
     ::_pbi::ConstantInitialized): _impl_{
     /*decltype(_impl_.roomcode_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
@@ -388,7 +422,7 @@ struct SkillInfoDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 SkillInfoDefaultTypeInternal _SkillInfo_default_instance_;
 }  // namespace Protocol
-static ::_pb::Metadata file_level_metadata_Protocol_2eproto[27];
+static ::_pb::Metadata file_level_metadata_Protocol_2eproto[30];
 static const ::_pb::EnumDescriptor* file_level_enum_descriptors_Protocol_2eproto[4];
 static constexpr ::_pb::ServiceDescriptor const** file_level_service_descriptors_Protocol_2eproto = nullptr;
 
@@ -520,6 +554,7 @@ const uint32_t TableStruct_Protocol_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
   PROTOBUF_FIELD_OFFSET(::Protocol::S_EnterRoom, _impl_.enterroomok_),
+  PROTOBUF_FIELD_OFFSET(::Protocol::S_EnterRoom, _impl_.info_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::Protocol::S_RoomPlayerList, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -536,6 +571,24 @@ const uint32_t TableStruct_Protocol_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE
   ~0u,  // no _inlined_string_donated_
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::Protocol::S_LeaveRoom, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::Protocol::C_StartGame, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::Protocol::S_StartGame, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::Protocol::C_EnterGame, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
@@ -621,15 +674,18 @@ static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protode
   { 105, -1, -1, sizeof(::Protocol::C_CreateRoom)},
   { 112, -1, -1, sizeof(::Protocol::C_EnterRoom)},
   { 120, -1, -1, sizeof(::Protocol::S_EnterRoom)},
-  { 127, -1, -1, sizeof(::Protocol::S_RoomPlayerList)},
-  { 135, -1, -1, sizeof(::Protocol::C_LeaveRoom)},
-  { 141, -1, -1, sizeof(::Protocol::S_LeaveRoom)},
-  { 147, -1, -1, sizeof(::Protocol::RoomInfo)},
-  { 156, -1, -1, sizeof(::Protocol::GameSessionInfo)},
-  { 164, -1, -1, sizeof(::Protocol::ObjectInfo)},
-  { 175, -1, -1, sizeof(::Protocol::PositionInfo)},
-  { 185, -1, -1, sizeof(::Protocol::StatInfo)},
-  { 199, -1, -1, sizeof(::Protocol::SkillInfo)},
+  { 128, -1, -1, sizeof(::Protocol::S_RoomPlayerList)},
+  { 136, -1, -1, sizeof(::Protocol::C_LeaveRoom)},
+  { 142, -1, -1, sizeof(::Protocol::S_LeaveRoom)},
+  { 148, -1, -1, sizeof(::Protocol::C_StartGame)},
+  { 154, -1, -1, sizeof(::Protocol::S_StartGame)},
+  { 160, -1, -1, sizeof(::Protocol::C_EnterGame)},
+  { 166, -1, -1, sizeof(::Protocol::RoomInfo)},
+  { 175, -1, -1, sizeof(::Protocol::GameSessionInfo)},
+  { 183, -1, -1, sizeof(::Protocol::ObjectInfo)},
+  { 194, -1, -1, sizeof(::Protocol::PositionInfo)},
+  { 204, -1, -1, sizeof(::Protocol::StatInfo)},
+  { 218, -1, -1, sizeof(::Protocol::SkillInfo)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
@@ -654,6 +710,9 @@ static const ::_pb::Message* const file_default_instances[] = {
   &::Protocol::_S_RoomPlayerList_default_instance_._instance,
   &::Protocol::_C_LeaveRoom_default_instance_._instance,
   &::Protocol::_S_LeaveRoom_default_instance_._instance,
+  &::Protocol::_C_StartGame_default_instance_._instance,
+  &::Protocol::_S_StartGame_default_instance_._instance,
+  &::Protocol::_C_EnterGame_default_instance_._instance,
   &::Protocol::_RoomInfo_default_instance_._instance,
   &::Protocol::_GameSessionInfo_default_instance_._instance,
   &::Protocol::_ObjectInfo_default_instance_._instance,
@@ -680,46 +739,50 @@ const char descriptor_table_protodef_Protocol_2eproto[] PROTOBUF_SECTION_VARIABL
   "\005\022\r\n\005token\030\002 \001(\005\"\032\n\007S_Login\022\017\n\007loginOk\030\001"
   " \001(\010\" \n\014C_CreateRoom\022\020\n\010nickname\030\001 \001(\t\"1"
   "\n\013C_EnterRoom\022\020\n\010nickname\030\001 \001(\t\022\020\n\010roomC"
-  "ode\030\002 \001(\t\"\"\n\013S_EnterRoom\022\023\n\013enterRoomOk\030"
-  "\001 \001(\010\"i\n\020S_RoomPlayerList\022$\n\010roomInfo\030\001 "
-  "\001(\0132\022.Protocol.RoomInfo\022/\n\014gameSessions\030"
-  "\002 \003(\0132\031.Protocol.GameSessionInfo\"\r\n\013C_Le"
-  "aveRoom\"\r\n\013S_LeaveRoom\"C\n\010RoomInfo\022\016\n\006ro"
-  "omId\030\001 \001(\005\022\020\n\010roomCode\030\002 \001(\t\022\025\n\rhostSess"
-  "ionId\030\003 \001(\005\"6\n\017GameSessionInfo\022\021\n\tsessio"
-  "nId\030\001 \001(\005\022\020\n\010nickname\030\002 \001(\t\"\213\001\n\nObjectIn"
-  "fo\022\020\n\010objectId\030\001 \001(\005\022\014\n\004name\030\002 \001(\t\022\'\n\007po"
-  "sInfo\030\003 \001(\0132\026.Protocol.PositionInfo\022$\n\010s"
-  "tatInfo\030\004 \001(\0132\022.Protocol.StatInfo\022\016\n\006isE"
-  "dge\030\005 \001(\010\"v\n\014PositionInfo\022&\n\005state\030\001 \001(\016"
-  "2\027.Protocol.CreatureState\022\"\n\007moveDir\030\002 \001"
-  "(\0162\021.Protocol.MoveDir\022\014\n\004posX\030\003 \001(\005\022\014\n\004p"
-  "osY\030\004 \001(\005\"\224\001\n\010StatInfo\022\n\n\002id\030\001 \001(\005\022\014\n\004na"
-  "me\030\002 \001(\t\022\020\n\010speedLvl\030\003 \001(\005\022\r\n\005power\030\004 \001("
-  "\005\022\023\n\013availBubble\030\005 \001(\005\022\023\n\013maxSpeedLvl\030\006 "
-  "\001(\005\022\020\n\010maxPower\030\007 \001(\005\022\021\n\tmaxBubble\030\010 \001(\005"
-  "\"6\n\tSkillInfo\022\r\n\005power\030\001 \001(\005\022\014\n\004posX\030\002 \001"
-  "(\005\022\014\n\004posY\030\003 \001(\005*\323\002\n\005MsgId\022\020\n\014S_ENTER_GA"
-  "ME\020\000\022\020\n\014S_LEAVE_GAME\020\001\022\013\n\007S_SPAWN\020\002\022\r\n\tS"
-  "_DESPAWN\020\003\022\n\n\006C_MOVE\020\004\022\n\n\006S_MOVE\020\005\022\013\n\007C_"
-  "SKILL\020\006\022\021\n\rS_CHANGE_STAT\020\007\022\t\n\005S_POP\020\010\022\n\n"
-  "\006S_TRAP\020\t\022\t\n\005S_DIE\020\n\022\017\n\013S_CONNECTED\020\013\022\022\n"
-  "\016S_DISCONNECTED\020\014\022\013\n\007C_LOGIN\020\r\022\013\n\007S_LOGI"
-  "N\020\016\022\021\n\rC_CREATE_ROOM\020\017\022\020\n\014C_ENTER_ROOM\020\020"
-  "\022\020\n\014S_ENTER_ROOM\020\021\022\026\n\022S_ROOM_PLAYER_LIST"
-  "\020\022\022\020\n\014C_LEAVE_ROOM\020\023\022\020\n\014S_LEAVE_ROOM\020\024*B"
-  "\n\rCreatureState\022\010\n\004IDLE\020\000\022\n\n\006MOVING\020\001\022\010\n"
-  "\004DEAD\020\002\022\007\n\003POP\020\003\022\010\n\004TRAP\020\004*0\n\007MoveDir\022\006\n"
-  "\002UP\020\000\022\010\n\004DOWN\020\001\022\010\n\004LEFT\020\002\022\t\n\005RIGHT\020\003*Q\n\016"
-  "GameObjectType\022\010\n\004NONE\020\000\022\n\n\006PLAYER\020\001\022\t\n\005"
-  "BLOCK\020\002\022\n\n\006BUBBLE\020\003\022\010\n\004WAVE\020\004\022\010\n\004ITEM\020\005B"
-  "\033\252\002\030Google.Protobuf.Protocolb\006proto3"
+  "ode\030\002 \001(\t\"K\n\013S_EnterRoom\022\023\n\013enterRoomOk\030"
+  "\001 \001(\010\022\'\n\004info\030\002 \001(\0132\031.Protocol.GameSessi"
+  "onInfo\"i\n\020S_RoomPlayerList\022$\n\010roomInfo\030\001"
+  " \001(\0132\022.Protocol.RoomInfo\022/\n\014gameSessions"
+  "\030\002 \003(\0132\031.Protocol.GameSessionInfo\"\r\n\013C_L"
+  "eaveRoom\"\r\n\013S_LeaveRoom\"\r\n\013C_StartGame\"\r"
+  "\n\013S_StartGame\"\r\n\013C_EnterGame\"C\n\010RoomInfo"
+  "\022\016\n\006roomId\030\001 \001(\005\022\020\n\010roomCode\030\002 \001(\t\022\025\n\rho"
+  "stSessionId\030\003 \001(\005\"6\n\017GameSessionInfo\022\021\n\t"
+  "sessionId\030\001 \001(\005\022\020\n\010nickname\030\002 \001(\t\"\213\001\n\nOb"
+  "jectInfo\022\020\n\010objectId\030\001 \001(\005\022\014\n\004name\030\002 \001(\t"
+  "\022\'\n\007posInfo\030\003 \001(\0132\026.Protocol.PositionInf"
+  "o\022$\n\010statInfo\030\004 \001(\0132\022.Protocol.StatInfo\022"
+  "\016\n\006isEdge\030\005 \001(\010\"v\n\014PositionInfo\022&\n\005state"
+  "\030\001 \001(\0162\027.Protocol.CreatureState\022\"\n\007moveD"
+  "ir\030\002 \001(\0162\021.Protocol.MoveDir\022\014\n\004posX\030\003 \001("
+  "\005\022\014\n\004posY\030\004 \001(\005\"\224\001\n\010StatInfo\022\n\n\002id\030\001 \001(\005"
+  "\022\014\n\004name\030\002 \001(\t\022\020\n\010speedLvl\030\003 \001(\005\022\r\n\005powe"
+  "r\030\004 \001(\005\022\023\n\013availBubble\030\005 \001(\005\022\023\n\013maxSpeed"
+  "Lvl\030\006 \001(\005\022\020\n\010maxPower\030\007 \001(\005\022\021\n\tmaxBubble"
+  "\030\010 \001(\005\"6\n\tSkillInfo\022\r\n\005power\030\001 \001(\005\022\014\n\004po"
+  "sX\030\002 \001(\005\022\014\n\004posY\030\003 \001(\005*\211\003\n\005MsgId\022\020\n\014S_EN"
+  "TER_GAME\020\000\022\020\n\014S_LEAVE_GAME\020\001\022\013\n\007S_SPAWN\020"
+  "\002\022\r\n\tS_DESPAWN\020\003\022\n\n\006C_MOVE\020\004\022\n\n\006S_MOVE\020\005"
+  "\022\013\n\007C_SKILL\020\006\022\021\n\rS_CHANGE_STAT\020\007\022\t\n\005S_PO"
+  "P\020\010\022\n\n\006S_TRAP\020\t\022\t\n\005S_DIE\020\n\022\017\n\013S_CONNECTE"
+  "D\020\013\022\022\n\016S_DISCONNECTED\020\014\022\013\n\007C_LOGIN\020\r\022\013\n\007"
+  "S_LOGIN\020\016\022\021\n\rC_CREATE_ROOM\020\017\022\020\n\014C_ENTER_"
+  "ROOM\020\020\022\020\n\014S_ENTER_ROOM\020\021\022\026\n\022S_ROOM_PLAYE"
+  "R_LIST\020\022\022\020\n\014C_LEAVE_ROOM\020\023\022\020\n\014S_LEAVE_RO"
+  "OM\020\024\022\020\n\014C_START_GAME\020\025\022\020\n\014S_START_GAME\020\026"
+  "\022\020\n\014C_ENTER_GAME\020\027*B\n\rCreatureState\022\010\n\004I"
+  "DLE\020\000\022\n\n\006MOVING\020\001\022\010\n\004DEAD\020\002\022\007\n\003POP\020\003\022\010\n\004"
+  "TRAP\020\004*0\n\007MoveDir\022\006\n\002UP\020\000\022\010\n\004DOWN\020\001\022\010\n\004L"
+  "EFT\020\002\022\t\n\005RIGHT\020\003*Q\n\016GameObjectType\022\010\n\004NO"
+  "NE\020\000\022\n\n\006PLAYER\020\001\022\t\n\005BLOCK\020\002\022\n\n\006BUBBLE\020\003\022"
+  "\010\n\004WAVE\020\004\022\010\n\004ITEM\020\005B\033\252\002\030Google.Protobuf."
+  "Protocolb\006proto3"
   ;
 static ::_pbi::once_flag descriptor_table_Protocol_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_Protocol_2eproto = {
-    false, false, 2036, descriptor_table_protodef_Protocol_2eproto,
+    false, false, 2176, descriptor_table_protodef_Protocol_2eproto,
     "Protocol.proto",
-    &descriptor_table_Protocol_2eproto_once, nullptr, 0, 27,
+    &descriptor_table_Protocol_2eproto_once, nullptr, 0, 30,
     schemas, file_default_instances, TableStruct_Protocol_2eproto::offsets,
     file_level_metadata_Protocol_2eproto, file_level_enum_descriptors_Protocol_2eproto,
     file_level_service_descriptors_Protocol_2eproto,
@@ -758,6 +821,9 @@ bool MsgId_IsValid(int value) {
     case 18:
     case 19:
     case 20:
+    case 21:
+    case 22:
+    case 23:
       return true;
     default:
       return false;
@@ -3724,8 +3790,13 @@ void C_EnterRoom::InternalSwap(C_EnterRoom* other) {
 
 class S_EnterRoom::_Internal {
  public:
+  static const ::Protocol::GameSessionInfo& info(const S_EnterRoom* msg);
 };
 
+const ::Protocol::GameSessionInfo&
+S_EnterRoom::_Internal::info(const S_EnterRoom* msg) {
+  return *msg->_impl_.info_;
+}
 S_EnterRoom::S_EnterRoom(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
@@ -3736,10 +3807,14 @@ S_EnterRoom::S_EnterRoom(const S_EnterRoom& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
   S_EnterRoom* const _this = this; (void)_this;
   new (&_impl_) Impl_{
-      decltype(_impl_.enterroomok_){}
+      decltype(_impl_.info_){nullptr}
+    , decltype(_impl_.enterroomok_){}
     , /*decltype(_impl_._cached_size_)*/{}};
 
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  if (from._internal_has_info()) {
+    _this->_impl_.info_ = new ::Protocol::GameSessionInfo(*from._impl_.info_);
+  }
   _this->_impl_.enterroomok_ = from._impl_.enterroomok_;
   // @@protoc_insertion_point(copy_constructor:Protocol.S_EnterRoom)
 }
@@ -3749,7 +3824,8 @@ inline void S_EnterRoom::SharedCtor(
   (void)arena;
   (void)is_message_owned;
   new (&_impl_) Impl_{
-      decltype(_impl_.enterroomok_){false}
+      decltype(_impl_.info_){nullptr}
+    , decltype(_impl_.enterroomok_){false}
     , /*decltype(_impl_._cached_size_)*/{}
   };
 }
@@ -3765,6 +3841,7 @@ S_EnterRoom::~S_EnterRoom() {
 
 inline void S_EnterRoom::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  if (this != internal_default_instance()) delete _impl_.info_;
 }
 
 void S_EnterRoom::SetCachedSize(int size) const {
@@ -3777,6 +3854,10 @@ void S_EnterRoom::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
+  if (GetArenaForAllocation() == nullptr && _impl_.info_ != nullptr) {
+    delete _impl_.info_;
+  }
+  _impl_.info_ = nullptr;
   _impl_.enterroomok_ = false;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
@@ -3791,6 +3872,14 @@ const char* S_EnterRoom::_InternalParse(const char* ptr, ::_pbi::ParseContext* c
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
           _impl_.enterroomok_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // .Protocol.GameSessionInfo info = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 18)) {
+          ptr = ctx->ParseMessage(_internal_mutable_info(), ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -3830,6 +3919,13 @@ uint8_t* S_EnterRoom::_InternalSerialize(
     target = ::_pbi::WireFormatLite::WriteBoolToArray(1, this->_internal_enterroomok(), target);
   }
 
+  // .Protocol.GameSessionInfo info = 2;
+  if (this->_internal_has_info()) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(2, _Internal::info(this),
+        _Internal::info(this).GetCachedSize(), target, stream);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
@@ -3845,6 +3941,13 @@ size_t S_EnterRoom::ByteSizeLong() const {
   uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
+
+  // .Protocol.GameSessionInfo info = 2;
+  if (this->_internal_has_info()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+        *_impl_.info_);
+  }
 
   // bool enterRoomOk = 1;
   if (this->_internal_enterroomok() != 0) {
@@ -3869,6 +3972,10 @@ void S_EnterRoom::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PR
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
+  if (from._internal_has_info()) {
+    _this->_internal_mutable_info()->::Protocol::GameSessionInfo::MergeFrom(
+        from._internal_info());
+  }
   if (from._internal_enterroomok() != 0) {
     _this->_internal_set_enterroomok(from._internal_enterroomok());
   }
@@ -3889,7 +3996,12 @@ bool S_EnterRoom::IsInitialized() const {
 void S_EnterRoom::InternalSwap(S_EnterRoom* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  swap(_impl_.enterroomok_, other->_impl_.enterroomok_);
+  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(S_EnterRoom, _impl_.enterroomok_)
+      + sizeof(S_EnterRoom::_impl_.enterroomok_)
+      - PROTOBUF_FIELD_OFFSET(S_EnterRoom, _impl_.info_)>(
+          reinterpret_cast<char*>(&_impl_.info_),
+          reinterpret_cast<char*>(&other->_impl_.info_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata S_EnterRoom::GetMetadata() const {
@@ -4207,6 +4319,126 @@ const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*S_LeaveRoom::GetClassData() co
 
 // ===================================================================
 
+class C_StartGame::_Internal {
+ public:
+};
+
+C_StartGame::C_StartGame(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase(arena, is_message_owned) {
+  // @@protoc_insertion_point(arena_constructor:Protocol.C_StartGame)
+}
+C_StartGame::C_StartGame(const C_StartGame& from)
+  : ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase() {
+  C_StartGame* const _this = this; (void)_this;
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  // @@protoc_insertion_point(copy_constructor:Protocol.C_StartGame)
+}
+
+
+
+
+
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData C_StartGame::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase::CopyImpl,
+    ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase::MergeImpl,
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*C_StartGame::GetClassData() const { return &_class_data_; }
+
+
+
+
+
+
+
+::PROTOBUF_NAMESPACE_ID::Metadata C_StartGame::GetMetadata() const {
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_Protocol_2eproto_getter, &descriptor_table_Protocol_2eproto_once,
+      file_level_metadata_Protocol_2eproto[21]);
+}
+
+// ===================================================================
+
+class S_StartGame::_Internal {
+ public:
+};
+
+S_StartGame::S_StartGame(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase(arena, is_message_owned) {
+  // @@protoc_insertion_point(arena_constructor:Protocol.S_StartGame)
+}
+S_StartGame::S_StartGame(const S_StartGame& from)
+  : ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase() {
+  S_StartGame* const _this = this; (void)_this;
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  // @@protoc_insertion_point(copy_constructor:Protocol.S_StartGame)
+}
+
+
+
+
+
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData S_StartGame::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase::CopyImpl,
+    ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase::MergeImpl,
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*S_StartGame::GetClassData() const { return &_class_data_; }
+
+
+
+
+
+
+
+::PROTOBUF_NAMESPACE_ID::Metadata S_StartGame::GetMetadata() const {
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_Protocol_2eproto_getter, &descriptor_table_Protocol_2eproto_once,
+      file_level_metadata_Protocol_2eproto[22]);
+}
+
+// ===================================================================
+
+class C_EnterGame::_Internal {
+ public:
+};
+
+C_EnterGame::C_EnterGame(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase(arena, is_message_owned) {
+  // @@protoc_insertion_point(arena_constructor:Protocol.C_EnterGame)
+}
+C_EnterGame::C_EnterGame(const C_EnterGame& from)
+  : ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase() {
+  C_EnterGame* const _this = this; (void)_this;
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  // @@protoc_insertion_point(copy_constructor:Protocol.C_EnterGame)
+}
+
+
+
+
+
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData C_EnterGame::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase::CopyImpl,
+    ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase::MergeImpl,
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*C_EnterGame::GetClassData() const { return &_class_data_; }
+
+
+
+
+
+
+
+::PROTOBUF_NAMESPACE_ID::Metadata C_EnterGame::GetMetadata() const {
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_Protocol_2eproto_getter, &descriptor_table_Protocol_2eproto_once,
+      file_level_metadata_Protocol_2eproto[23]);
+}
+
+// ===================================================================
+
 class RoomInfo::_Internal {
  public:
 };
@@ -4465,7 +4697,7 @@ void RoomInfo::InternalSwap(RoomInfo* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata RoomInfo::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_Protocol_2eproto_getter, &descriptor_table_Protocol_2eproto_once,
-      file_level_metadata_Protocol_2eproto[21]);
+      file_level_metadata_Protocol_2eproto[24]);
 }
 
 // ===================================================================
@@ -4695,7 +4927,7 @@ void GameSessionInfo::InternalSwap(GameSessionInfo* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata GameSessionInfo::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_Protocol_2eproto_getter, &descriptor_table_Protocol_2eproto_once,
-      file_level_metadata_Protocol_2eproto[22]);
+      file_level_metadata_Protocol_2eproto[25]);
 }
 
 // ===================================================================
@@ -5040,7 +5272,7 @@ void ObjectInfo::InternalSwap(ObjectInfo* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata ObjectInfo::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_Protocol_2eproto_getter, &descriptor_table_Protocol_2eproto_once,
-      file_level_metadata_Protocol_2eproto[23]);
+      file_level_metadata_Protocol_2eproto[26]);
 }
 
 // ===================================================================
@@ -5305,7 +5537,7 @@ void PositionInfo::InternalSwap(PositionInfo* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata PositionInfo::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_Protocol_2eproto_getter, &descriptor_table_Protocol_2eproto_once,
-      file_level_metadata_Protocol_2eproto[24]);
+      file_level_metadata_Protocol_2eproto[27]);
 }
 
 // ===================================================================
@@ -5688,7 +5920,7 @@ void StatInfo::InternalSwap(StatInfo* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata StatInfo::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_Protocol_2eproto_getter, &descriptor_table_Protocol_2eproto_once,
-      file_level_metadata_Protocol_2eproto[25]);
+      file_level_metadata_Protocol_2eproto[28]);
 }
 
 // ===================================================================
@@ -5923,7 +6155,7 @@ void SkillInfo::InternalSwap(SkillInfo* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata SkillInfo::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_Protocol_2eproto_getter, &descriptor_table_Protocol_2eproto_once,
-      file_level_metadata_Protocol_2eproto[26]);
+      file_level_metadata_Protocol_2eproto[29]);
 }
 
 // @@protoc_insertion_point(namespace_scope)
@@ -6012,6 +6244,18 @@ Arena::CreateMaybeMessage< ::Protocol::C_LeaveRoom >(Arena* arena) {
 template<> PROTOBUF_NOINLINE ::Protocol::S_LeaveRoom*
 Arena::CreateMaybeMessage< ::Protocol::S_LeaveRoom >(Arena* arena) {
   return Arena::CreateMessageInternal< ::Protocol::S_LeaveRoom >(arena);
+}
+template<> PROTOBUF_NOINLINE ::Protocol::C_StartGame*
+Arena::CreateMaybeMessage< ::Protocol::C_StartGame >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::Protocol::C_StartGame >(arena);
+}
+template<> PROTOBUF_NOINLINE ::Protocol::S_StartGame*
+Arena::CreateMaybeMessage< ::Protocol::S_StartGame >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::Protocol::S_StartGame >(arena);
+}
+template<> PROTOBUF_NOINLINE ::Protocol::C_EnterGame*
+Arena::CreateMaybeMessage< ::Protocol::C_EnterGame >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::Protocol::C_EnterGame >(arena);
 }
 template<> PROTOBUF_NOINLINE ::Protocol::RoomInfo*
 Arena::CreateMaybeMessage< ::Protocol::RoomInfo >(Arena* arena) {
