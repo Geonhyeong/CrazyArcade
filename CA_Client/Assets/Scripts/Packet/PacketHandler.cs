@@ -4,6 +4,7 @@ using ServerCore;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 internal class PacketHandler
@@ -196,5 +197,15 @@ internal class PacketHandler
 
         C_EnterGame enterGamePkt = new C_EnterGame();
         Managers.Network.Send(enterGamePkt);
+    }
+
+    public static void S_EndGameHandler(PacketSession session, IMessage packet)
+    {
+        Debug.Log("End Game");
+
+        UI_GameScene gameSceneUI = Managers.UI.SceneUI as UI_GameScene;
+        if (gameSceneUI == null)
+            return;
+        gameSceneUI.GameOver();
     }
 }

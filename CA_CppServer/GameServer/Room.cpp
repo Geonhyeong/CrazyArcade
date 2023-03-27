@@ -22,10 +22,9 @@ void Room::Enter(GameSessionRef gameSession)
 	Protocol::S_EnterRoom enterRoomPkt;
 	enterRoomPkt.set_enterroomok(true);
 	{
-		Protocol::GameSessionInfo* info = new Protocol::GameSessionInfo();
+		Protocol::GameSessionInfo* info = enterRoomPkt.mutable_info();
 		info->set_sessionid(gameSession->GetSessionId());
 		info->set_nickname(gameSession->GetNickname());
-		enterRoomPkt.set_allocated_info(info);
 	}
 	auto sendBuffer = ClientPacketHandler::MakeSendBuffer(enterRoomPkt);
 	gameSession->Send(sendBuffer);
@@ -33,11 +32,10 @@ void Room::Enter(GameSessionRef gameSession)
 	// 모든 세션에게 리스트의 정보를 브로드캐스트
 	Protocol::S_RoomPlayerList listPkt;
 	{
-		Protocol::RoomInfo* roomInfo = new Protocol::RoomInfo();
+		Protocol::RoomInfo* roomInfo = listPkt.mutable_roominfo();
 		roomInfo->set_roomid(_roomId);
 		roomInfo->set_roomcode(_roomCode);
 		roomInfo->set_hostsessionid(_hostSessionId);
-		listPkt.set_allocated_roominfo(roomInfo);
 	}
 	{
 		for (auto& it : _gameSessions)
@@ -89,11 +87,10 @@ void Room::Leave(GameSessionRef gameSession)
 	// 다른 사람들에게 S_RoomPlayerList
 	Protocol::S_RoomPlayerList listPkt;
 	{
-		Protocol::RoomInfo* roomInfo = new Protocol::RoomInfo();
+		Protocol::RoomInfo* roomInfo = listPkt.mutable_roominfo();
 		roomInfo->set_roomid(_roomId);
 		roomInfo->set_roomcode(_roomCode);
 		roomInfo->set_hostsessionid(_hostSessionId);
-		listPkt.set_allocated_roominfo(roomInfo);
 	}
 	{
 		for (auto& it : _gameSessions)

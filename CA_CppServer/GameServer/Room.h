@@ -29,6 +29,7 @@ public:
 	int32 GetHostSessionId() { return _hostSessionId; }
 	int32 GetGameRoomId() { return _gameRoomId; }
 	void SetGameRoomId(int32 gameRoomId) { _gameRoomId = gameRoomId; }
+	int32 GetSessionCount() { return _gameSessions.size(); }
 
 private:
 	int32 _roomId;

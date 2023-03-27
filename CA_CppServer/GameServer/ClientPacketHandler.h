@@ -53,6 +53,7 @@ public:
 	static SendBufferRef MakeSendBuffer(Protocol::S_RoomPlayerList& pkt) { return MakeSendBuffer(pkt, Protocol::S_ROOM_PLAYER_LIST); }
 	static SendBufferRef MakeSendBuffer(Protocol::S_LeaveRoom& pkt) { return MakeSendBuffer(pkt, Protocol::S_LEAVE_ROOM); }
 	static SendBufferRef MakeSendBuffer(Protocol::S_StartGame& pkt) { return MakeSendBuffer(pkt, Protocol::S_START_GAME); }
+	static SendBufferRef MakeSendBuffer(Protocol::S_EndGame& pkt) { return MakeSendBuffer(pkt, Protocol::S_END_GAME); }
 
 private:
 	template<typename PacketType, typename ProcessFunc>

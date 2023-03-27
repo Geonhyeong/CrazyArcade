@@ -3,10 +3,9 @@
 
 void GameObject::SetCellPos(int32 x, int32 y)
 {
-    Protocol::PositionInfo posInfo = info->posinfo();
-    posInfo.set_posx(x);
-    posInfo.set_posy(y);
-    info->set_allocated_posinfo(&posInfo);
+    Protocol::PositionInfo* posInfo = info.mutable_posinfo();
+    posInfo->set_posx(x);
+    posInfo->set_posy(y);
 }
 
 Vector2Int GameObject::GetFrontCellPos(Protocol::MoveDir dir, int32 distance)

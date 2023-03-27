@@ -137,10 +137,7 @@ public class MyPlayerController : PlayerController
     {
         if (_coSkillCooltime == null && Input.GetKeyDown(KeyCode.Space))
         {
-            C_Skill skill = new C_Skill() { Info = new SkillInfo() };
-            skill.Info.Power = Power;
-            skill.Info.PosX = PosInfo.PosX;
-            skill.Info.PosY = PosInfo.PosY;
+            C_Skill skill = new C_Skill();
             Managers.Network.Send(skill);
 
             _coSkillCooltime = StartCoroutine("CoInputCooltime", 0.2f);

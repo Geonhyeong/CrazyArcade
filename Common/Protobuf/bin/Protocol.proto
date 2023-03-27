@@ -28,6 +28,7 @@ enum MsgId {
   C_START_GAME = 21;
   S_START_GAME = 22;
   C_ENTER_GAME = 23;
+  S_END_GAME = 24;
 }
 
 enum CreatureState {
@@ -79,7 +80,6 @@ message S_Move {
 }
 
 message C_Skill {
-    SkillInfo info = 1;
 }
 
 message S_ChangeStat {
@@ -146,7 +146,9 @@ message S_StartGame {
 }
 
 message C_EnterGame {
+}
 
+message S_EndGame {
 }
 
 message RoomInfo {
@@ -176,18 +178,7 @@ message PositionInfo {
 }
 
 message StatInfo {
-    int32 id = 1;
-    string name = 2;
-    int32 speedLvl = 3;
-    int32 power = 4;
-    int32 availBubble = 5;
-    int32 maxSpeedLvl = 6;
-    int32 maxPower = 7;
-    int32 maxBubble = 8;
-}
-
-message SkillInfo {
-    int32 power = 1;
-    int32 posX = 2;
-    int32 posY = 3;
+    int32 speedLvl = 1;
+    int32 power = 2;
+    int32 availBubble = 3;
 }

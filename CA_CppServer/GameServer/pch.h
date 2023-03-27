@@ -22,3 +22,7 @@ using RoomRef			= std::shared_ptr<class Room>;
 using GameRoomRef		= std::shared_ptr<class GameRoom>;
 using GameObjectRef		= std::shared_ptr<class GameObject>;
 using PlayerRef			= std::shared_ptr<class Player>;
+using BlockRef			= std::shared_ptr<class Block>;
+using BubbleRef			= std::shared_ptr<class Bubble>;
+using WaveRef			= std::shared_ptr<class Wave>;
+using ItemRef			= std::shared_ptr<class Item>;

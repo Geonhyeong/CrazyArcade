@@ -43,6 +43,10 @@ public class RoomManager
 
     public void RefreshUI()
     {
+        UI_GameScene gameSceneUI = Managers.UI.SceneUI as UI_GameScene;
+        if (gameSceneUI != null)
+            gameSceneUI.RefreshUI();
+
         UI_RoomScene roomSceneUI = Managers.UI.SceneUI as UI_RoomScene;
         if (roomSceneUI == null)
             return;

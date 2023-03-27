@@ -7,7 +7,7 @@ using static Define;
 public class PlayerController : CreatureController
 {
     [SerializeField]
-    public float Speed { get; set; } = 1.0f;
+    public float Speed { get; set; } = 0.8f;
     public int Power { get; set; } = 1;
     public int AvailBubble { get; set; } = 1;
 
@@ -144,23 +144,4 @@ public class PlayerController : CreatureController
     protected virtual void SetNextPos()
     {
     }
-
-    /*public void UseSkill(SkillInfo info)
-    {
-        //_coSkill = StartCoroutine("CoStartBubble");
-        Debug.Log("Make Bubble!");
-        
-    }
-
-    private IEnumerator CoStartBubble()
-    {
-        *//*GameObject go = Managers.Resource.Instantiate("Inanimate/Bubble");
-        BubbleController bc = go.GetComponent<BubbleController>();
-        bc.CellPos = CellPos;
-        bc.Host = gameObject;
-
-        yield return new WaitForSeconds(0.5f);
-        _coSkill = null;*//*
-        yield return new WaitForSeconds(0.5f);
-    }*/
 }

@@ -26,12 +26,36 @@ bool Handle_INVALID(PacketSessionRef& session, BYTE* buffer, int32 len)
 
 bool Handle_C_MOVE(PacketSessionRef& session, Protocol::C_Move& pkt)
 {
-	return false;
+	GameSessionRef gameSession = static_pointer_cast<GameSession>(session);
+	PlayerRef player = gameSession->myPlayer.lock();
+
+	if (player != nullptr)
+	{
+		GameRoomRef gameRoom = player->room.lock();
+		if (gameRoom != nullptr)
+		{
+			gameRoom->DoAsync(&GameRoom::HandleMove, player, pkt);
+		}
+	}
+
+	return true;
 }
 
 bool Handle_C_SKILL(PacketSessionRef& session, Protocol::C_Skill& pkt)
 {
-	return false;
+	GameSessionRef gameSession = static_pointer_cast<GameSession>(session);
+	PlayerRef player = gameSession->myPlayer.lock();
+
+	if (player != nullptr)
+	{
+		GameRoomRef gameRoom = player->room.lock();
+		if (gameRoom != nullptr)
+		{
+			gameRoom->DoAsync(&GameRoom::HandleSkill, player, pkt);
+		}
+	}
+
+	return true;
 }
 
 bool Handle_C_LOGIN(PacketSessionRef& session, Protocol::C_Login& pkt)
@@ -139,17 +163,17 @@ bool Handle_C_START_GAME(PacketSessionRef& session, Protocol::C_StartGame& pkt)
 
 	if (room != nullptr)
 	{
-		if (gameSession->GetSessionId() == room->GetHostSessionId())
+		if (gameSession->GetSessionId() == room->GetHostSessionId() && room->GetSessionCount() > 1)
 		{
-			// 게임이 시작되었다는 신호를 방 안 세션들에게 Broadcast
-			Protocol::S_StartGame startGamePkt;
-			auto sendBuffer = ClientPacketHandler::MakeSendBuffer(startGamePkt);
-			room->DoAsync(&Room::Broadcast, sendBuffer);
-			 
 			// 게임 방 생성
 			GameRoomRef gameRoom = GGameRoomManager.Add();
 			room->SetGameRoomId(gameRoom->GetGameRoomId());
 			gameRoom->DoAsync(&GameRoom::Init, room);
+			 
+			// 게임이 시작되었다는 신호를 방 안 세션들에게 Broadcast
+			Protocol::S_StartGame startGamePkt;
+			auto sendBuffer = ClientPacketHandler::MakeSendBuffer(startGamePkt);
+			room->DoAsync(&Room::Broadcast, sendBuffer);
 		}
 	}
 
@@ -167,17 +191,20 @@ bool Handle_C_ENTER_GAME(PacketSessionRef& session, Protocol::C_EnterGame& pkt)
 		PlayerRef player = make_shared<Player>();
 		player->SetObjectId(GObjectManager.GenerateId(Protocol::GameObjectType::PLAYER));
 		player->SetOwnerSession(gameSession);
-		player->info->set_name("Player_" + to_string(player->GetObjectId()));
+		player->info.set_name("Player_" + to_string(player->GetObjectId()));
 		{
-			Protocol::PositionInfo posInfo = player->info->posinfo();
-			posInfo.set_state(Protocol::CreatureState::IDLE);
-			posInfo.set_movedir(Protocol::MoveDir::DOWN);
-			// TODO : 위치는 정해진 몇 곳에서 랜덤 배정
-			posInfo.set_posx(0);
-			posInfo.set_posy(-1);
-			player->info->set_allocated_posinfo(&posInfo);
+			Protocol::PositionInfo* posInfo = player->info.mutable_posinfo();
+			posInfo->set_state(Protocol::CreatureState::IDLE);
+			posInfo->set_movedir(Protocol::MoveDir::DOWN);
+			posInfo->set_posx(1);
+			posInfo->set_posy(1);
 		}
-		// TODO : 스탯 관련 추가
+		{	// 스탯 관련 추가
+			Protocol::StatInfo* statInfo = player->info.mutable_statinfo();
+			statInfo->set_speedlvl(1);
+			statInfo->set_power(1);
+			statInfo->set_availbubble(1);
+		}
 		gameSession->myPlayer = player;
 
 		// 플레이어를 게임에 입장시키기
