@@ -11,6 +11,7 @@ public class Define
         Lobby,
         Room,
         Game,
+        Test,
     }
 
     public enum Sound

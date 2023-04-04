@@ -64,13 +64,13 @@ public class MapEditor
                         {
                             switch(tile.name)
                             {
-                                case "block_1":
+                                case "Block_1":
                                     writer.Write("1");
                                     break;
-                                case "block_2":
+                                case "Block_2":
                                     writer.Write("2");
                                     break;
-                                case "block_3":
+                                case "Block_3":
                                     writer.Write("3");
                                     break;
                             }
