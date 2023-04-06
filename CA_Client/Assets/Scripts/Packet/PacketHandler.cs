@@ -193,7 +193,10 @@ internal class PacketHandler
     public static void S_StartGameHandler(PacketSession session, IMessage packet)
     {
         Debug.Log("Start Game");
-        Managers.Scene.LoadScene(Define.Scene.Game);
+        if (Managers.Room.RoomCode == "TEST")
+            Managers.Scene.LoadScene(Define.Scene.Test);
+        else
+            Managers.Scene.LoadScene(Define.Scene.Game);
 
         C_EnterGame enterGamePkt = new C_EnterGame();
         Managers.Network.Send(enterGamePkt);

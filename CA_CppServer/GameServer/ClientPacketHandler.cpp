@@ -62,29 +62,30 @@ bool Handle_C_LOGIN(PacketSessionRef& session, Protocol::C_Login& pkt)
 {
 	GameSessionRef gameSession = static_pointer_cast<GameSession>(session);
 
-	// Validation 체크 (RedisDB에 token 검증)
-	string value = GRedisManager->GetValue(to_string(pkt.accountdbid()));
-	json j = json::parse(value);
+	//// Validation 체크 (RedisDB에 token 검증)
+	//string value = GRedisManager->GetValue(to_string(pkt.accountdbid()));
+	//json j = json::parse(value);
 
-	bool isValid = true;
-	if (pkt.accountdbid() != j["AccountDbId"] || pkt.token() != j["Token"] || j["Expired"] < ::GetTickCount64())
-		isValid = false;
+	//bool isValid = true;
+	//if (pkt.accountdbid() != j["AccountDbId"] || pkt.token() != j["Token"] || j["Expired"] < ::GetTickCount64())
+	//	isValid = false;
 
-	// 현재 접속중인데 또 로그인 시도한건지 확인
-	if (GSessionManager.FindByAccountDbId(pkt.accountdbid()) != nullptr)
-		isValid = false;
+	//// 현재 접속중인데 또 로그인 시도한건지 확인
+	//if (GSessionManager.FindByAccountDbId(pkt.accountdbid()) != nullptr)
+	//	isValid = false;
 
-	cout << "AccountId: " << pkt.accountdbid() << " Access Complete!" << endl;
+	//cout << "AccountId: " << pkt.accountdbid() << " Access Complete!" << endl;
 
 	Protocol::S_Login loginPkt;
-	loginPkt.set_loginok(isValid);
+	//loginPkt.set_loginok(isValid);
+	loginPkt.set_loginok(true);
 	auto sendBuffer = ClientPacketHandler::MakeSendBuffer(loginPkt);
 	session->Send(sendBuffer);
 	
-	if (isValid)
+	//if (isValid)
 		gameSession->SetAccountDbId(pkt.accountdbid());
-	else
-		session->Disconnect(L"Invalid Session!");
+	/*else
+		session->Disconnect(L"Invalid Session!");*/
 	
 	return true;
 }
@@ -125,6 +126,13 @@ bool Handle_C_ENTER_ROOM(PacketSessionRef& session, Protocol::C_EnterRoom& pkt)
 			auto sendBuffer = ClientPacketHandler::MakeSendBuffer(enterRoomPkt);
 			session->Send(sendBuffer);
 		}
+	}
+	else if (pkt.roomcode() == "TEST")
+	{
+		RoomRef room = GRoomManager.FindByCode("TEST");
+		if (room == nullptr)
+			room = GRoomManager.Generate("TEST");
+		room->DoAsync(&Room::Enter, gameSession);
 	}
 	else
 	{
@@ -168,7 +176,10 @@ bool Handle_C_START_GAME(PacketSessionRef& session, Protocol::C_StartGame& pkt)
 			// 게임 방 생성
 			GameRoomRef gameRoom = GGameRoomManager.Add();
 			room->SetGameRoomId(gameRoom->GetGameRoomId());
-			gameRoom->DoAsync(&GameRoom::Init, room);
+			if (room->GetRoomCode() == "TEST")
+				gameRoom->DoAsync(&GameRoom::Init, room, 0);
+			else
+				gameRoom->DoAsync(&GameRoom::Init, room, 1);
 			 
 			// 게임이 시작되었다는 신호를 방 안 세션들에게 Broadcast
 			Protocol::S_StartGame startGamePkt;

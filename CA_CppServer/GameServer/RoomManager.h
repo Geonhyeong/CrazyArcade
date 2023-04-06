@@ -5,7 +5,7 @@ class Room;
 class RoomManager
 {
 public:
-	RoomRef Generate();
+	RoomRef Generate(string roomCode = "");
 	void Remove(int roomId);
 	RoomRef Find(int roomId);
 	RoomRef FindByCode(string roomCode);

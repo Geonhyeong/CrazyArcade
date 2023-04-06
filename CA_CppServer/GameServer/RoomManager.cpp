@@ -5,14 +5,18 @@
 
 RoomManager GRoomManager;
 
-RoomRef RoomManager::Generate()
+RoomRef RoomManager::Generate(string roomCode)
 {
 	WRITE_LOCK;
 	int32 roomId = ++_roomId;
 
 	RoomRef room = make_shared<Room>();
 	room->SetRoomId(roomId);
-	room->SetRoomCode(MakeRoomCode());
+	
+	if (roomCode == "")
+		roomCode = MakeRoomCode();
+	room->SetRoomCode(roomCode);
+
 	_rooms.insert(make_pair(roomId, room));
 
 	cout << "Room is Generated : " << roomId << endl;

@@ -9,6 +9,7 @@
 #include "Bubble.h"
 #include "Wave.h"
 #include "Item.h"
+#include <random>
 
 GameRoom::~GameRoom()
 {
@@ -19,10 +20,10 @@ GameRoom::~GameRoom()
 	_blocks.clear();
 }
 
-void GameRoom::Init(RoomRef ownerRoom)
+void GameRoom::Init(RoomRef ownerRoom, int32 mapId)
 {
 	_ownerRoom = ownerRoom;
-	gameMap.LoadMap(1);	// TODO : 일단 지금은 맵이 1개
+	gameMap.LoadMap(mapId);	// TODO : 일단 지금은 맵이 1개
 	gameMap.LoadObjects(static_pointer_cast<GameRoom>(shared_from_this()));
 }
 
@@ -40,9 +41,14 @@ void GameRoom::EnterGame(GameObjectRef gameObject)
 		{
 			// 위치는 정해진 몇 곳에 순차적으로 배정
 			Protocol::PositionInfo* posInfo = player->info.mutable_posinfo();
-			Vector2Int startPoint = START_POINTS[_players.size()];
+			/*Vector2Int startPoint = START_POINTS[_players.size()];
 			posInfo->set_posx(startPoint.x);
-			posInfo->set_posy(startPoint.y);
+			posInfo->set_posy(startPoint.y);*/
+			::random_device rd;
+			::mt19937 gen(rd());
+			::uniform_int_distribution<int> dis(-20, 20);
+			posInfo->set_posx(dis(gen));
+			posInfo->set_posy(dis(gen));
 		}
 		_players.insert(make_pair(player->GetObjectId(), player));
 		

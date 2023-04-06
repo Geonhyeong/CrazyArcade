@@ -14,8 +14,8 @@ REM XCOPY /Y ClientPacketHandler.h "../../../CA_CppServer/GameServer"
 START ../../../CA_Server/PacketGenerator/bin/PacketGenerator.exe ./Protocol.proto
 XCOPY /Y Protocol.cs "../../../CA_Client/Assets/Scripts/Packet"
 XCOPY /Y ClientPacketManager.cs "../../../CA_Client/Assets/Scripts/Packet"
-REM XCOPY /Y Protocol.cs "../../../CA_Server/Server/Packet"
-REM XCOPY /Y ServerPacketManager.cs "../../../CA_Server/Server/Packet"
+XCOPY /Y Protocol.cs "../../../CA_Server/DummyClient/Packet"
+XCOPY /Y ClientPacketManager.cs "../../../CA_Server/DummyClient/Packet"
 
 DEL /Q /F *.pb.h
 DEL /Q /F *.pb.cc

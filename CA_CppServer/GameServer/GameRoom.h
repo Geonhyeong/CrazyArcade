@@ -7,7 +7,7 @@ class GameRoom : public JobQueue
 public:
 	~GameRoom();
 
-	void Init(RoomRef ownerRoom);
+	void Init(RoomRef ownerRoom, int32 mapId);
 	void EnterGame(GameObjectRef gameObject);
 	void LeaveGame(int32 objectId);
 	void HandleMove(PlayerRef player, Protocol::C_Move movePacket);
